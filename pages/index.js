@@ -1,16 +1,24 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Link from 'next/link';
-import {pagingUnoRoomsApi} from "../apis/unoRoom";
+import {createUnoRoom, pagingUnoRoomsApi} from "../apis/unoRoom";
 import styles from '../css/index.module.css';
 import GlobalHeader from "../components/common/header";
 import Footer from "../components/common/footer";
 import cookie from "cookie";
+import Loading from "../components/common/loading";
 
 export default function Index({data}) {
     const [page, setPage] = useState(2);
     const [pageSize, setPageSize] = useState(20);
     const [records, setRecords] = useState(data);
     const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (data.length < pageSize) {
+            setHasMore(false);
+        }
+    }, [])
 
     const listContent = () => {
         if (!hasMore) {
@@ -42,10 +50,38 @@ export default function Index({data}) {
         })
     }
 
+    const createRoom = () => {
+        setLoading(true);
+        createUnoRoom({
+            "roomName": "Friendship first",
+            "playersSize": 4,
+            "privacyFlag": 0,
+            "remark": "Auto Create"
+        }).then((response) => {
+            if (response.code === "0") {
+                listContent();
+            }
+        }).finally(() => {
+            setLoading(false);
+        })
+    }
+
     return (
         <>
             <GlobalHeader/>
             <div className={styles.container}>
+                <div className={styles.fixHeight}>
+                    {
+                        loading ?
+                            <Loading text={"正在创建"}/>
+                            :
+                            <div className={styles.loginButton}
+                                 onClick={createRoom}
+                            >
+                                创建房间
+                            </div>
+                    }
+                </div>
                 {
                     records.map(record => <div key={record.id}
                                                className={styles.card}>
@@ -70,12 +106,13 @@ export default function Index({data}) {
 export async function getServerSideProps({req, query}) {
     const cookies = cookie.parse(req ? req.headers.cookie || "" : document.cookie);
     const response = await pagingUnoRoomsApi({
-        pageIndex: 1,
-        pageSize: 20
+        page: 1,
+        size: 20
     }, cookies);
-    if (response) {
+
+    if (response.code === "0") {
         return {props: {data: response.data}}
-    } else {
-        return {props: {data: []}}
     }
+
+    return {props: {data: []}}
 }

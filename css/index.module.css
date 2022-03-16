@@ -98,6 +98,10 @@
     right: 0;
 }
 
+.fixHeight {
+    height: 80px;
+}
+
 .loginButton {
     cursor: pointer;
     text-align: center;
@@ -108,16 +112,13 @@
     font-size: .9rem;
     line-height: 1.17648;
     font-weight: 400;
-    letter-spacing: -.022em;
+    letter-spacing: 5px;
     min-width: 28px;
-    padding: 18px 31px;
+    padding: 12px 31px;
+    margin-bottom: 20px;
     box-sizing: border-box;
-    width: 90%;
     max-width: var(--max-width);
     border: 0;
-    margin: 10vh auto;
-    display: none;
-    outline: none;
 }
 
 .time {
