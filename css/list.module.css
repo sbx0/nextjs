@@ -1,0 +1,97 @@
+.container {
+    width: 100%;
+    max-width: var(--max-width);
+    background-color: #fefefe;
+    margin: auto;
+    min-height: 100vh;
+    padding: 20px 20px 20px 20px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem 3px rgba(0, 0, 0, .10);
+    padding: 5px 10px 5px 10px;
+    margin: 2rem 0;
+    transition: .5s all cubic-bezier(0, 1, 0.95, 1.05);
+}
+
+.card h4 {
+    color: rgba(28, 28, 28, 0.91);
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: .1rem .5rem;
+    background-color: #fff;
+    line-height: 2rem;
+    letter-spacing: .1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    border-radius: 1rem;
+    transition: .5s all cubic-bezier(0, 1, 0.95, 1.05);
+}
+
+.card p {
+    margin: 0;
+    font-size: .9rem;
+    font-weight: bold;
+    padding: .1rem .5rem 1rem .5rem;
+    letter-spacing: 1px;
+    color: #949499;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    transition: .5s all cubic-bezier(0, 1, 0.95, 1.05);
+}
+
+
+.buttonGroup {
+    display: block;
+    width: 100%;
+}
+
+.buttonGroupItem {
+    display: inline-block;
+    width: 25%;
+}
+
+.buttonGroupItem button {
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 10px;
+    background: #b1b1b1;
+    color: #fff;
+    font-size: .9rem;
+    line-height: .5rem;
+    font-weight: 400;
+    letter-spacing: -.022em;
+    min-width: 20px;
+    padding: 12px 0;
+    box-sizing: border-box;
+    width: 90%;
+    border: 0;
+    display: block;
+    outline: none;
+    margin: 0 auto 5px auto;
+}
+
+.buttonGroupItem .enable {
+    background: #0071e3;
+}
+
+.loadingButtonDiv {
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+.loadingButtonDiv button {
+    width: 100%;
+    margin: 0 auto;
+    border: 0;
+    font-size: 1rem;
+    color: rgba(130, 130, 130, 0.5);
+    background-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+}

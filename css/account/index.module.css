@@ -1,0 +1,39 @@
+.table {
+    width: 100%;
+    text-align: center;
+}
+
+.table h1 {
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.tbody {
+    margin-top: 20px;
+}
+
+.week {
+    font-size: 15px;
+}
+
+.day {
+    padding: 10px;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.dayDetail {
+    width: 20px;
+    height: 10px;
+    margin: 25px auto;
+}
+
+.day:hover {
+    font-size: 25px;
+}
+
+.now {
+    color: #ffffff;
+    background-color: #094fff94;
+    padding: 10px;
+    font-size: 20px;
+}

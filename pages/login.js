@@ -1,0 +1,78 @@
+import React, {useState} from 'react';
+import {loginApi, logoutApi} from "../apis/user";
+import styles from '../css/login.module.css';
+import useUserInfo from "../hooks/useUserInfo";
+import {removeCookie, setCookie} from "../utils/cookies";
+import GlobalHeader from "../components/common/header";
+import {useRouter} from 'next/router'
+import Footer from "../components/common/footer";
+
+export default function Login() {
+    const router = useRouter()
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const userInfo = useUserInfo();
+
+    const loginRequest = () => {
+        removeCookie('token', null)
+        if (userInfo != null) return;
+        loginApi({
+            username: username,
+            password: password
+        }).then((response) => {
+            if (response.isLogin) {
+                setCookie('token', response.tokenValue);
+                router.push("/").then(r => r);
+            }
+        })
+    }
+
+    const logout = () => {
+        localStorage.removeItem("token");
+        removeCookie('token', '');
+        logoutApi().then(r => r);
+        router.reload();
+    }
+
+    return (
+        <>
+            <GlobalHeader/>
+            <div className={styles.container}>
+                {
+                    userInfo == null ?
+                        <>
+                            <div className={styles.row}>
+                                <input id="username"
+                                       type="text"
+                                       className={styles.input}
+                                       placeholder=" "
+                                       onChange={(event) => setUsername(event.target.value)}/>
+                                <label htmlFor="username">用户名</label>
+                            </div>
+                            <div className={styles.row}>
+                                <input id="password"
+                                       type="password"
+                                       className={styles.input}
+                                       placeholder=" "
+                                       onChange={(event) => setPassword(event.target.value)}/>
+                                <label htmlFor="password">密码</label>
+                            </div>
+                            <button className={styles.loginButton}
+                                    onClick={() => loginRequest()}>
+                                登录
+                            </button>
+                        </>
+                        :
+                        <>
+                            <p>当前登录账号：{userInfo.username}</p>
+                            <button className={styles.loginButton}
+                                    onClick={() => logout()}>
+                                退出登录
+                            </button>
+                        </>
+                }
+            </div>
+            <Footer/>
+        </>
+    );
+}
