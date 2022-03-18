@@ -17,11 +17,10 @@ export default function CallApiButton({loadingText, buttonText, onSuccess, api, 
                 }
             } else {
                 toast(response.message, {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
+                    position: "bottom-center",
+                    autoClose: 1000,
                     closeOnClick: true,
-                    pauseOnHover: true,
+                    pauseOnHover: false,
                     draggable: true,
                     progress: undefined,
                 });

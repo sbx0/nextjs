@@ -1,7 +1,7 @@
 import {getCookie} from "./cookies";
 import {toast} from "react-toastify";
 
-const server = 'http://192.168.31.78:8080';
+const server = 'http://192.168.1.3:8080';
 const version = 'dev';
 
 export async function get(url, params, cookies) {

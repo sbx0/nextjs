@@ -10,16 +10,80 @@
     padding: 20px 20px 20px 20px;
 }
 
-.player {
+.player-0 {
     height: 50px;
-    width: 300px;
+    width: 250px;
     margin: 30px;
     padding: 10px;
-    border: 1px solid #adadad;
-    border-radius: 4px;
+    border-radius: 10px;
+    text-align: center;
+    background-size: 600% 600% !important;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    animation: gradientBG 10s ease infinite, breathing infinite 10s linear;
+}
+
+.player-1 {
+    height: 50px;
+    width: 250px;
+    margin: 30px;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    background-size: 600% 600% !important;
+    background: linear-gradient(-45deg, #e73c7e, #23a6d5, #23d5ab, #ee7752);
+    animation: gradientBG 10s ease infinite, breathing infinite 10s linear;
+}
+
+.player-2 {
+    height: 50px;
+    width: 250px;
+    margin: 30px;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    background-size: 600% 600% !important;
+    background: linear-gradient(-45deg, #23a6d5, #23d5ab, #ee7752, #e73c7e);
+    animation: gradientBG 10s ease infinite, breathing infinite 10s linear;
+}
+
+.player-3 {
+    height: 50px;
+    width: 250px;
+    margin: 30px;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    background-size: 600% 600% !important;
+    background: linear-gradient(-45deg, #23d5ab, #ee7752, #e73c7e, #23a6d5);
+    animation: gradientBG 10s ease infinite, breathing infinite 10s linear;
+}
+
+@keyframes gradientBG {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+@keyframes breathing {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .playerName {
+    color: white;
     font-size: 20px;
     user-select: none;
 }

@@ -3,9 +3,14 @@ import {infoUnoRoom} from "../apis/unoRoom";
 
 export default function useRoomInfo(initData, roomCode, flag) {
     const [data, setData] = useState(initData);
+    const [count, setCount] = useState(0);
 
     useEffect(() => {
-        if (initData !== undefined) return;
+        if (initData !== undefined) {
+            setCount(count + 1);
+        }
+        if (count === 0) return;
+        console.log('count = ' + count)
         if (roomCode === undefined) return;
         infoUnoRoom({roomCode: roomCode}).then((response) => {
             if (response.code === "0") {
@@ -15,5 +20,6 @@ export default function useRoomInfo(initData, roomCode, flag) {
             }
         })
     }, [roomCode, flag]);
+
     return data;
 }

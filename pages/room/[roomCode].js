@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import useRoomUser from "../../hooks/useRoomUser";
 import CallApiButton from "../../components/common/callApiButton";
 import Timer from "../../components/common/timer";
-import {joinRoom} from "../../apis/unoRoomUser";
+import {joinRoom, quitRoom} from "../../apis/unoRoomUser";
 import useRoomInfo from "../../hooks/useRoomInfo";
 import cookie from "cookie";
 import {infoUnoRoom} from "../../apis/unoRoom";
@@ -17,8 +17,10 @@ import {infoUnoRoom} from "../../apis/unoRoom";
 export default function RoomDetail({data}) {
     const router = useRouter();
     const [flag, setFlag] = useState(false);
+    const [roomInfoFlag, setRoomInfoFlag] = useState(false);
+    const [isIAmIn, setIsIAmIn] = useState(data.isIAmIn);
     const roomUser = useRoomUser(router.query.roomCode, flag);
-    const roomInfo = useRoomInfo(data, router.query.roomCode);
+    const roomInfo = useRoomInfo(data, router.query.roomCode, roomInfoFlag);
     const [roomSize, setRoomSize] = useState({
         in: 0,
         all: 0
@@ -39,29 +41,32 @@ export default function RoomDetail({data}) {
                 all: allNumber
             }
         )
+        console.log('roomInfo?.isIAmIn ', roomInfo?.isIAmIn)
     }, [roomUser, roomInfo])
 
     return (
         <>
             <GlobalHeader/>
-            <Timer something={() => setFlag(!flag)} timeout={1000}/>
+            <Timer something={() => setFlag(!flag)} timeout={500}/>
             <div className={styles.container}>
                 <h1>{roomInfo?.roomName}</h1>
                 <CallApiButton
-                    buttonText={'加入房间 ' + roomSize.in + '/' + roomSize.all}
-                    loadingText={'正在加入'}
-                    api={joinRoom}
+                    buttonText={(isIAmIn ? '退出房间 ' : '加入房间 ') + roomSize.in + '/' + roomSize.all}
+                    loadingText={(isIAmIn ? '正在退出 ' : '正在加入')}
+                    api={isIAmIn ? quitRoom : joinRoom}
                     params={{
                         "roomCode": router.query.roomCode
                     }}
                     onSuccess={() => {
+                        setIsIAmIn(!isIAmIn)
                         setFlag(!flag);
+                        setRoomInfoFlag(!roomInfoFlag);
                     }}
                 />
                 <div>
                     {
-                        roomUser?.map(one => {
-                            return <div key={one.id} className={styles.player}>
+                        roomUser?.map((one, index) => {
+                            return <div key={one.id} className={styles['player-' + index]}>
                                 <div className={styles.playerName}>{one.username}</div>
                             </div>
                         })
