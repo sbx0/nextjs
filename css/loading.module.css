@@ -11,6 +11,7 @@
 .text {
     font-size: 13px;
     animation: breathing infinite 1s linear;
+    user-select: none;
 }
 
 @keyframes breathing {

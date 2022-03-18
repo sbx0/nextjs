@@ -5,20 +5,29 @@ import styles from '../css/index.module.css';
 import GlobalHeader from "../components/common/header";
 import Footer from "../components/common/footer";
 import cookie from "cookie";
-import Loading from "../components/common/loading";
+import 'react-toastify/dist/ReactToastify.css';
+import CallApiButton from "../components/common/callApiButton";
 
 export default function Index({data}) {
     const [page, setPage] = useState(2);
     const [pageSize, setPageSize] = useState(20);
     const [records, setRecords] = useState(data);
     const [hasMore, setHasMore] = useState(true);
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (data.length < pageSize) {
             setHasMore(false);
         }
     }, [])
+
+    useEffect(() => {
+        listContent();
+    }, [page])
+
+    const refresh = () => {
+        setHasMore(true);
+        setPage(1);
+    }
 
     const listContent = () => {
         if (!hasMore) {
@@ -50,38 +59,22 @@ export default function Index({data}) {
         })
     }
 
-    const createRoom = () => {
-        setLoading(true);
-        createUnoRoom({
-            "roomName": "Friendship first",
-            "playersSize": 4,
-            "privacyFlag": 0,
-            "remark": "Auto Create"
-        }).then((response) => {
-            if (response.code === "0") {
-                listContent();
-            }
-        }).finally(() => {
-            setLoading(false);
-        })
-    }
-
     return (
         <>
             <GlobalHeader/>
             <div className={styles.container}>
-                <div className={styles.fixHeight}>
-                    {
-                        loading ?
-                            <Loading text={"正在创建"}/>
-                            :
-                            <div className={styles.loginButton}
-                                 onClick={createRoom}
-                            >
-                                创建房间
-                            </div>
-                    }
-                </div>
+                <CallApiButton
+                    buttonText={'创建房间'}
+                    loadingText={'正在创建'}
+                    api={createUnoRoom}
+                    params={{
+                        "roomName": "Friendship first",
+                        "playersSize": 4,
+                        "privacyFlag": 0,
+                        "remark": "Auto Create"
+                    }}
+                    onSuccess={refresh}
+                />
                 {
                     records.map(record => <div key={record.id}
                                                className={styles.card}>

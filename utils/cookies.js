@@ -11,7 +11,6 @@ export function getCookie(key) {
 }
 
 export function setCookie(key, value) {
-    console.log('setCookie');
     const d = new Date();
     d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
     const expires = "expires=" + d.toGMTString();
@@ -19,7 +18,6 @@ export function setCookie(key, value) {
 }
 
 export function removeCookie(key, value) {
-    console.log('setCookie');
     const d = new Date();
     const expires = "expires=" + d.toGMTString();
     document.cookie = key + "=" + value + "; " + expires;

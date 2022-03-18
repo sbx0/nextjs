@@ -5,7 +5,6 @@ export default function useUserInfo() {
     const [userInfo, setUserInfo] = useState(null);
     useEffect(() => {
         getSysUserInfo().then((response) => {
-            console.log(response);
             if (response?.code === 500) {
                 setUserInfo(null);
             } else {

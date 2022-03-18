@@ -19,8 +19,8 @@ export default function Footer() {
                 &nbsp;&nbsp;-&nbsp;&nbsp;
                 <a href="https://ziyuan.baidu.com/site/index#/" target="_blank">baidu</a>
             </p>
-            <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
-                    data-cf-beacon='{"token": "2d9d5be43b34404abb5064a088d50b68"}'/>
+            {/*<script defer src='https://static.cloudflareinsights.com/beacon.min.js'*/}
+            {/*        data-cf-beacon='{"token": "2d9d5be43b34404abb5064a088d50b68"}'/>*/}
         </div>
     );
 }

@@ -1,6 +1,7 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {useRouter} from 'next/router';
 import styles from '../../css/header.module.css';
+import {ToastContainer} from "react-toastify";
 
 export default function GlobalHeader() {
     const router = useRouter();
@@ -39,6 +40,7 @@ export default function GlobalHeader() {
                     </ul>
                 </div>
             </header>
+            <ToastContainer/>
         </div>
     );
 }
