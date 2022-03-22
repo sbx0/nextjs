@@ -1,0 +1,90 @@
+.container {
+    display: inline-block;
+    position: relative;
+    float: left;
+    width: 150px;
+    height: 220px;
+    border-radius: 10px;
+    background: #fff;
+    margin: 5px;
+    -webkit-box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+}
+
+.bg-red {
+    border-radius: 5px;
+    background: #ff5555;
+    width: 130px;
+    height: 200px;
+    margin: 10px 10px;
+}
+
+.bg-blue {
+    border-radius: 5px;
+    background: #5555ff;
+    width: 130px;
+    height: 200px;
+    margin: 10px 10px;
+}
+
+.bg-green {
+    border-radius: 5px;
+    background: #55aa55;
+    width: 130px;
+    height: 200px;
+    margin: 10px 10px;
+}
+
+.bg-yellow {
+    border-radius: 5px;
+    background: #ffaa00;
+    width: 130px;
+    height: 200px;
+    margin: 10px 10px;
+}
+
+.bg- {
+    border-radius: 5px;
+    background: #030303;
+    width: 130px;
+    height: 200px;
+    margin: 10px 10px;
+}
+
+.number {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 100px;
+    margin: 0 auto;
+    border-radius: 30px;
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    line-height: 100px;
+    font-weight: bolder;
+}
+
+.numberUp {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    color: white;
+    font-size: 20px;
+    font-family: 'impact';
+    transform: rotate(3deg);
+    -webkit-transform: rotate(3deg);
+}
+
+.numberDown {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    color: white;
+    font-size: 20px;
+    font-family: 'impact';
+    transform: rotate(183deg);
+    -webkit-transform: rotate(183deg);
+}
+
+
