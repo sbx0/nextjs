@@ -78,7 +78,7 @@ export default function Index({data}) {
                 {
                     records.map(record => <div key={record.id}
                                                className={styles.card}>
-                        <p>{record.crateTime}</p>
+                        <p>{record.createTime} [{record.playersInSize}/{record.playersSize}]</p>
                         <Link href={'/room/' + record.roomCode}>
                             <h4>{record.roomName}</h4>
                         </Link>

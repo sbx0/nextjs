@@ -11,7 +11,7 @@ import Timer from "../../components/common/timer";
 import {joinRoom, quitRoom} from "../../apis/unoRoomUser";
 import useRoomInfo from "../../hooks/useRoomInfo";
 import cookie from "cookie";
-import {infoUnoRoom} from "../../apis/unoRoom";
+import {infoUnoRoom, startUnoRoom} from "../../apis/unoRoom";
 
 
 export default function RoomDetail({data}) {
@@ -19,6 +19,7 @@ export default function RoomDetail({data}) {
     const [flag, setFlag] = useState(false);
     const [roomInfoFlag, setRoomInfoFlag] = useState(false);
     const [isIAmIn, setIsIAmIn] = useState(data.isIAmIn);
+    const [roomStatus, setRoomStatus] = useState(data.roomStatus);
     const roomUser = useRoomUser(router.query.roomCode, flag);
     const roomInfo = useRoomInfo(data, router.query.roomCode, roomInfoFlag);
     const [roomSize, setRoomSize] = useState({
@@ -47,22 +48,27 @@ export default function RoomDetail({data}) {
     return (
         <>
             <GlobalHeader/>
-            <Timer something={() => setFlag(!flag)} timeout={500}/>
+            <Timer something={() => setFlag(!flag)} timeout={10000}/>
             <div className={styles.container}>
                 <h1>{roomInfo?.roomName}</h1>
-                <CallApiButton
-                    buttonText={(isIAmIn ? '退出房间 ' : '加入房间 ') + roomSize.in + '/' + roomSize.all}
-                    loadingText={(isIAmIn ? '正在退出 ' : '正在加入')}
-                    api={isIAmIn ? quitRoom : joinRoom}
-                    params={{
-                        "roomCode": router.query.roomCode
-                    }}
-                    onSuccess={() => {
-                        setIsIAmIn(!isIAmIn)
-                        setFlag(!flag);
-                        setRoomInfoFlag(!roomInfoFlag);
-                    }}
-                />
+                {
+                    roomStatus === 0 ?
+                        <CallApiButton
+                            buttonText={(isIAmIn ? '退出房间 ' : '加入房间 ') + roomSize.in + '/' + roomSize.all}
+                            loadingText={(isIAmIn ? '正在退出 ' : '正在加入')}
+                            api={isIAmIn ? quitRoom : joinRoom}
+                            params={{
+                                "roomCode": router.query.roomCode
+                            }}
+                            onSuccess={() => {
+                                setIsIAmIn(!isIAmIn)
+                                setFlag(!flag);
+                                setRoomInfoFlag(!roomInfoFlag);
+                            }}
+                        />
+                        :
+                        <></>
+                }
                 <div>
                     {
                         roomUser?.map((one, index) => {
@@ -72,6 +78,24 @@ export default function RoomDetail({data}) {
                         })
                     }
                 </div>
+                {
+                    roomSize.in === roomSize.all && isIAmIn && roomStatus === 0 ?
+                        <CallApiButton
+                            buttonText={'开始'}
+                            loadingText={'正在加载'}
+                            api={startUnoRoom}
+                            params={{
+                                "roomCode": router.query.roomCode
+                            }}
+                            onSuccess={() => {
+                                setRoomStatus(1);
+                                setFlag(!flag);
+                                setRoomInfoFlag(!roomInfoFlag);
+                            }}
+                        />
+                        :
+                        <></>
+                }
             </div>
             <Footer/>
             <ToastContainer/>
