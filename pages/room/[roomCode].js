@@ -13,6 +13,7 @@ import useRoomInfo from "../../hooks/useRoomInfo";
 import cookie from "cookie";
 import {infoUnoRoom, startUnoRoom} from "../../apis/unoRoom";
 import MyCards from "../../components/card/myCards";
+import DiscardCards from "../../components/card/discardCards";
 
 
 export default function RoomDetail({data}) {
@@ -27,6 +28,7 @@ export default function RoomDetail({data}) {
         in: 0,
         all: 0
     });
+    const [discards, setDiscards] = useState([]);
 
     useEffect(() => {
         let inNumber = 0;
@@ -97,7 +99,15 @@ export default function RoomDetail({data}) {
                         :
                         <></>
                 }
-                <MyCards roomCode={router.query.roomCode} flag={roomInfoFlag} setFlag={setRoomInfoFlag}/>
+                <DiscardCards roomCode={router.query.roomCode}
+                              flag={roomInfoFlag}
+                              data={discards}
+                              setData={setDiscards}/>
+                <MyCards roomCode={router.query.roomCode}
+                         flag={roomInfoFlag}
+                         setFlag={setRoomInfoFlag}
+                         discards={discards}
+                         setDiscards={setDiscards}/>
             </div>
             <Footer/>
             <ToastContainer/>

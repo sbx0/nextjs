@@ -3,7 +3,7 @@ import styles from './myCards.module.css';
 import useMyCards from "../../hooks/useMyCards";
 import Card from "./card";
 
-export default function MyCards({roomCode, flag, setFlag}) {
+export default function MyCards({roomCode, flag, setFlag, discards, setDiscards}) {
     const [data, setData] = useState([]);
     const cards = useMyCards({
         data: data,
@@ -22,6 +22,8 @@ export default function MyCards({roomCode, flag, setFlag}) {
                 setFlag={setFlag}
                 data={data}
                 setData={setData}
+                discards={discards}
+                setDiscards={setDiscards}
             />)
         }
     </div>;
