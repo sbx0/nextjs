@@ -12,7 +12,6 @@ import {joinRoom, quitRoom} from "../../apis/unoRoomUser";
 import useRoomInfo from "../../hooks/useRoomInfo";
 import cookie from "cookie";
 import {infoUnoRoom, startUnoRoom} from "../../apis/unoRoom";
-import {drawCard} from "../../apis/unoCard";
 import MyCards from "../../components/card/myCards";
 
 
@@ -81,29 +80,11 @@ export default function RoomDetail({data}) {
                     }
                 </div>
                 {
-                    roomSize.in === roomSize.all && isIAmIn && roomStatus === 0 ?
+                    roomSize.in === roomSize.all && isIAmIn ?
                         <CallApiButton
                             buttonText={'开始'}
                             loadingText={'正在加载'}
                             api={startUnoRoom}
-                            params={{
-                                "roomCode": router.query.roomCode
-                            }}
-                            onSuccess={() => {
-                                setRoomStatus(1);
-                                setFlag(!flag);
-                                setRoomInfoFlag(!roomInfoFlag);
-                            }}
-                        />
-                        :
-                        <></>
-                }
-                {
-                    roomSize.in === roomSize.all && isIAmIn && roomStatus === 1 ?
-                        <CallApiButton
-                            buttonText={'抽牌'}
-                            loadingText={'正在抽牌'}
-                            api={drawCard}
                             params={{
                                 "roomCode": router.query.roomCode
                             }}
