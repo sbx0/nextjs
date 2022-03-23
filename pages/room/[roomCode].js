@@ -97,7 +97,7 @@ export default function RoomDetail({data}) {
                         :
                         <></>
                 }
-                <MyCards roomCode={router.query.roomCode}/>
+                <MyCards roomCode={router.query.roomCode} flag={roomInfoFlag} setFlag={setRoomInfoFlag}/>
             </div>
             <Footer/>
             <ToastContainer/>

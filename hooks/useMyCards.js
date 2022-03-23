@@ -1,8 +1,9 @@
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {myCards} from "../apis/unoCard";
 
-export default function useMyCards(roomCode, flag) {
-    const [data, setData] = useState([]);
+export default function useMyCards({
+                                       data, setData, roomCode, flag
+                                   }) {
 
     useEffect(() => {
         if (roomCode === undefined) return;
