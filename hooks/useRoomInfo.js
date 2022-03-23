@@ -10,7 +10,6 @@ export default function useRoomInfo(initData, roomCode, flag) {
             setCount(count + 1);
         }
         if (count === 0) return;
-        console.log('count = ' + count)
         if (roomCode === undefined) return;
         infoUnoRoom({roomCode: roomCode}).then((response) => {
             if (response.code === "0") {

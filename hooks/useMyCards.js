@@ -6,6 +6,7 @@ export default function useMyCards({
                                    }) {
 
     let colorWeight = {
+        black: 0,
         red: 1,
         blue: 2,
         green: 3,

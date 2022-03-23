@@ -14,6 +14,7 @@ import cookie from "cookie";
 import {infoUnoRoom, startUnoRoom} from "../../apis/unoRoom";
 import MyCards from "../../components/card/myCards";
 import DiscardCards from "../../components/card/discardCards";
+import {drawCard} from "../../apis/unoCard";
 
 
 export default function RoomDetail({data}) {
@@ -45,13 +46,12 @@ export default function RoomDetail({data}) {
                 all: allNumber
             }
         )
-        console.log('roomInfo?.isIAmIn ', roomInfo?.isIAmIn)
     }, [roomUser, roomInfo])
 
     return (
         <>
             <GlobalHeader/>
-            <Timer something={() => setFlag(!flag)} timeout={10000}/>
+            <Timer something={() => setFlag(!flag)} timeout={1000}/>
             <div className={styles.container}>
                 <h1>{roomInfo?.roomName}</h1>
                 {
@@ -82,7 +82,7 @@ export default function RoomDetail({data}) {
                     }
                 </div>
                 {
-                    roomSize.in === roomSize.all && isIAmIn ?
+                    roomSize.in === roomSize.all && isIAmIn && roomStatus === 0 ?
                         <CallApiButton
                             buttonText={'开始'}
                             loadingText={'正在加载'}
@@ -99,13 +99,30 @@ export default function RoomDetail({data}) {
                         :
                         <></>
                 }
+                {
+                    roomSize.in === roomSize.all && isIAmIn && roomStatus === 1 ?
+                        <CallApiButton
+                            buttonText={'抽牌'}
+                            loadingText={'正在抽牌'}
+                            api={drawCard}
+                            params={{
+                                "roomCode": router.query.roomCode
+                            }}
+                            onSuccess={() => {
+                                setFlag(!flag);
+                                setRoomInfoFlag(!roomInfoFlag);
+                            }}
+                        />
+                        :
+                        <></>
+                }
                 <DiscardCards roomCode={router.query.roomCode}
-                              flag={roomInfoFlag}
+                              flag={flag}
                               data={discards}
                               setData={setDiscards}/>
                 <MyCards roomCode={router.query.roomCode}
-                         flag={roomInfoFlag}
-                         setFlag={setRoomInfoFlag}
+                         flag={flag}
+                         setFlag={setFlag}
                          discards={discards}
                          setDiscards={setDiscards}/>
             </div>

@@ -11,9 +11,10 @@
     -webkit-box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
     box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
     cursor: pointer;
+    user-select: none;
 }
 
-.container:hover {
+.disable {
     display: inline-block;
     position: relative;
     float: left;
@@ -25,19 +26,41 @@
     border: #7b7b7b 1px solid;
     -webkit-box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
     box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+    cursor: not-allowed;
+    pointer-events: none;
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    -o-filter: grayscale(50%);
+    filter: grayscale(50%);
+    user-select: none;
+}
+
+.container:hover {
+    display: inline-block;
+    position: relative;
+    float: left;
+    width: 150px;
+    height: 220px;
+    border-radius: 10px;
+    background: #fff;
+    border: #7b7b7b 1px solid;
+    -webkit-box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
     cursor: pointer;
     animation: breathing infinite 1s linear;
+    z-index: 1;
+    user-select: none;
 }
 
 @keyframes breathing {
     0% {
-        transform: scale(1) translateY(-30px);
+        transform: scale(1);
     }
     50% {
-        transform: scale(1.1) translateY(-30px);
+        transform: scale(1.2);
     }
     100% {
-        transform: scale(1) translateY(-30px);
+        transform: scale(1);
     }
 }
 

@@ -9,7 +9,7 @@ export default function useDiscardCards({
         if (roomCode === undefined) return;
         discardCards({roomCode: roomCode}).then((response) => {
             if (response) {
-                setData(response.data);
+                setData(response.data.reverse());
             } else {
                 setData([]);
             }
