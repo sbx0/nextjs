@@ -1,54 +1,60 @@
-.container {
+@value card-width: 90px;
+
+@value card-height: 140px;
+
+@value card-inner-width: 80px;
+
+@value card-inner-height: 130px;
+
+@value card-inner-margin: 5px 5px 5px 5px;
+
+@value margin-right: -60px;
+
+@value font-size: 15px;
+
+.containerCan {
     display: inline-block;
     position: relative;
-    float: left;
-    width: 150px;
-    height: 220px;
+    width: card-width;
+    height: card-height;
     border-radius: 10px;
     background: #fff;
-    margin-right: -100px;
+    margin-right: margin-right;
     border: #7b7b7b 1px solid;
-    -webkit-box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
-    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 0 5px 5px #f1f1f138;
+    box-shadow: 0 0 5px 5px #f1f1f138;
     cursor: pointer;
     user-select: none;
 }
 
-.disable {
+.containerCan:hover {
     display: inline-block;
     position: relative;
-    float: left;
-    width: 150px;
-    height: 220px;
-    border-radius: 10px;
-    background: #fff;
-    margin-right: -100px;
-    border: #7b7b7b 1px solid;
-    -webkit-box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
-    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
-    cursor: not-allowed;
-    pointer-events: none;
-    -webkit-filter: grayscale(50%);
-    -moz-filter: grayscale(50%);
-    -o-filter: grayscale(50%);
-    filter: grayscale(50%);
-    user-select: none;
-}
-
-.container:hover {
-    display: inline-block;
-    position: relative;
-    float: left;
-    width: 150px;
-    height: 220px;
+    width: card-width;
+    height: card-height;
     border-radius: 10px;
     background: #fff;
     border: #7b7b7b 1px solid;
-    -webkit-box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
-    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 0 5px 5px #f1f1f138;
+    box-shadow: 0 0 5px 5px #f1f1f138;
     cursor: pointer;
     animation: breathing infinite 1s linear;
     z-index: 1;
+    user-select: none;
+}
+
+.container {
+    display: inline-block;
+    position: relative;
+    width: card-width;
+    height: card-height;
+    border-radius: 10px;
+    background: #fff;
+    margin-right: margin-right;
+    border: #7b7b7b 1px solid;
+    -webkit-box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
     user-select: none;
 }
 
@@ -67,41 +73,41 @@
 .bg-red {
     border-radius: 5px;
     background: #ff5555;
-    width: 130px;
-    height: 200px;
-    margin: 10px 10px;
+    width: card-inner-width;
+    height: card-inner-height;
+    margin: card-inner-margin;
 }
 
 .bg-blue {
     border-radius: 5px;
     background: #5555ff;
-    width: 130px;
-    height: 200px;
-    margin: 10px 10px;
+    width: card-inner-width;
+    height: card-inner-height;
+    margin: card-inner-margin;
 }
 
 .bg-green {
     border-radius: 5px;
     background: #55aa55;
-    width: 130px;
-    height: 200px;
-    margin: 10px 10px;
+    width: card-inner-width;
+    height: card-inner-height;
+    margin: card-inner-margin;
 }
 
 .bg-yellow {
     border-radius: 5px;
     background: #ffaa00;
-    width: 130px;
-    height: 200px;
-    margin: 10px 10px;
+    width: card-inner-width;
+    height: card-inner-height;
+    margin: card-inner-margin;
 }
 
 .bg-black {
     border-radius: 5px;
     background: #030303;
-    width: 130px;
-    height: 200px;
-    margin: 10px 10px;
+    width: card-inner-width;
+    height: card-inner-height;
+    margin: card-inner-margin;
 }
 
 .number {
@@ -112,7 +118,7 @@
     margin: 0 auto;
     border-radius: 30px;
     color: white;
-    font-size: 30px;
+    font-size: font-size;
     text-align: center;
     line-height: 100px;
     font-weight: bolder;
@@ -120,24 +126,19 @@
 
 .numberUp {
     position: absolute;
-    top: 10px;
-    left: 15px;
+    top: 5px;
+    left: 8px;
     color: white;
-    font-size: 20px;
-    font-family: 'impact';
-    transform: rotate(3deg);
-    -webkit-transform: rotate(3deg);
+    font-size: font-size;
 }
 
 .numberDown {
     position: absolute;
-    bottom: 10px;
-    right: 15px;
+    bottom: 5px;
+    right: 8px;
     color: white;
-    font-size: 20px;
-    font-family: 'impact';
-    transform: rotate(183deg);
-    -webkit-transform: rotate(183deg);
+    font-size: font-size;
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
 }
-
 

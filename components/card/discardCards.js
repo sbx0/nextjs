@@ -12,11 +12,13 @@ export default function DiscardCards({roomCode, flag, data, setData}) {
     });
 
     return <div className={styles.container}>
-        {
-            cards.map((one, index) => <DiscardCard
-                key={index}
-                card={one}
-            />)
-        }
+        <div className={styles.innerContainer}>
+            {
+                cards.map((one, index) => <DiscardCard
+                    key={index}
+                    card={one}
+                />)
+            }
+        </div>
     </div>;
 }

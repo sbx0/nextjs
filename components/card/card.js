@@ -8,17 +8,21 @@ export default function Card({roomCode, card, flag, setFlag, setData, data, disc
     useEffect(() => {
         let canPlay = false;
 
-        if (discards[discards.length - 1].color === "black") {
+        if (discards == null || discards.length === 0) {
             canPlay = true;
-        }
-        if (card.color === "black") {
-            canPlay = true;
-        }
-        if (card.color === discards[discards.length - 1].color) {
-            canPlay = true;
-        }
-        if (card.point === discards[discards.length - 1].point) {
-            canPlay = true;
+        } else {
+            if (discards[discards.length - 1].color === "black") {
+                canPlay = true;
+            }
+            if (card.color === "black") {
+                canPlay = true;
+            }
+            if (card.color === discards[discards.length - 1].color) {
+                canPlay = true;
+            }
+            if (card.point === discards[discards.length - 1].point) {
+                canPlay = true;
+            }
         }
 
         setCan(canPlay);
@@ -27,17 +31,21 @@ export default function Card({roomCode, card, flag, setFlag, setData, data, disc
     const clickToPlayCard = () => {
         let canPlay = false;
 
-        if (discards[discards.length - 1].color === "black") {
+        if (discards == null || discards.length === 0) {
             canPlay = true;
-        }
-        if (card.color === "black") {
-            canPlay = true;
-        }
-        if (card.color === discards[discards.length - 1].color) {
-            canPlay = true;
-        }
-        if (card.point === discards[discards.length - 1].point) {
-            canPlay = true;
+        } else {
+            if (discards[discards.length - 1].color === "black") {
+                canPlay = true;
+            }
+            if (card.color === "black") {
+                canPlay = true;
+            }
+            if (card.color === discards[discards.length - 1].color) {
+                canPlay = true;
+            }
+            if (card.point === discards[discards.length - 1].point) {
+                canPlay = true;
+            }
         }
 
         if (canPlay) {
@@ -82,7 +90,7 @@ export default function Card({roomCode, card, flag, setFlag, setData, data, disc
         }
     }
 
-    return <div onDoubleClick={clickToPlayCard} className={can ? styles.container : styles.disable}>
+    return <div onDoubleClick={clickToPlayCard} className={can ? styles.containerCan : styles.container}>
         <div className={styles['bg-' + card.color]}>
             <div className={styles.numberUp}>
                 {better(card.point)}

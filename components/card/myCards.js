@@ -13,18 +13,20 @@ export default function MyCards({roomCode, flag, setFlag, discards, setDiscards}
     });
 
     return <div className={styles.container}>
-        {
-            cards.map((one, index) => <Card
-                key={index}
-                roomCode={roomCode}
-                card={one}
-                flag={flag}
-                setFlag={setFlag}
-                data={data}
-                setData={setData}
-                discards={discards}
-                setDiscards={setDiscards}
-            />)
-        }
+        <div className={styles.innerContainer}>
+            {
+                cards.map((one, index) => <Card
+                    key={index}
+                    roomCode={roomCode}
+                    card={one}
+                    flag={flag}
+                    setFlag={setFlag}
+                    data={data}
+                    setData={setData}
+                    discards={discards}
+                    setDiscards={setDiscards}
+                />)
+            }
+        </div>
     </div>;
 }

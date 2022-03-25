@@ -1,3 +1,44 @@
+@value player-height: 100px;
+
+@value player-width: 50px;
+
+@value player-margin: 0px 10px 50px 10px;
+
+@value player-padding: 10px;
+
+.fullscreen {
+    overflow: auto;
+    background: white;
+}
+
+.enter {
+    text-align: right;
+    width: 100px;
+    background: #333334;
+    color: white;
+    border: 0 solid black;
+    border-radius: 10px;
+    padding: 5px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.exit {
+    text-align: center;
+    width: 100px;
+    background: #333334;
+    color: white;
+    border: 0 solid black;
+    border-radius: 10px;
+    padding: 5px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
 .container {
     width: 100%;
     max-width: var(--max-width);
@@ -10,23 +51,23 @@
     padding: 20px 20px 20px 20px;
 }
 
-.player-0 {
-    height: 50px;
-    width: 250px;
-    margin: 30px;
-    padding: 10px;
+.player0 {
+    height: player-height;
+    width: player-width;
+    margin: player-margin;
+    padding: player-padding;
     border-radius: 10px;
     text-align: center;
     background-size: 600% 600% !important;
     background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-    animation: gradientBG 10s ease infinite, breathing infinite 10s linear;
+    animation: gradientBG 5s ease infinite, currentUser infinite 1s linear;
 }
 
-.player-1 {
-    height: 50px;
-    width: 250px;
-    margin: 30px;
-    padding: 10px;
+.player1 {
+    height: player-height;
+    width: player-width;
+    margin: player-margin;
+    padding: player-padding;
     border-radius: 10px;
     text-align: center;
     background-size: 600% 600% !important;
@@ -34,11 +75,11 @@
     animation: gradientBG 10s ease infinite, breathing infinite 10s linear;
 }
 
-.player-2 {
-    height: 50px;
-    width: 250px;
-    margin: 30px;
-    padding: 10px;
+.player2 {
+    height: player-height;
+    width: player-width;
+    margin: player-margin;
+    padding: player-padding;
     border-radius: 10px;
     text-align: center;
     background-size: 600% 600% !important;
@@ -46,11 +87,11 @@
     animation: gradientBG 10s ease infinite, breathing infinite 10s linear;
 }
 
-.player-3 {
-    height: 50px;
-    width: 250px;
-    margin: 30px;
-    padding: 10px;
+.player3 {
+    height: player-height;
+    width: player-width;
+    margin: player-margin;
+    padding: player-padding;
     border-radius: 10px;
     text-align: center;
     background-size: 600% 600% !important;
@@ -80,6 +121,23 @@
     100% {
         transform: scale(1);
     }
+}
+
+@keyframes currentUser {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.playerContainer {
+    display: flex;
+    justify-content: center;
 }
 
 .playerName {
