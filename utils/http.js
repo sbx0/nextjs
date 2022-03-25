@@ -1,10 +1,12 @@
 import {getCookie} from "./cookies";
 import {toast} from "react-toastify";
 
-const server = 'http://192.168.1.3:8080';
+// In order to expose a variable to the browser you have to prefix the variable with NEXT_PUBLIC_.
+const server = process.env.NEXT_PUBLIC_API_URL;
 const version = 'dev';
 
 export async function get(url, params, cookies) {
+
     if (params) {
         const paramsArray = [];
         Object.keys(params).forEach((key) =>
