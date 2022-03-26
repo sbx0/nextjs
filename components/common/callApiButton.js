@@ -1,16 +1,20 @@
-import 'react-markdown-editor-lite/lib/index.css';
 import {toast} from 'react-toastify';
 import styles from "../../css/index.module.css";
 import React, {useState} from "react";
+import {useRouter} from 'next/router'
 import Loading from "./loading";
 
 
 export default function CallApiButton({loadingText, buttonText, onSuccess, api, params}) {
+    const router = useRouter()
     const [loading, setLoading] = useState(false);
 
     const createRoom = () => {
         setLoading(true);
         api(params).then((response) => {
+            if (response.code === 500) {
+                router.push("/login").then(r => r);
+            }
             if (response.code === "0") {
                 if (onSuccess != null) {
                     onSuccess()
