@@ -18,8 +18,8 @@ export default function RoomDetail({data, roomCode}) {
     const [flag, setFlag] = useState(false);
     const [roomInfoFlag, setRoomInfoFlag] = useState(false);
     const [myCardsFlag, setMyCardsFlag] = useState(false);
-    const [isIAmIn, setIsIAmIn] = useState(data.isIAmIn);
-    const [roomStatus, setRoomStatus] = useState(data.roomStatus);
+    const [isIAmIn, setIsIAmIn] = useState(data?.isIAmIn);
+    const [roomStatus, setRoomStatus] = useState(data?.roomStatus);
     const roomUser = useRoomUser(roomCode, flag);
     const roomInfo = useRoomInfo(data, roomCode, roomInfoFlag);
     const [roomSize, setRoomSize] = useState({
