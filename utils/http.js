@@ -3,7 +3,7 @@ import {toast} from "react-toastify";
 
 // In order to expose a variable to the browser you have to prefix the variable with NEXT_PUBLIC_.
 const server = process.env.NEXT_PUBLIC_API_URL;
-const version = 'dev';
+const version = process.env.NEXT_PUBLIC_VERSION;
 
 export async function get(url, params, cookies) {
 
