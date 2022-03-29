@@ -98,29 +98,25 @@ export async function postForm(url, params) {
     return await _fetch(request).then((data) => data);
 }
 
-const _fetch = (request, timeout = 200000) => {
+const _fetch = (request, timeout = 1000) => {
     const requestPromise = new Promise((resolve, reject) => {
-            request
-                .then((response) => {
-                    return response;
-                })
-                .then((response) => {
-                    return response.json()
-                })
-                .then((data) => {
-                    resolve(data);
-                })
-                .catch((error) => {
-                    toast(error, {
-                        position: "top-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                    });
+            request.then((response) => {
+                return response;
+            }).then((response) => {
+                return response.json()
+            }).then((data) => {
+                resolve(data);
+            }).catch((error) => {
+                toast(error, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
                 });
+            });
         }
     )
     const timerPromise = new Promise((resolve, reject) => {

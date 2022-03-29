@@ -26,11 +26,9 @@ export default function RoomDetailRequireLogin({data, isLogin}) {
 }
 
 export async function getServerSideProps({req, query}) {
-    console.log('[roomCode] query', query)
     const cookies = cookie.parse(req ? req.headers.cookie || "" : document.cookie);
     const response = await infoUnoRoom({roomCode: query.roomCode}, cookies);
 
-    console.log('[roomCode] response ', response)
 
     if (response.code === 500) {
         return {props: {data: [], isLogin: false}}
