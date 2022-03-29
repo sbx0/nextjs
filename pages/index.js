@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import CallApiButton from "../components/common/callApiButton";
 import {sseSend} from "../apis/sse";
 import {EventSourcePolyfill} from 'event-source-polyfill';
+import {toast} from "react-toastify";
 
 export default function Index({data}) {
     const [page, setPage] = useState(2);
@@ -34,7 +35,14 @@ export default function Index({data}) {
         );
 
         eventSource.addEventListener("message", (event) => {
-            console.log("message ", event.data);
+            toast(event.data, {
+                position: "bottom-center",
+                autoClose: 1000,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+            });
         });
 
         sseSend().then(r => {
