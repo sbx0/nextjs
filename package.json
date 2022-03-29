@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "cookie": "0.4.2",
+    "event-source-polyfill": "^1.0.26",
     "highlight.js": "11.5.0",
     "markdown-it": "12.3.2",
     "moment": "2.29.1",

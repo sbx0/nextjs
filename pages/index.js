@@ -7,6 +7,8 @@ import Footer from "../components/common/footer";
 import cookie from "cookie";
 import 'react-toastify/dist/ReactToastify.css';
 import CallApiButton from "../components/common/callApiButton";
+import {sseSend} from "../apis/sse";
+import {EventSourcePolyfill} from 'event-source-polyfill';
 
 export default function Index({data}) {
     const [page, setPage] = useState(2);
@@ -22,6 +24,23 @@ export default function Index({data}) {
 
     useEffect(() => {
         listContent();
+
+        let eventSource = new EventSourcePolyfill(
+            "/UNO/sse/subscribe", {
+                headers: {
+                    'version': 'dev'
+                }
+            }
+        );
+
+        eventSource.addEventListener("message", (event) => {
+            console.log("message ", event.data);
+        });
+
+        sseSend().then(r => {
+            console.log(r)
+        })
+
     }, [page])
 
     const refresh = () => {
