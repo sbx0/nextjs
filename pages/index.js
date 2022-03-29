@@ -29,7 +29,7 @@ export default function Index({data}) {
         let eventSource = new EventSourcePolyfill(
             "/UNO/sse/subscribe", {
                 headers: {
-                    'version': 'dev'
+                    'version': process.env.NEXT_PUBLIC_VERSION
                 }
             }
         );
