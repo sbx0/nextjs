@@ -14,5 +14,6 @@ export default function useRoomUser(roomCode, flag) {
             }
         })
     }, [roomCode, flag]);
+
     return roomUser;
 }

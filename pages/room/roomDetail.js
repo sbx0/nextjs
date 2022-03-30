@@ -3,7 +3,6 @@ import styles from './room.module.css';
 import 'react-toastify/dist/ReactToastify.css';
 import useRoomUser from "../../hooks/useRoomUser";
 import CallApiButton from "../../components/common/callApiButton";
-import Timer from "../../components/common/timer";
 import {joinRoom, quitRoom} from "../../apis/unoRoomUser";
 import useRoomInfo from "../../hooks/useRoomInfo";
 import {startUnoRoom} from "../../apis/unoRoom";
@@ -13,15 +12,16 @@ import {drawCard} from "../../apis/unoCard";
 import {FullScreen, useFullScreenHandle} from "react-full-screen";
 
 
-export default function RoomDetail({roomCode}) {
+export default function RoomDetail({
+                                       roomCode,
+                                       userChangeFlag,
+                                       setUserChangeFlag
+                                   }) {
     const handle = useFullScreenHandle();
-    const [flag, setFlag] = useState(false);
-    const [roomInfoFlag, setRoomInfoFlag] = useState(false);
-    const [myCardsFlag, setMyCardsFlag] = useState(false);
-    const roomInfo = useRoomInfo(roomCode, roomInfoFlag);
-    const [isIAmIn, setIsIAmIn] = useState(roomInfo);
+    const roomInfo = useRoomInfo(roomCode, userChangeFlag);
+    const roomUser = useRoomUser(roomCode, userChangeFlag);
+    const [isIAmIn, setIsIAmIn] = useState(false);
     const [roomStatus, setRoomStatus] = useState(0);
-    const roomUser = useRoomUser(roomCode, flag);
     const [roomSize, setRoomSize] = useState({
         in: 0,
         all: 0
@@ -53,7 +53,6 @@ export default function RoomDetail({roomCode}) {
                 全屏
             </div>
             <FullScreen handle={handle} className={styles.fullscreen}>
-                <Timer something={() => setFlag(!flag)} timeout={2000}/>
                 {/*<div onClick={handle.exit} className={styles.exit} hidden={!handle.active}>*/}
                 {/*    X*/}
                 {/*</div>*/}
@@ -69,8 +68,9 @@ export default function RoomDetail({roomCode}) {
                                 }}
                                 onSuccess={() => {
                                     setIsIAmIn(!isIAmIn)
-                                    setFlag(!flag);
-                                    setRoomInfoFlag(!roomInfoFlag);
+                                    if (isIAmIn) {
+                                        setUserChangeFlag(!userChangeFlag);
+                                    }
                                 }}
                             />
                             :
@@ -96,8 +96,6 @@ export default function RoomDetail({roomCode}) {
                                 }}
                                 onSuccess={() => {
                                     setRoomStatus(1);
-                                    setFlag(!flag);
-                                    setRoomInfoFlag(!roomInfoFlag);
                                 }}
                             />
                             :
@@ -113,19 +111,16 @@ export default function RoomDetail({roomCode}) {
                                     "roomCode": roomCode
                                 }}
                                 onSuccess={() => {
-                                    setMyCardsFlag(!myCardsFlag);
+
                                 }}
                             />
                             :
                             <></>
                     }
                     <DiscardCards roomCode={roomCode}
-                                  flag={flag}
                                   data={discards}
                                   setData={setDiscards}/>
                     <MyCards roomCode={roomCode}
-                             flag={myCardsFlag}
-                             setFlag={setMyCardsFlag}
                              discards={discards}
                              setDiscards={setDiscards}/>
                 </div>
@@ -133,4 +128,3 @@ export default function RoomDetail({roomCode}) {
         </>
     );
 }
-
