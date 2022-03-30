@@ -1,11 +1,13 @@
 import {getCookie} from "./cookies";
 import {toast} from "react-toastify";
+import axios from "axios";
 
 // In order to expose a variable to the browser you have to prefix the variable with NEXT_PUBLIC_.
 const server = process.env.NEXT_PUBLIC_API_URL;
 const version = process.env.NEXT_PUBLIC_VERSION;
+const timeout = 5000;
 
-export async function get(url, params, cookies) {
+export function get(url, params, cookies) {
 
     if (params) {
         const paramsArray = [];
@@ -31,14 +33,16 @@ export async function get(url, params, cookies) {
             headers.version = version
         }
     }
-    const request = fetch(server + url, {
-        method: 'GET',
+    const request = axios({
+        method: 'get',
+        url: server + url,
         headers: headers,
+        timeout: timeout
     });
-    return await _fetch(request).then((data) => data);
+    return _fetch(request).then((data) => data);
 }
 
-export async function upload(url, params, cookies) {
+export function upload(url, params, cookies) {
     let headers = {}
     if (cookies != null) {
         if (cookies.token != null) {
@@ -51,15 +55,17 @@ export async function upload(url, params, cookies) {
             headers.version = version
         }
     }
-    const request = fetch(server + url, {
-        method: 'POST',
+    const request = axios({
+        method: 'post',
+        url: server + url,
         headers: headers,
-        body: params
+        timeout: timeout,
+        data: params
     });
-    return await _fetch(request).then((data) => data);
+    return _fetch(request).then((data) => data);
 }
 
-export async function post(url, params, cookies) {
+export function post(url, params, cookies) {
     let headers = {'Content-Type': 'application/json;charset=UTF-8'}
     if (cookies != null) {
         if (cookies.token != null) {
@@ -72,15 +78,17 @@ export async function post(url, params, cookies) {
             headers.version = version
         }
     }
-    const request = fetch(server + url, {
-        method: 'POST',
+    const request = axios({
+        method: 'post',
+        url: server + url,
         headers: headers,
-        body: JSON.stringify(params)
+        timeout: timeout,
+        data: JSON.stringify(params)
     });
-    return await _fetch(request).then((data) => data);
+    return _fetch(request).then((data) => data);
 }
 
-export async function postForm(url, params) {
+export function postForm(url, params) {
     if (params) {
         const paramsArray = [];
         Object.keys(params).forEach((key) =>
@@ -90,39 +98,29 @@ export async function postForm(url, params) {
         }
     }
     let headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    const request = fetch(server + url, {
-        method: 'POST',
+    const request = axios({
+        method: 'post',
+        url: server + url,
         headers: headers,
-        body: params
+        timeout: timeout,
+        data: params
     });
-    return await _fetch(request).then((data) => data);
+    return _fetch(request).then((data) => data);
 }
 
-const _fetch = (request, timeout = 1000) => {
-    const requestPromise = new Promise((resolve, reject) => {
-            request.then((response) => {
-                return response;
-            }).then((response) => {
-                return response.json()
-            }).then((data) => {
-                resolve(data);
-            }).catch((error) => {
-                toast(error, {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
+const _fetch = (request) => {
+    return request.then((response) => {
+        if (response.status !== 200) {
+            toast(response.status, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
             });
         }
-    )
-    const timerPromise = new Promise((resolve, reject) => {
-        setTimeout(() => {
-            reject('请求超时');
-        }, timeout)
+        return response.data;
     })
-    return Promise.race([requestPromise, timerPromise]);
 }

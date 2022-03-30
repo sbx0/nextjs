@@ -13,15 +13,15 @@ import {drawCard} from "../../apis/unoCard";
 import {FullScreen, useFullScreenHandle} from "react-full-screen";
 
 
-export default function RoomDetail({data, roomCode}) {
+export default function RoomDetail({roomCode}) {
     const handle = useFullScreenHandle();
     const [flag, setFlag] = useState(false);
     const [roomInfoFlag, setRoomInfoFlag] = useState(false);
     const [myCardsFlag, setMyCardsFlag] = useState(false);
-    const [isIAmIn, setIsIAmIn] = useState(data?.isIAmIn);
-    const [roomStatus, setRoomStatus] = useState(data?.roomStatus);
+    const roomInfo = useRoomInfo(roomCode, roomInfoFlag);
+    const [isIAmIn, setIsIAmIn] = useState(roomInfo);
+    const [roomStatus, setRoomStatus] = useState(0);
     const roomUser = useRoomUser(roomCode, flag);
-    const roomInfo = useRoomInfo(data, roomCode, roomInfoFlag);
     const [roomSize, setRoomSize] = useState({
         in: 0,
         all: 0
@@ -37,6 +37,8 @@ export default function RoomDetail({data, roomCode}) {
         if (roomInfo !== undefined && roomInfo?.playersSize !== undefined) {
             allNumber = roomInfo.playersSize;
         }
+        setRoomStatus(roomInfo.roomStatus)
+        setIsIAmIn(roomInfo.isIAmIn)
         setRoomSize(
             {
                 in: inNumber,
