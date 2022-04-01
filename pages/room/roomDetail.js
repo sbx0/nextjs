@@ -77,6 +77,7 @@ export default function RoomDetail({
                                 }}
                                 onSuccess={() => {
                                     roomInfo.setFlag(!roomInfo.flag);
+                                    setIsIAmIn(!isIAmIn);
                                 }}
                             />
                             :
