@@ -13,6 +13,7 @@ import {FullScreen, useFullScreenHandle} from "react-full-screen";
 
 
 export default function RoomDetail({
+                                       ready,
                                        joinMessage,
                                        quitMessage,
                                        roomCode
@@ -29,6 +30,11 @@ export default function RoomDetail({
     const [discards, setDiscards] = useState([]);
 
     useEffect(() => {
+        roomUser.setFlag(!roomUser.flag);
+        roomInfo.setFlag(!roomInfo.flag);
+    }, [ready])
+
+    useEffect(() => {
         let inNumber = 0;
         let allNumber = 0;
         if (roomUser.data !== undefined && roomUser.data?.length !== undefined) {
@@ -43,13 +49,11 @@ export default function RoomDetail({
                 all: allNumber
             }
         )
-        console.log('1')
     }, [roomUser.data, roomInfo.data])
 
     useEffect(() => {
         setRoomStatus(roomInfo.data.roomStatus);
         setIsIAmIn(roomInfo.data.isIAmIn);
-        console.log('2')
     }, [roomInfo.data])
 
     return (
