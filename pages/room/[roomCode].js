@@ -3,7 +3,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import RoomDetail from "./roomDetail";
 import {useRouter} from "next/router";
 import GlobalHeader from "../../components/common/header";
-import {ToastContainer} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 import Footer from "../../components/common/footer";
 import {EventSourcePolyfill} from "event-source-polyfill";
 import LoadingContainer from "../../components/common/loadingContainer";
@@ -30,6 +30,14 @@ export default function RoomDetailRequireLogin() {
 
         eventSource.current.onmessage = (event) => {
             console.log('onmessage')
+            toast(event.data, {
+                position: "bottom-center",
+                autoClose: 1000,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+            });
         }
 
         eventSource.current.onerror = (event) => {
