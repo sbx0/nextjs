@@ -10,13 +10,13 @@ export default function Footer() {
             </span>
             <p>
                 <a href="https://github.com/sbx0" target="_blank">github</a>
-                &nbsp;&nbsp;-&nbsp;&nbsp;
+                -
                 <a href="https://dash.cloudflare.com/login" target="_blank">cloudflare</a>
-                &nbsp;&nbsp;-&nbsp;&nbsp;
+                -
                 <a href="http://mvn.coderead.cn/" target="_blank">maven</a>
-                &nbsp;&nbsp;-&nbsp;&nbsp;
+                -
                 <a href="https://www.npmjs.com/" target="_blank">npm</a>
-                &nbsp;&nbsp;-&nbsp;&nbsp;
+                -
                 <a href="https://ziyuan.baidu.com/site/index#/" target="_blank">baidu</a>
             </p>
             {/*<script defer src='https://static.cloudflareinsights.com/beacon.min.js'*/}

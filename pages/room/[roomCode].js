@@ -10,6 +10,8 @@ import {EventSourcePolyfill} from "event-source-polyfill";
 
 export default function RoomDetailRequireLogin() {
     const [userChangeFlag, setUserChangeFlag] = useState(false);
+    const [joinMessage, setJoinMessage] = useState(null);
+    const [quitMessage, setQuitMessage] = useState(null);
     const router = useRouter();
     const eventSource = useRef();
 
@@ -21,30 +23,43 @@ export default function RoomDetailRequireLogin() {
                 }
             }
         )
+
         eventSource.current.addEventListener("join", (event) => {
-            console.log("join " + event.data);
-            setUserChangeFlag(!userChangeFlag);
+            console.log('join ' + event.data)
+            setJoinMessage(JSON.parse(event.data));
         });
         eventSource.current.addEventListener("quit", (event) => {
-            console.log("quit " + event.data);
-            setUserChangeFlag(!userChangeFlag);
+            console.log('quit ' + event.data)
+            setQuitMessage(JSON.parse(event.data));
         });
+
+        return () => {
+            eventSource.current.removeEventListener("join");
+            eventSource.current.removeEventListener("quit");
+        }
     }, [])
 
     useEffect(() => {
+
         eventSource.current.addEventListener("join", (event) => {
-            console.log("join " + event.data);
-            setUserChangeFlag(!userChangeFlag);
+            console.log('join ' + event.data)
+            setJoinMessage(JSON.parse(event.data));
         });
         eventSource.current.addEventListener("quit", (event) => {
-            console.log("quit " + event.data);
-            setUserChangeFlag(!userChangeFlag);
+            console.log('quit ' + event.data)
+            setQuitMessage(JSON.parse(event.data));
         });
+
+        return () => {
+            eventSource.current.removeEventListener("join");
+            eventSource.current.removeEventListener("quit");
+        }
     }, [userChangeFlag])
 
     return <>
         <GlobalHeader/>
-        <RoomDetail userChangeFlag={userChangeFlag} setUserChangeFlag={setUserChangeFlag}
+        <RoomDetail joinMessage={joinMessage}
+                    quitMessage={quitMessage}
                     roomCode={router.query.roomCode}/>
         <ToastContainer/>
         <Footer/>

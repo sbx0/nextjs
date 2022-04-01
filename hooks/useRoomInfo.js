@@ -1,8 +1,9 @@
 import {useEffect, useState} from 'react';
 import {infoUnoRoom} from "../apis/unoRoom";
 
-export default function useRoomInfo(roomCode, flag) {
+export default function useRoomInfo(roomCode) {
     const [data, setData] = useState({});
+    const [flag, setFlag] = useState(false);
 
     useEffect(() => {
         if (roomCode === undefined) return;
@@ -15,5 +16,5 @@ export default function useRoomInfo(roomCode, flag) {
         })
     }, [roomCode, flag]);
 
-    return data;
+    return {data, flag, setFlag};
 }

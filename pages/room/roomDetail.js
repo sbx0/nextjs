@@ -13,13 +13,13 @@ import {FullScreen, useFullScreenHandle} from "react-full-screen";
 
 
 export default function RoomDetail({
-                                       roomCode,
-                                       userChangeFlag,
-                                       setUserChangeFlag
+                                       joinMessage,
+                                       quitMessage,
+                                       roomCode
                                    }) {
     const handle = useFullScreenHandle();
-    const roomInfo = useRoomInfo(roomCode, userChangeFlag);
-    const roomUser = useRoomUser(roomCode, userChangeFlag);
+    const roomInfo = useRoomInfo(roomCode);
+    const roomUser = useRoomUser(roomCode, joinMessage, quitMessage);
     const [isIAmIn, setIsIAmIn] = useState(false);
     const [roomStatus, setRoomStatus] = useState(0);
     const [roomSize, setRoomSize] = useState({
@@ -31,21 +31,26 @@ export default function RoomDetail({
     useEffect(() => {
         let inNumber = 0;
         let allNumber = 0;
-        if (roomUser !== undefined && roomUser?.length !== undefined) {
-            inNumber = roomUser.length;
+        if (roomUser.data !== undefined && roomUser.data?.length !== undefined) {
+            inNumber = roomUser.data?.length;
         }
-        if (roomInfo !== undefined && roomInfo?.playersSize !== undefined) {
-            allNumber = roomInfo.playersSize;
+        if (roomInfo.data !== undefined && roomInfo.data?.playersSize !== undefined) {
+            allNumber = roomInfo.data.playersSize;
         }
-        setRoomStatus(roomInfo.roomStatus)
-        setIsIAmIn(roomInfo.isIAmIn)
         setRoomSize(
             {
                 in: inNumber,
                 all: allNumber
             }
         )
-    }, [roomUser, roomInfo])
+        console.log('1')
+    }, [roomUser.data, roomInfo.data])
+
+    useEffect(() => {
+        setRoomStatus(roomInfo.data.roomStatus);
+        setIsIAmIn(roomInfo.data.isIAmIn);
+        console.log('2')
+    }, [roomInfo.data])
 
     return (
         <>
@@ -67,10 +72,7 @@ export default function RoomDetail({
                                     "roomCode": roomCode
                                 }}
                                 onSuccess={() => {
-                                    setIsIAmIn(!isIAmIn)
-                                    if (isIAmIn) {
-                                        setUserChangeFlag(!userChangeFlag);
-                                    }
+                                    roomInfo.setFlag(!roomInfo.flag);
                                 }}
                             />
                             :
@@ -78,9 +80,9 @@ export default function RoomDetail({
                     }
                     <div className={styles.playerContainer}>
                         {
-                            roomUser?.map((one, index) => {
+                            roomUser.data?.map((one, index) => {
                                 return <div key={one.id} className={styles['player' + index]}>
-                                    <div className={styles.playerName}>{one.username}</div>
+                                    <div className={styles.playerName}>{one.nickname}</div>
                                 </div>
                             })
                         }
