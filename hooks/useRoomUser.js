@@ -21,6 +21,11 @@ export default function useRoomUser(roomCode, joinMessage, quitMessage) {
             if (data == null) {
                 return;
             }
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].id === joinMessage.id) {
+                    return;
+                }
+            }
             let u = data.splice(0);
             u.push(joinMessage);
             setData(u);
