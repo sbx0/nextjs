@@ -18,6 +18,9 @@ export default function useRoomUser(roomCode, joinMessage, quitMessage) {
 
     useEffect(() => {
         if (joinMessage != null) {
+            if (data == null) {
+                return;
+            }
             let u = data.splice(0);
             u.push(joinMessage);
             setData(u);
@@ -26,6 +29,9 @@ export default function useRoomUser(roomCode, joinMessage, quitMessage) {
 
     useEffect(() => {
         if (quitMessage != null) {
+            if (data == null) {
+                return;
+            }
             let u = [];
             for (let i = 0; i < data.length; i++) {
                 if (data[i].id !== quitMessage.id) {

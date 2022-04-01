@@ -17,6 +17,9 @@ export default function RoomDetailRequireLogin() {
     const eventSource = useRef();
 
     useEffect(() => {
+        if (router.query.roomCode === null || router.query.roomCode === undefined || router.query.roomCode === '') {
+            return;
+        }
         eventSource.current = new EventSourcePolyfill(
             "/UNO/uno/room/subscribe/" + router.query.roomCode, {
                 headers: {
@@ -53,7 +56,7 @@ export default function RoomDetailRequireLogin() {
             eventSource.current.removeEventListener("quit");
             eventSource.current.close();
         }
-    }, [])
+    }, [router.query.roomCode])
 
     return <>
         <GlobalHeader/>
