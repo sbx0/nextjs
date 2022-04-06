@@ -15,7 +15,7 @@ export default function Login() {
 
     const loginRequest = () => {
         removeCookie('token', null)
-        if (userInfo != null) return;
+        if (userInfo.data != null) return;
         loginApi({
             username: username,
             password: password
@@ -39,7 +39,7 @@ export default function Login() {
             <GlobalHeader/>
             <div className={styles.container}>
                 {
-                    userInfo == null ?
+                    userInfo.data == null ?
                         <>
                             <div className={styles.row}>
                                 <input id="username"
@@ -64,7 +64,7 @@ export default function Login() {
                         </>
                         :
                         <>
-                            <p>当前登录账号：{userInfo.username}</p>
+                            <p>当前登录账号：{userInfo.data.username}</p>
                             <button className={styles.loginButton}
                                     onClick={() => logout()}>
                                 退出登录

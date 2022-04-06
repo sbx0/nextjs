@@ -2,15 +2,18 @@ import {useEffect, useState} from 'react';
 import {getSysUserInfo} from "../apis/user";
 
 export default function useUserInfo() {
-    const [userInfo, setUserInfo] = useState(null);
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
+        setLoading(true);
         getSysUserInfo().then((response) => {
             if (response?.code === 500) {
-                setUserInfo(null);
+                setData(null);
             } else {
-                setUserInfo(response);
+                setData(response);
             }
+            setLoading(false);
         })
     }, []);
-    return userInfo;
+    return {data, loading};
 }
