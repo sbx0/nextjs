@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
 import {EventSourcePolyfill} from "event-source-polyfill";
-import {toast, ToastContainer} from "react-toastify";
+import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingContainer from "../../components/common/loadingContainer";
 import RoomDetail from "./roomDetail";
@@ -28,14 +28,6 @@ export default function RoomSSE() {
 
         eventSource.current.onmessage = (event) => {
             console.log('onmessage')
-            toast(event.data, {
-                position: "bottom-center",
-                autoClose: 1000,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-            });
         }
 
         eventSource.current.onerror = (event) => {
