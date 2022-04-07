@@ -11,6 +11,7 @@ export default function RoomSSE() {
     const [ready, setReady] = useState(false);
     const [joinMessage, setJoinMessage] = useState(null);
     const [quitMessage, setQuitMessage] = useState(null);
+    const [drawCardMessage, setDrawCardMessage] = useState(null);
     const router = useRouter();
     const eventSource = useRef();
 
@@ -48,10 +49,15 @@ export default function RoomSSE() {
             console.log('quit ' + event.data)
             setQuitMessage(JSON.parse(event.data));
         });
+        eventSource.current.addEventListener("draw_card", (event) => {
+            console.log('draw_card ' + event.data)
+            setDrawCardMessage(JSON.parse(event.data));
+        });
 
         return () => {
             eventSource.current.removeEventListener("join");
             eventSource.current.removeEventListener("quit");
+            eventSource.current.removeEventListener("draw_card");
             eventSource.current.close();
         }
     }, [router.query.roomCode])
@@ -62,6 +68,7 @@ export default function RoomSSE() {
                 ready={ready}
                 joinMessage={joinMessage}
                 quitMessage={quitMessage}
+                drawCardMessage={drawCardMessage}
                 roomCode={router.query.roomCode}/>
             <ToastContainer/>
         </LoadingContainer>

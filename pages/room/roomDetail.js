@@ -16,6 +16,7 @@ export default function RoomDetail({
                                        ready,
                                        joinMessage,
                                        quitMessage,
+                                       drawCardMessage,
                                        roomCode
                                    }) {
     const handle = useFullScreenHandle();
@@ -127,7 +128,8 @@ export default function RoomDetail({
                     <DiscardCards roomCode={roomCode}
                                   data={discards}
                                   setData={setDiscards}/>
-                    <MyCards roomCode={roomCode}
+                    <MyCards drawCardMessage={drawCardMessage}
+                             roomCode={roomCode}
                              discards={discards}
                              setDiscards={setDiscards}/>
                 </div>

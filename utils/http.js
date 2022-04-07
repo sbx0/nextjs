@@ -5,6 +5,7 @@ import axios from "axios";
 // In order to expose a variable to the browser you have to prefix the variable with NEXT_PUBLIC_.
 const server = process.env.NEXT_PUBLIC_API_URL;
 const version = process.env.NEXT_PUBLIC_VERSION;
+const region = process.env.NEXT_PUBLIC_REGION;
 const timeout = 5000;
 
 export function get(url, params, cookies) {
@@ -25,11 +26,13 @@ export function get(url, params, cookies) {
     if (cookies != null) {
         if (cookies.token != null) {
             headers.token = cookies.token
+            headers.region = region
             headers.version = version
         }
     } else {
         if (getCookie('token') != null) {
             headers.token = getCookie('token')
+            headers.region = region
             headers.version = version
         }
     }
@@ -47,11 +50,13 @@ export function upload(url, params, cookies) {
     if (cookies != null) {
         if (cookies.token != null) {
             headers.token = cookies.token
+            headers.region = region
             headers.version = version
         }
     } else {
         if (getCookie('token') != null) {
             headers.token = getCookie('token')
+            headers.region = region
             headers.version = version
         }
     }
@@ -70,11 +75,13 @@ export function post(url, params, cookies) {
     if (cookies != null) {
         if (cookies.token != null) {
             headers.token = cookies.token
+            headers.region = region
             headers.version = version
         }
     } else {
         if (getCookie('token') != null) {
             headers.token = getCookie('token')
+            headers.region = region
             headers.version = version
         }
     }

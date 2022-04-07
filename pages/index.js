@@ -69,7 +69,7 @@ export default function Index({data}) {
                     api={createUnoRoom}
                     params={{
                         "roomName": "Friendship first",
-                        "playersSize": 4,
+                        "playersSize": 2,
                         "privacyFlag": 0,
                         "remark": "Auto Create"
                     }}

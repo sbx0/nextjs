@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './myCards.module.css';
 import useMyCards from "../../hooks/useMyCards";
 import Card from "./card";
 
-export default function MyCards({roomCode, flag, setFlag, discards, setDiscards}) {
+export default function MyCards({drawCardMessage, roomCode, flag, setFlag, discards, setDiscards}) {
     const [data, setData] = useState([]);
     const cards = useMyCards({
         data: data,
@@ -11,6 +11,10 @@ export default function MyCards({roomCode, flag, setFlag, discards, setDiscards}
         roomCode: roomCode,
         flag: flag
     });
+
+    useEffect(() => {
+        console.log(drawCardMessage)
+    }, [drawCardMessage])
 
     return <div className={styles.container}>
         <div className={styles.innerContainer}>
