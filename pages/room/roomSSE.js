@@ -43,15 +43,15 @@ export default function RoomSSE() {
 
         eventSource.current.addEventListener("join", (event) => {
             console.log('join ' + event.data)
-            setJoinMessage(JSON.parse(event.data));
+            setJoinMessage(JSON.parse(event.data.toString()));
         });
         eventSource.current.addEventListener("quit", (event) => {
             console.log('quit ' + event.data)
-            setQuitMessage(JSON.parse(event.data));
+            setQuitMessage(JSON.parse(event.data.toString()));
         });
         eventSource.current.addEventListener("draw_card", (event) => {
-            console.log('draw_card ' + event.data)
-            setDrawCardMessage(JSON.parse(event.data));
+            console.log('draw_card' + JSON.parse(event.data.toString()));
+            setDrawCardMessage(JSON.parse(event.data.toString()));
         });
 
         return () => {
