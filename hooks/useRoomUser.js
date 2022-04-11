@@ -1,9 +1,25 @@
 import {useEffect, useState} from 'react';
 import {listRoomUser} from "../apis/unoRoomUser";
 
-export default function useRoomUser(roomCode, joinMessage, quitMessage) {
+export default function useRoomUser(roomCode, joinMessage, quitMessage, numberOfCardsMessage) {
     const [data, setData] = useState(null);
     const [flag, setFlag] = useState(false);
+
+    useEffect(() => {
+        if (numberOfCardsMessage === null) return;
+        let message = numberOfCardsMessage.split('=');
+        let userId = message[0];
+        let numbers = message[1];
+
+        let users = data.splice(0);
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].id.toString() === userId) {
+                users[i].num = numbers;
+                break;
+            }
+        }
+        setData(users);
+    }, [numberOfCardsMessage])
 
     useEffect(() => {
         if (roomCode === undefined) return;

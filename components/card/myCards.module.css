@@ -1,10 +1,11 @@
 .container {
-    width: 100%;
+    width: 100vw;
     padding: 5px;
+    overflow-x: auto;
 }
 
 .innerContainer {
-    display: flex;
-    justify-content: center;
-    margin-left: -60px;
+    width: max-content;
+    padding: 10px 40px 10px 10px;
+    margin: 0 auto;
 }

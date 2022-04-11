@@ -8,7 +8,7 @@
 
 @value card-inner-margin: 5px 5px 5px 5px;
 
-@value margin-right: -60px;
+@value margin-right: -30px;
 
 @value font-size: 15px;
 
@@ -25,9 +25,10 @@
     box-shadow: 0 0 5px 5px #f1f1f138;
     cursor: pointer;
     user-select: none;
+    animation: breathing infinite 1s linear;
 }
 
-.containerCan:hover {
+.container:active {
     display: inline-block;
     position: relative;
     width: card-width;
@@ -39,7 +40,6 @@
     box-shadow: 0 0 5px 5px #f1f1f138;
     cursor: pointer;
     animation: breathing infinite 1s linear;
-    z-index: 1;
     user-select: none;
 }
 

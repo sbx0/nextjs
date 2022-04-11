@@ -1,6 +1,6 @@
-@value player-height: 100px;
+@value player-height: 60px;
 
-@value player-width: 50px;
+@value player-width: 100px;
 
 @value player-margin: 0px 10px 50px 10px;
 
@@ -143,5 +143,11 @@
 .playerName {
     color: white;
     font-size: 20px;
+    user-select: none;
+}
+
+.cardNum {
+    color: white;
+    font-size: 15px;
     user-select: none;
 }

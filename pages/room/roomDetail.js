@@ -24,7 +24,7 @@ export default function RoomDetail({
                                    }) {
     const handle = useFullScreenHandle();
     const roomInfo = useRoomInfo(roomCode);
-    const roomUser = useRoomUser(roomCode, joinMessage, quitMessage);
+    const roomUser = useRoomUser(roomCode, joinMessage, quitMessage, numberOfCardsMessage);
     const [isIAmIn, setIsIAmIn] = useState(false);
     const [roomStatus, setRoomStatus] = useState(0);
     const [roomSize, setRoomSize] = useState({
@@ -98,6 +98,7 @@ export default function RoomDetail({
                             roomUser.data?.map((one, index) => {
                                 return <div key={one.id} className={styles['player' + index]}>
                                     <div className={styles.playerName}>{one.nickname}</div>
+                                    <div className={styles.cardNum}>{one.num}</div>
                                 </div>
                             })
                         }

@@ -93,7 +93,7 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
         }
     }
 
-    return <div onDoubleClick={clickToPlayCard} className={can ? styles.containerCan : styles.container}>
+    return <div onDoubleClick={clickToPlayCard} className={styles.container}>
         {
             debug ?
                 <div>
