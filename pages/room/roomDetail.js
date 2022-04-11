@@ -17,7 +17,10 @@ export default function RoomDetail({
                                        joinMessage,
                                        quitMessage,
                                        drawCardMessage,
-                                       roomCode
+                                       setDrawCardMessage,
+                                       roomCode,
+                                       discardCardsMessage,
+                                       numberOfCardsMessage
                                    }) {
     const handle = useFullScreenHandle();
     const roomInfo = useRoomInfo(roomCode);
@@ -29,6 +32,12 @@ export default function RoomDetail({
         all: 0
     });
     const [discards, setDiscards] = useState([]);
+
+    useEffect(() => {
+        if (roomStatus === 0) {
+            roomInfo.setFlag(!roomInfo.flag);
+        }
+    }, [drawCardMessage])
 
     useEffect(() => {
         roomUser.setFlag(!roomUser.flag);
@@ -118,14 +127,15 @@ export default function RoomDetail({
                                 params={{
                                     "roomCode": roomCode
                                 }}
-                                onSuccess={() => {
-
+                                onSuccess={(params) => {
+                                    setDrawCardMessage(params)
                                 }}
                             />
                             :
                             <></>
                     }
-                    <DiscardCards roomCode={roomCode}
+                    <DiscardCards discardCardsMessage={discardCardsMessage}
+                                  roomCode={roomCode}
                                   data={discards}
                                   setData={setDiscards}/>
                     <MyCards drawCardMessage={drawCardMessage}

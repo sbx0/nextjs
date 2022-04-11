@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './discardCard.module.css';
 
 export default function DiscardCard({card}) {
+    const [debug, setDebug] = useState(false);
 
     const better = (text) => {
         switch (text) {
@@ -21,16 +22,31 @@ export default function DiscardCard({card}) {
     }
 
     return <div className={styles.container}>
-        <div className={styles['bg-' + card.color]}>
-            <div className={styles.numberUp}>
-                {better(card.point)}
-            </div>
-            <div className={styles.number}>
-                {better(card.point)}
-            </div>
-            <div className={styles.numberDown}>
-                {better(card.point)}
-            </div>
-        </div>
+        {
+            debug ?
+                <div>
+                    <div>
+                        {better(card.point)}
+                    </div>
+                    <div>
+                        {card.color}
+                    </div>
+                    <div>
+                        {better(card.point)}
+                    </div>
+                </div>
+                :
+                <div className={styles['bg-' + card.color]}>
+                    <div className={styles.numberUp}>
+                        {better(card.point)}
+                    </div>
+                    <div className={styles.number}>
+                        {better(card.point)}
+                    </div>
+                    <div className={styles.numberDown}>
+                        {better(card.point)}
+                    </div>
+                </div>
+        }
     </div>
 }

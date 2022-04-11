@@ -12,6 +12,8 @@ export default function RoomSSE() {
     const [joinMessage, setJoinMessage] = useState(null);
     const [quitMessage, setQuitMessage] = useState(null);
     const [drawCardMessage, setDrawCardMessage] = useState(null);
+    const [discardCardsMessage, setDiscardCardsMessage] = useState(null);
+    const [numberOfCardsMessage, setNumberOfCardsMessage] = useState(null);
     const router = useRouter();
     const eventSource = useRef();
 
@@ -50,14 +52,24 @@ export default function RoomSSE() {
             setQuitMessage(JSON.parse(event.data.toString()));
         });
         eventSource.current.addEventListener("draw_card", (event) => {
-            console.log('draw_card' + JSON.parse(event.data.toString()));
+            console.log('draw_card ' + JSON.parse(event.data.toString()));
             setDrawCardMessage(JSON.parse(event.data.toString()));
+        });
+        eventSource.current.addEventListener("discard_cards", (event) => {
+            console.log('discard_cards ' + JSON.parse(event.data.toString()));
+            setDiscardCardsMessage(JSON.parse(event.data.toString()));
+        });
+        eventSource.current.addEventListener("number_of_cards", (event) => {
+            console.log('number_of_cards ' + event.data.toString());
+            setNumberOfCardsMessage(event.data.toString());
         });
 
         return () => {
             eventSource.current.removeEventListener("join");
             eventSource.current.removeEventListener("quit");
             eventSource.current.removeEventListener("draw_card");
+            eventSource.current.removeEventListener("discard_cards");
+            eventSource.current.removeEventListener("number_of_cards");
             eventSource.current.close();
         }
     }, [router.query.roomCode])
@@ -69,6 +81,9 @@ export default function RoomSSE() {
                 joinMessage={joinMessage}
                 quitMessage={quitMessage}
                 drawCardMessage={drawCardMessage}
+                setDrawCardMessage={setDrawCardMessage}
+                discardCardsMessage={discardCardsMessage}
+                numberOfCardsMessage={numberOfCardsMessage}
                 roomCode={router.query.roomCode}/>
             <ToastContainer/>
         </LoadingContainer>

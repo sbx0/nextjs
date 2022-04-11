@@ -2,8 +2,20 @@ import {useEffect} from 'react';
 import {discardCards} from "../apis/unoCard";
 
 export default function useDiscardCards({
-                                            data, setData, roomCode, flag
+                                            data, setData, roomCode, discardCardsMessage
                                         }) {
+
+    useEffect(() => {
+        if (discardCardsMessage === null) {
+            return;
+        }
+        let cards = data.splice(0);
+        if (cards.size > 9) {
+            cards.pop();
+        }
+        cards.push(discardCardsMessage);
+        setData(cards);
+    }, [discardCardsMessage])
 
     useEffect(() => {
         if (roomCode === undefined) return;
@@ -14,6 +26,7 @@ export default function useDiscardCards({
                 setData([]);
             }
         })
-    }, [roomCode, flag]);
+    }, [roomCode]);
+
     return data;
 }

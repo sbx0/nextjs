@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import styles from './card.module.css';
 import {playCards} from "../../apis/unoCard";
 
-export default function Card({roomCode, card, flag, setFlag, setData, data, discards, setDiscards}) {
+export default function Card({roomCode, card, setData, data, discards, setDiscards}) {
     const [can, setCan] = useState(false);
+    const [debug, setDebug] = useState(false);
 
     useEffect(() => {
         let canPlay = false;
@@ -26,7 +27,7 @@ export default function Card({roomCode, card, flag, setFlag, setData, data, disc
         }
 
         setCan(canPlay);
-    }, [flag])
+    }, [discards])
 
     const clickToPlayCard = () => {
         let canPlay = false;
@@ -65,10 +66,12 @@ export default function Card({roomCode, card, flag, setFlag, setData, data, disc
             setDiscards(ndd);
             playCards({roomCode: roomCode, uuid: card.uuid, color: card.color}).then((response) => {
                     if (response.code === '0') {
-                        setFlag(!flag)
+
                     }
                 }
             )
+        } else {
+            console.log("can't play");
         }
 
     }
@@ -91,16 +94,31 @@ export default function Card({roomCode, card, flag, setFlag, setData, data, disc
     }
 
     return <div onDoubleClick={clickToPlayCard} className={can ? styles.containerCan : styles.container}>
-        <div className={styles['bg-' + card.color]}>
-            <div className={styles.numberUp}>
-                {better(card.point)}
-            </div>
-            <div className={styles.number}>
-                {better(card.point)}
-            </div>
-            <div className={styles.numberDown}>
-                {better(card.point)}
-            </div>
-        </div>
+        {
+            debug ?
+                <div>
+                    <div>
+                        {better(card.point)}
+                    </div>
+                    <div>
+                        {card.color}
+                    </div>
+                    <div>
+                        {better(card.point)}
+                    </div>
+                </div>
+                :
+                <div className={styles['bg-' + card.color]}>
+                    <div className={styles.numberUp}>
+                        {better(card.point)}
+                    </div>
+                    <div className={styles.number}>
+                        {better(card.point)}
+                    </div>
+                    <div className={styles.numberDown}>
+                        {better(card.point)}
+                    </div>
+                </div>
+        }
     </div>
 }

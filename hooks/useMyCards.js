@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {myCards} from "../apis/unoCard";
 
 export default function useMyCards({
-                                       roomCode, flag, drawCardMessage
+                                       roomCode, drawCardMessage
                                    }) {
     const [data, setData] = useState([]);
 
@@ -85,7 +85,7 @@ export default function useMyCards({
                 setData([]);
             }
         })
-    }, [roomCode, flag]);
+    }, [roomCode]);
 
     return {data, setData};
 }

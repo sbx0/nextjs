@@ -17,7 +17,7 @@ export default function CallApiButton({loadingText, buttonText, onSuccess, api, 
             }
             if (response.code === "0") {
                 if (onSuccess != null) {
-                    onSuccess()
+                    onSuccess(response.data)
                 }
             } else {
                 toast(response.message, {
