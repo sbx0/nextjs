@@ -35,3 +35,8 @@ yarn-error.log*
 /package-lock.json
 /.idea/
 yarn.lock
+
+#pwa
+**/public/workbox-*.js
+**/public/sw.js
+**/public/worker-*.js
