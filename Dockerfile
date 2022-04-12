@@ -1,7 +1,5 @@
 FROM node:lts
 
-RUN apk add --no-cache libc6-compat
-
 COPY ./ ./
 
 RUN yarn install && npx next build
