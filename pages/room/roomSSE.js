@@ -20,12 +20,15 @@ export default function RoomSSE() {
     const eventSource = useRef();
 
     useEffect(() => {
-        serviceInstanceChoose().then((response) => {
+        if (router.query.roomCode === null || router.query.roomCode === undefined || router.query.roomCode === '') {
+            return;
+        }
+        serviceInstanceChoose({roomCode: router.query.roomCode}).then((response) => {
             if (response.code === '0') {
                 setServiceInstanceId(response.data);
             }
         })
-    }, [])
+    }, [router.query.roomCode])
 
     useEffect(() => {
         if (serviceInstanceId === null) {
@@ -87,7 +90,7 @@ export default function RoomSSE() {
             eventSource.current.removeEventListener("number_of_cards");
             eventSource.current.close();
         }
-    }, [router.query.roomCode, serviceInstanceId])
+    }, [serviceInstanceId])
 
     return <>
         <LoadingContainer loading={!ready} text={'连接中'}>
@@ -99,6 +102,7 @@ export default function RoomSSE() {
                 setDrawCardMessage={setDrawCardMessage}
                 discardCardsMessage={discardCardsMessage}
                 numberOfCardsMessage={numberOfCardsMessage}
+                serviceInstanceId={serviceInstanceId}
                 roomCode={router.query.roomCode}/>
             <ToastContainer/>
         </LoadingContainer>

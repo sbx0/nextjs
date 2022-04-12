@@ -14,11 +14,12 @@ import {FullScreen, useFullScreenHandle} from "react-full-screen";
 
 export default function RoomDetail({
                                        ready,
+                                       roomCode,
+                                       serviceInstanceId,
                                        joinMessage,
                                        quitMessage,
                                        drawCardMessage,
                                        setDrawCardMessage,
-                                       roomCode,
                                        discardCardsMessage,
                                        numberOfCardsMessage
                                    }) {
@@ -83,7 +84,8 @@ export default function RoomDetail({
                                 loadingText={(isIAmIn ? '正在退出 ' : '正在加入')}
                                 api={isIAmIn ? quitRoom : joinRoom}
                                 params={{
-                                    "roomCode": roomCode
+                                    "roomCode": roomCode,
+                                    "instance-id": serviceInstanceId,
                                 }}
                                 onSuccess={() => {
                                     roomInfo.setFlag(!roomInfo.flag);
@@ -110,7 +112,8 @@ export default function RoomDetail({
                                 loadingText={'正在加载'}
                                 api={startUnoRoom}
                                 params={{
-                                    "roomCode": roomCode
+                                    "roomCode": roomCode,
+                                    "instance-id": serviceInstanceId,
                                 }}
                                 onSuccess={() => {
                                     setRoomStatus(1);
@@ -126,7 +129,8 @@ export default function RoomDetail({
                                 loadingText={'正在抽牌'}
                                 api={drawCard}
                                 params={{
-                                    "roomCode": roomCode
+                                    "roomCode": roomCode,
+                                    "instance-id": serviceInstanceId,
                                 }}
                                 onSuccess={(params) => {
                                     setDrawCardMessage(params)

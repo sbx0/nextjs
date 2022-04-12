@@ -11,7 +11,9 @@ export default function CallApiButton({loadingText, buttonText, onSuccess, api, 
 
     const createRoom = () => {
         setLoading(true);
-        api(params).then((response) => {
+        api(params, null, {
+            'instance-id': params['instance-id']
+        }).then((response) => {
             if (response.code === 500) {
                 router.push("/login").then(r => r);
             }

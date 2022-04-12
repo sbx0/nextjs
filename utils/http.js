@@ -8,7 +8,7 @@ const version = process.env.NEXT_PUBLIC_VERSION;
 const region = process.env.NEXT_PUBLIC_REGION;
 const timeout = 5000;
 
-export function get(url, params, cookies) {
+export function get(url, params, cookies, additionalHeaders) {
 
     if (params) {
         const paramsArray = [];
@@ -36,6 +36,11 @@ export function get(url, params, cookies) {
             headers.version = version
         }
     }
+
+    if (additionalHeaders != null) {
+        headers['instance-id'] = additionalHeaders['instance-id'];
+    }
+
     const request = axios({
         method: 'get',
         url: server + url,
