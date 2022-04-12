@@ -5,10 +5,12 @@ import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingContainer from "../../components/common/loadingContainer";
 import RoomDetail from "./roomDetail";
+import {serviceInstanceChoose} from "../../apis/serviceInstance";
 
 
 export default function RoomSSE() {
     const [ready, setReady] = useState(false);
+    const [serviceInstanceId, setServiceInstanceId] = useState(null);
     const [joinMessage, setJoinMessage] = useState(null);
     const [quitMessage, setQuitMessage] = useState(null);
     const [drawCardMessage, setDrawCardMessage] = useState(null);
@@ -18,13 +20,26 @@ export default function RoomSSE() {
     const eventSource = useRef();
 
     useEffect(() => {
+        serviceInstanceChoose().then((response) => {
+            if (response.code === '0') {
+                setServiceInstanceId(response.data);
+            }
+        })
+    }, [])
+
+    useEffect(() => {
+        if (serviceInstanceId === null) {
+            return;
+        }
+
         if (router.query.roomCode === null || router.query.roomCode === undefined || router.query.roomCode === '') {
             return;
         }
         eventSource.current = new EventSourcePolyfill(
             "/UNO/uno/room/subscribe/" + router.query.roomCode, {
                 headers: {
-                    'version': process.env.NEXT_PUBLIC_VERSION
+                    'version': process.env.NEXT_PUBLIC_VERSION,
+                    'instance-id': serviceInstanceId
                 }
             }
         )
@@ -72,7 +87,7 @@ export default function RoomSSE() {
             eventSource.current.removeEventListener("number_of_cards");
             eventSource.current.close();
         }
-    }, [router.query.roomCode])
+    }, [router.query.roomCode, serviceInstanceId])
 
     return <>
         <LoadingContainer loading={!ready} text={'连接中'}>
