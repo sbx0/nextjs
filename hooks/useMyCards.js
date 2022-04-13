@@ -18,7 +18,7 @@ export default function useMyCards({
         if (drawCardMessage === null) {
             return;
         }
-        let sorted = data.splice(0);
+        let sorted = data.concat();
         for (let i = 0; i < drawCardMessage.length; i++) {
             sorted.push(drawCardMessage[i]);
         }
@@ -54,7 +54,7 @@ export default function useMyCards({
         if (roomCode === undefined) return;
         myCards({roomCode: roomCode}).then((response) => {
             if (response.code === "0") {
-                let sorted = response.data.splice(0);
+                let sorted = response.data.concat();
                 let temp;
 
                 for (let i = sorted.length; i > 0; i--) {

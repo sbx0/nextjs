@@ -9,7 +9,7 @@ export default function useDiscardCards({
         if (discardCardsMessage === null) {
             return;
         }
-        let cards = data.splice(0);
+        let cards = data.concat();
         if (cards.length > 9) {
             cards.pop();
         }

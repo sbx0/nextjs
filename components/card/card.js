@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styles from './card.module.css';
 import {playCards} from "../../apis/unoCard";
+import {toast} from "react-toastify";
 
 export default function Card({roomCode, card, setData, data, discards, setDiscards, serviceInstanceId}) {
     const [can, setCan] = useState(false);
@@ -50,6 +51,9 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
         }
 
         if (canPlay) {
+            let original = data.concat();
+            let originalDiscards = discards.concat();
+
             let nd = [];
             let j = 0;
             for (let i = 0; i < data.length; i++) {
@@ -58,22 +62,40 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
                 }
             }
             setData(nd);
-            let ndd = discards.splice(0);
+
+            let ndd = discards.concat();
             for (let i = 0; i < ndd.length - 1; i++) {
                 ndd[i] = ndd[i + 1];
             }
             ndd[ndd.length - 1] = card;
             setDiscards(ndd);
+
             playCards({roomCode: roomCode, uuid: card.uuid, color: card.color}, null, {
                 'instance-id': serviceInstanceId
             }).then((response) => {
-                    if (response.code === '0') {
-
+                    if (response.code !== '0') {
+                        setData(original);
+                        setDiscards(originalDiscards);
+                        toast("can't play", {
+                            position: "bottom-center",
+                            autoClose: 1000,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            draggable: true,
+                            progress: undefined,
+                        });
                     }
                 }
             )
         } else {
-            console.log("can't play");
+            toast("can't play", {
+                position: "bottom-center",
+                autoClose: 1000,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+            });
         }
 
     }

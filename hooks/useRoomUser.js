@@ -11,7 +11,7 @@ export default function useRoomUser(roomCode, joinMessage, quitMessage, numberOf
         let userId = message[0];
         let numbers = message[1];
 
-        let users = data.splice(0);
+        let users = data.concat();
         for (let i = 0; i < users.length; i++) {
             if (users[i].id.toString() === userId) {
                 users[i].num = numbers;
@@ -42,7 +42,7 @@ export default function useRoomUser(roomCode, joinMessage, quitMessage, numberOf
                     return;
                 }
             }
-            let u = data.splice(0);
+            let u = data.concat();
             u.push(joinMessage);
             setData(u);
         }
