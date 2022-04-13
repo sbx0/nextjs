@@ -5,7 +5,7 @@ import {toast} from "react-toastify";
 
 export default function Card({roomCode, card, setData, data, discards, setDiscards, serviceInstanceId}) {
     const [can, setCan] = useState(false);
-    const [debug, setDebug] = useState(false);
+    const [debug, setDebug] = useState(true);
 
     useEffect(() => {
         let canPlay = false;

@@ -16,6 +16,7 @@ export default function RoomSSE() {
     const [drawCardMessage, setDrawCardMessage] = useState(null);
     const [discardCardsMessage, setDiscardCardsMessage] = useState(null);
     const [numberOfCardsMessage, setNumberOfCardsMessage] = useState(null);
+    const [whoTurnMessage, setWhoTurnMessage] = useState('0');
     const router = useRouter();
     const eventSource = useRef();
 
@@ -81,6 +82,10 @@ export default function RoomSSE() {
             console.log('number_of_cards ' + event.data.toString());
             setNumberOfCardsMessage(event.data.toString());
         });
+        eventSource.current.addEventListener("who_turn", (event) => {
+            console.log('who_turn ' + event.data.toString());
+            setWhoTurnMessage(event.data.toString());
+        });
 
         return () => {
             eventSource.current.removeEventListener("join");
@@ -88,6 +93,7 @@ export default function RoomSSE() {
             eventSource.current.removeEventListener("draw_card");
             eventSource.current.removeEventListener("discard_cards");
             eventSource.current.removeEventListener("number_of_cards");
+            eventSource.current.removeEventListener("who_turn");
             eventSource.current.close();
         }
     }, [serviceInstanceId])
@@ -102,6 +108,7 @@ export default function RoomSSE() {
                 setDrawCardMessage={setDrawCardMessage}
                 discardCardsMessage={discardCardsMessage}
                 numberOfCardsMessage={numberOfCardsMessage}
+                whoTurnMessage={whoTurnMessage}
                 serviceInstanceId={serviceInstanceId}
                 roomCode={router.query.roomCode}/>
             <ToastContainer/>

@@ -60,7 +60,11 @@
     text-align: center;
     background-size: 600% 600% !important;
     background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-    animation: gradientBG 5s ease infinite, currentUser infinite 1s linear;
+    animation: gradientBG 10s ease infinite, breathing infinite 10s linear;
+}
+
+.currentUser {
+    animation: gradientBG 5s ease infinite, currentUser infinite 1s linear !important;
 }
 
 .player1 {

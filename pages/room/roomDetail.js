@@ -21,7 +21,8 @@ export default function RoomDetail({
                                        drawCardMessage,
                                        setDrawCardMessage,
                                        discardCardsMessage,
-                                       numberOfCardsMessage
+                                       numberOfCardsMessage,
+                                       whoTurnMessage
                                    }) {
     const handle = useFullScreenHandle();
     const roomInfo = useRoomInfo(roomCode);
@@ -98,7 +99,8 @@ export default function RoomDetail({
                     <div className={styles.playerContainer}>
                         {
                             roomUser.data?.map((one, index) => {
-                                return <div key={one.id} className={styles['player' + index]}>
+                                return <div key={one.id}
+                                            className={`${((index + "") === whoTurnMessage) ? styles.currentUser : ''} ${styles['player' + index]}`}>
                                     <div className={styles.playerName}>{one.nickname}</div>
                                     <div className={styles.cardNum}>{one.num}</div>
                                 </div>
