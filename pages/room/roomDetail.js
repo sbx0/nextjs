@@ -145,6 +145,7 @@ export default function RoomDetail({
                                   setData={setDiscards}/>
                     <MyCards drawCardMessage={drawCardMessage}
                              roomCode={roomCode}
+                             serviceInstanceId={serviceInstanceId}
                              discards={discards}
                              setDiscards={setDiscards}/>
                 </div>

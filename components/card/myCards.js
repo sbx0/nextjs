@@ -3,7 +3,7 @@ import styles from './myCards.module.css';
 import useMyCards from "../../hooks/useMyCards";
 import Card from "./card";
 
-export default function MyCards({drawCardMessage, roomCode, discards, setDiscards}) {
+export default function MyCards({drawCardMessage, roomCode, discards, setDiscards, serviceInstanceId}) {
     const cards = useMyCards({
         drawCardMessage: drawCardMessage,
         roomCode: roomCode
@@ -14,6 +14,7 @@ export default function MyCards({drawCardMessage, roomCode, discards, setDiscard
             {
                 cards.data.map((one, index) => <Card
                     key={index}
+                    serviceInstanceId={serviceInstanceId}
                     roomCode={roomCode}
                     card={one}
                     data={cards.data}

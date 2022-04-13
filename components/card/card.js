@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styles from './card.module.css';
 import {playCards} from "../../apis/unoCard";
 
-export default function Card({roomCode, card, setData, data, discards, setDiscards}) {
+export default function Card({roomCode, card, setData, data, discards, setDiscards, serviceInstanceId}) {
     const [can, setCan] = useState(false);
     const [debug, setDebug] = useState(false);
 
@@ -64,7 +64,9 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
             }
             ndd[ndd.length - 1] = card;
             setDiscards(ndd);
-            playCards({roomCode: roomCode, uuid: card.uuid, color: card.color}).then((response) => {
+            playCards({roomCode: roomCode, uuid: card.uuid, color: card.color}, null, {
+                'instance-id': serviceInstanceId
+            }).then((response) => {
                     if (response.code === '0') {
 
                     }
