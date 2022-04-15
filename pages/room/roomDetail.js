@@ -22,7 +22,8 @@ export default function RoomDetail({
                                        setDrawCardMessage,
                                        discardCardsMessage,
                                        numberOfCardsMessage,
-                                       whoTurnMessage
+                                       whoTurnMessage,
+                                       setWhoTurnMessage
                                    }) {
     const handle = useFullScreenHandle();
     const roomInfo = useRoomInfo(roomCode);
@@ -66,6 +67,7 @@ export default function RoomDetail({
     useEffect(() => {
         setRoomStatus(roomInfo.data.roomStatus);
         setIsIAmIn(roomInfo.data.isIAmIn);
+        setWhoTurnMessage(roomInfo.data.currentGamer + '')
     }, [roomInfo.data])
 
     return (

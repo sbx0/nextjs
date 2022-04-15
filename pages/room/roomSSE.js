@@ -109,6 +109,7 @@ export default function RoomSSE() {
                 discardCardsMessage={discardCardsMessage}
                 numberOfCardsMessage={numberOfCardsMessage}
                 whoTurnMessage={whoTurnMessage}
+                setWhoTurnMessage={setWhoTurnMessage}
                 serviceInstanceId={serviceInstanceId}
                 roomCode={router.query.roomCode}/>
             <ToastContainer/>
