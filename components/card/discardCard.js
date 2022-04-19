@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import styles from './discardCard.module.css';
 
 export default function DiscardCard({card}) {
-    const [debug, setDebug] = useState(true);
+    const [debug, setDebug] = useState(false);
 
     const better = (text) => {
         switch (text) {
