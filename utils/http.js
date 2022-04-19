@@ -22,8 +22,10 @@ export function get(url, params, cookies, additionalHeaders) {
             }
         }
     }
+
     let headers = {'Content-Type': 'application/json;charset=UTF-8'}
     if (cookies != null) {
+        url = server + url;
         if (cookies.token != null) {
             headers.token = cookies.token
             headers.region = region
@@ -43,7 +45,7 @@ export function get(url, params, cookies, additionalHeaders) {
 
     const request = axios({
         method: 'get',
-        url: server + url,
+        url: url,
         headers: headers,
         timeout: timeout
     });
@@ -53,6 +55,7 @@ export function get(url, params, cookies, additionalHeaders) {
 export function upload(url, params, cookies) {
     let headers = {}
     if (cookies != null) {
+        url = server + url;
         if (cookies.token != null) {
             headers.token = cookies.token
             headers.region = region
@@ -67,7 +70,7 @@ export function upload(url, params, cookies) {
     }
     const request = axios({
         method: 'post',
-        url: server + url,
+        url: url,
         headers: headers,
         timeout: timeout,
         data: params
@@ -78,6 +81,7 @@ export function upload(url, params, cookies) {
 export function post(url, params, cookies) {
     let headers = {'Content-Type': 'application/json;charset=UTF-8'}
     if (cookies != null) {
+        url = server + url;
         if (cookies.token != null) {
             headers.token = cookies.token
             headers.region = region
@@ -92,7 +96,7 @@ export function post(url, params, cookies) {
     }
     const request = axios({
         method: 'post',
-        url: server + url,
+        url: url,
         headers: headers,
         timeout: timeout,
         data: JSON.stringify(params)
@@ -112,7 +116,7 @@ export function postForm(url, params) {
     let headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     const request = axios({
         method: 'post',
-        url: server + url,
+        url: url,
         headers: headers,
         timeout: timeout,
         data: params
