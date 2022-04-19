@@ -8,11 +8,12 @@ import useRoomInfo from "../../hooks/useRoomInfo";
 import {startUnoRoom} from "../../apis/unoRoom";
 import MyCards from "../../components/card/myCards";
 import DiscardCards from "../../components/card/discardCards";
-import {drawCard} from "../../apis/unoCard";
 import {FullScreen, useFullScreenHandle} from "react-full-screen";
+import RoomDashboard from "./roomDashboard";
 
 
 export default function RoomDetail({
+                                       user,
                                        ready,
                                        roomCode,
                                        serviceInstanceId,
@@ -35,6 +36,27 @@ export default function RoomDetail({
         all: 0
     });
     const [discards, setDiscards] = useState([]);
+    const [myTurn, setMyTurn] = useState(false);
+
+    useEffect(() => {
+        if (roomUser.data == null) return;
+        if (roomInfo.data == null) return;
+        let index = parseInt(whoTurnMessage);
+        if (index == null) {
+            index = roomInfo.data.currentGamer;
+        }
+        if (index == null) {
+            return;
+        }
+        let users = roomUser.data;
+        let currentPlayer = users[index];
+        if (currentPlayer == null) return;
+        if (currentPlayer.id === user.id) {
+            setMyTurn(true);
+        } else {
+            setMyTurn(false);
+        }
+    }, [roomUser.data, roomInfo.data, whoTurnMessage])
 
     useEffect(() => {
         if (roomStatus === 0) {
@@ -126,27 +148,22 @@ export default function RoomDetail({
                             :
                             <></>
                     }
-                    {
-                        roomSize.in === roomSize.all && isIAmIn && roomStatus === 1 ?
-                            <CallApiButton
-                                buttonText={'抽牌'}
-                                loadingText={'正在抽牌'}
-                                api={drawCard}
-                                params={{
-                                    "roomCode": roomCode,
-                                    "instance-id": serviceInstanceId,
-                                }}
-                                onSuccess={(params) => {
-                                    setDrawCardMessage(params)
-                                }}
-                            />
-                            :
-                            <></>
-                    }
                     <DiscardCards discardCardsMessage={discardCardsMessage}
                                   roomCode={roomCode}
                                   data={discards}
                                   setData={setDiscards}/>
+                    {
+                        myTurn ?
+                            <RoomDashboard myTurn={myTurn}
+                                           roomSize={roomSize}
+                                           roomCode={roomCode}
+                                           roomStatus={roomStatus}
+                                           serviceInstanceId={serviceInstanceId}
+                                           isIAmIn={isIAmIn}
+                                           setDrawCardMessage={setDrawCardMessage}/>
+                            :
+                            <></>
+                    }
                     <MyCards drawCardMessage={drawCardMessage}
                              roomCode={roomCode}
                              serviceInstanceId={serviceInstanceId}

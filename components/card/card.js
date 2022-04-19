@@ -50,53 +50,42 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
             }
         }
 
-        if (canPlay) {
-            let original = data.concat();
-            let originalDiscards = discards.concat();
+        let original = data.concat();
+        let originalDiscards = discards.concat();
 
-            let nd = [];
-            let j = 0;
-            for (let i = 0; i < data.length; i++) {
-                if (card.uuid !== data[i].uuid) {
-                    nd[j++] = data[i];
-                }
+        let nd = [];
+        let j = 0;
+        for (let i = 0; i < data.length; i++) {
+            if (card.uuid !== data[i].uuid) {
+                nd[j++] = data[i];
             }
-            setData(nd);
-
-            let ndd = discards.concat();
-            for (let i = 0; i < ndd.length - 1; i++) {
-                ndd[i] = ndd[i + 1];
-            }
-            ndd[ndd.length - 1] = card;
-            setDiscards(ndd);
-
-            playCards({roomCode: roomCode, uuid: card.uuid, color: card.color}, null, {
-                'instance-id': serviceInstanceId
-            }).then((response) => {
-                    if (response.code !== '0') {
-                        setData(original);
-                        setDiscards(originalDiscards);
-                        toast("can't play", {
-                            position: "bottom-center",
-                            autoClose: 1000,
-                            closeOnClick: true,
-                            pauseOnHover: false,
-                            draggable: true,
-                            progress: undefined,
-                        });
-                    }
-                }
-            )
-        } else {
-            toast("can't play", {
-                position: "bottom-center",
-                autoClose: 1000,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-            });
         }
+        setData(nd);
+
+        let ndd = discards.concat();
+        for (let i = 0; i < ndd.length - 1; i++) {
+            ndd[i] = ndd[i + 1];
+        }
+        ndd[ndd.length - 1] = card;
+        setDiscards(ndd);
+
+        playCards({roomCode: roomCode, uuid: card.uuid, color: card.color}, null, {
+            'instance-id': serviceInstanceId
+        }).then((response) => {
+                if (response.code !== '0') {
+                    setData(original);
+                    setDiscards(originalDiscards);
+                    toast("can't play", {
+                        position: "bottom-center",
+                        autoClose: 1000,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                }
+            }
+        )
 
     }
 

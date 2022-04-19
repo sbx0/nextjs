@@ -1,0 +1,16 @@
+@value player-height: 60px;
+
+@value player-width: 100px;
+
+@value player-margin: 0px 10px 50px 10px;
+
+@value player-padding: 10px;
+
+.board {
+    width: 100vw;
+    height: 50px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
