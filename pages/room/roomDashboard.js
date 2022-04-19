@@ -18,7 +18,7 @@ export default function RoomDashboard({
     return <>
         <div className={styles.board}>
             {
-                roomSize.in === roomSize.all && isIAmIn && roomStatus === 1 ?
+                roomSize?.in === roomSize?.all && isIAmIn && roomStatus === 1 ?
                     <CallApiButton
                         buttonText={'抽牌'}
                         loadingText={'正在抽牌'}
