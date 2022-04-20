@@ -21,7 +21,7 @@ export default function RoomUser({roomUser, whoTurnMessage, direction}) {
         </div>
         <div className={styles.playerContainer}>
             {
-                roomUser.data?.map((one, index) => {
+                roomUser?.data?.map((one, index) => {
                     return <div key={one.id}
                                 className={`${((index + "") === whoTurnMessage) ? styles.currentUser : ''} ${styles['player' + index]}`}>
                         <div className={styles.playerName}>{one.nickname}</div>
