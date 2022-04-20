@@ -72,7 +72,7 @@ export default function RoomSSE({user}) {
         eventSource.current.addEventListener("number_of_cards", (event) => setNumberOfCardsMessage(event.data.toString()));
         eventSource.current.addEventListener("who_turn", (event) => setWhoTurnMessage(event.data.toString()));
         eventSource.current.addEventListener("penalty_cards", (event) => setPenaltyCards(event.data.toString()));
-        eventSource.current.addEventListener("direction", (event) => setPenaltyCards(event.data.toString()));
+        eventSource.current.addEventListener("direction", (event) => setDirection(event.data.toString()));
 
         return () => {
             eventSource.current.removeEventListener("join");

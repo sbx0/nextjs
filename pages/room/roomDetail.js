@@ -43,10 +43,6 @@ export default function RoomDetail({
     const [myTurn, setMyTurn] = useState(false);
 
     useEffect(() => {
-
-    }, [penaltyCards, direction])
-
-    useEffect(() => {
         if (roomUser.data == null) return;
         if (roomInfo.data == null) return;
         let index = parseInt(whoTurnMessage);
@@ -92,8 +88,6 @@ export default function RoomDetail({
                 all: allNumber
             }
         )
-        setPenaltyCards(roomInfo.data.penaltyCards);
-        setDirection(roomInfo.data.direction);
     }, [roomUser.data, roomInfo.data])
 
     useEffect(() => {

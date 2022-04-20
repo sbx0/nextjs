@@ -1,7 +1,7 @@
 import styles from './roomDashboard.module.css';
 import CallApiButton from "../../components/common/callApiButton";
 import {drawCard, nextPlay} from "../../apis/unoCard";
-import {toast, ToastContainer} from "react-toastify";
+import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import React from "react";
 
@@ -30,14 +30,6 @@ export default function RoomDashboard({
                         }}
                         onSuccess={(params) => {
                             setDrawCardMessage(params);
-                            toast(params[0]?.color + ' ' + params[0]?.point, {
-                                position: "bottom-center",
-                                autoClose: 1000,
-                                closeOnClick: true,
-                                pauseOnHover: false,
-                                draggable: true,
-                                progress: undefined,
-                            });
                         }}
                     />
                     :
@@ -55,14 +47,6 @@ export default function RoomDashboard({
                         }}
                         onSuccess={(params) => {
                             setDrawCardMessage(params)
-                            toast(params[0]?.color + ' ' + params[0]?.point, {
-                                position: "bottom-center",
-                                autoClose: 1000,
-                                closeOnClick: true,
-                                pauseOnHover: false,
-                                draggable: true,
-                                progress: undefined,
-                            });
                         }}
                     />
                     :

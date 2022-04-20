@@ -4,8 +4,8 @@ import {playCards} from "../../apis/unoCard";
 import {toast} from "react-toastify";
 
 export default function Card({roomCode, card, setData, data, discards, setDiscards, serviceInstanceId}) {
-    const [can, setCan] = useState(false);
     const [debug, setDebug] = useState(false);
+    const [can, setCan] = useState(false);
     const [choose, setChoose] = useState(false);
 
     useEffect(() => {
@@ -71,6 +71,9 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
         if (card.color === 'black') {
             if (color === null) {
                 setChoose(true);
+                setTimeout(() => {
+                    setChoose(false);
+                }, [5000])
                 return;
             }
         }
@@ -81,11 +84,11 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
         playCards({roomCode: roomCode, uuid: card.uuid, color: color != null ? color : card.color}, null, {
             'instance-id': serviceInstanceId
         }).then((response) => {
-            if (response.code !== '0') {
-                setData(original);
-                setDiscards(originalDiscards);
-                toast("can't play", {
-                    position: "bottom-center",
+                if (response.code !== '0') {
+                    setData(original);
+                    setDiscards(originalDiscards);
+                    toast("can't play", {
+                        position: "bottom-center",
                         autoClose: 1000,
                         closeOnClick: true,
                         pauseOnHover: false,
@@ -93,7 +96,7 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
                         progress: undefined,
                     });
                 }
-            setChoose(false);
+                setChoose(false);
             }
         )
 
@@ -145,7 +148,7 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
         </div>
         {
             debug ?
-                <div onFocusCapture={() => setChoose(true)}>
+                <div>
                     <div>
                         {better(card.point)}
                     </div>
