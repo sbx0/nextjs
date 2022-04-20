@@ -7,6 +7,7 @@ import React from "react";
 
 export default function RoomDashboard({
                                           myTurn,
+                                          penaltyCards,
                                           roomSize,
                                           isIAmIn,
                                           roomStatus,

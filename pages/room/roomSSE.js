@@ -17,6 +17,8 @@ export default function RoomSSE({user}) {
     const [discardCardsMessage, setDiscardCardsMessage] = useState(null);
     const [numberOfCardsMessage, setNumberOfCardsMessage] = useState(null);
     const [whoTurnMessage, setWhoTurnMessage] = useState('0');
+    const [penaltyCards, setPenaltyCards] = useState('0');
+    const [direction, setDirection] = useState('normal');
     const router = useRouter();
     const eventSource = useRef();
 
@@ -39,6 +41,7 @@ export default function RoomSSE({user}) {
         if (router.query.roomCode === null || router.query.roomCode === undefined || router.query.roomCode === '') {
             return;
         }
+
         eventSource.current = new EventSourcePolyfill(
             "/UNO/uno/room/subscribe/" + router.query.roomCode, {
                 headers: {
@@ -62,30 +65,14 @@ export default function RoomSSE({user}) {
             setReady(true);
         }
 
-        eventSource.current.addEventListener("join", (event) => {
-            console.log('join ' + event.data)
-            setJoinMessage(JSON.parse(event.data.toString()));
-        });
-        eventSource.current.addEventListener("quit", (event) => {
-            console.log('quit ' + event.data)
-            setQuitMessage(JSON.parse(event.data.toString()));
-        });
-        eventSource.current.addEventListener("draw_card", (event) => {
-            console.log('draw_card ' + JSON.parse(event.data.toString()));
-            setDrawCardMessage(JSON.parse(event.data.toString()));
-        });
-        eventSource.current.addEventListener("discard_cards", (event) => {
-            console.log('discard_cards ' + JSON.parse(event.data.toString()));
-            setDiscardCardsMessage(JSON.parse(event.data.toString()));
-        });
-        eventSource.current.addEventListener("number_of_cards", (event) => {
-            console.log('number_of_cards ' + event.data.toString());
-            setNumberOfCardsMessage(event.data.toString());
-        });
-        eventSource.current.addEventListener("who_turn", (event) => {
-            console.log('who_turn ' + event.data.toString());
-            setWhoTurnMessage(event.data.toString());
-        });
+        eventSource.current.addEventListener("join", (event) => setJoinMessage(JSON.parse(event.data.toString())));
+        eventSource.current.addEventListener("quit", (event) => setQuitMessage(JSON.parse(event.data.toString())));
+        eventSource.current.addEventListener("draw_card", (event) => setDrawCardMessage(JSON.parse(event.data.toString())));
+        eventSource.current.addEventListener("discard_cards", (event) => setDiscardCardsMessage(JSON.parse(event.data.toString())));
+        eventSource.current.addEventListener("number_of_cards", (event) => setNumberOfCardsMessage(event.data.toString()));
+        eventSource.current.addEventListener("who_turn", (event) => setWhoTurnMessage(event.data.toString()));
+        eventSource.current.addEventListener("penalty_cards", (event) => setPenaltyCards(event.data.toString()));
+        eventSource.current.addEventListener("direction", (event) => setPenaltyCards(event.data.toString()));
 
         return () => {
             eventSource.current.removeEventListener("join");
@@ -94,6 +81,8 @@ export default function RoomSSE({user}) {
             eventSource.current.removeEventListener("discard_cards");
             eventSource.current.removeEventListener("number_of_cards");
             eventSource.current.removeEventListener("who_turn");
+            eventSource.current.removeEventListener("penalty_cards");
+            eventSource.current.removeEventListener("direction");
             eventSource.current.close();
         }
     }, [serviceInstanceId])
@@ -111,6 +100,10 @@ export default function RoomSSE({user}) {
                 numberOfCardsMessage={numberOfCardsMessage}
                 whoTurnMessage={whoTurnMessage}
                 setWhoTurnMessage={setWhoTurnMessage}
+                penaltyCards={penaltyCards}
+                setPenaltyCards={setPenaltyCards}
+                direction={direction}
+                setDirection={setDirection}
                 serviceInstanceId={serviceInstanceId}
                 roomCode={router.query.roomCode}/>
             <ToastContainer/>

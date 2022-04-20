@@ -42,9 +42,9 @@ export default function useRoomUser(roomCode, joinMessage, quitMessage, numberOf
                     return;
                 }
             }
-            let u = data.concat();
+            let u = data.concat().reverse();
             u.push(joinMessage);
-            setData(u);
+            setData(u.reverse());
         }
     }, [joinMessage]);
 

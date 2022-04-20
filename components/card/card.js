@@ -6,6 +6,7 @@ import {toast} from "react-toastify";
 export default function Card({roomCode, card, setData, data, discards, setDiscards, serviceInstanceId}) {
     const [can, setCan] = useState(false);
     const [debug, setDebug] = useState(false);
+    const [choose, setChoose] = useState(false);
 
     useEffect(() => {
         let canPlay = false;
@@ -30,7 +31,7 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
         setCan(canPlay);
     }, [discards])
 
-    const clickToPlayCard = () => {
+    const clickToPlayCard = (color) => {
         let canPlay = false;
 
         if (discards == null || discards.length === 0) {
@@ -60,23 +61,31 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
                 nd[j++] = data[i];
             }
         }
-        setData(nd);
 
         let ndd = discards.concat();
         for (let i = 0; i < ndd.length - 1; i++) {
             ndd[i] = ndd[i + 1];
         }
         ndd[ndd.length - 1] = card;
+
+        if (card.color === 'black') {
+            if (color === null) {
+                setChoose(true);
+                return;
+            }
+        }
+
+        setData(nd);
         setDiscards(ndd);
 
-        playCards({roomCode: roomCode, uuid: card.uuid, color: card.color}, null, {
+        playCards({roomCode: roomCode, uuid: card.uuid, color: color != null ? color : card.color}, null, {
             'instance-id': serviceInstanceId
         }).then((response) => {
-                if (response.code !== '0') {
-                    setData(original);
-                    setDiscards(originalDiscards);
-                    toast("can't play", {
-                        position: "bottom-center",
+            if (response.code !== '0') {
+                setData(original);
+                setDiscards(originalDiscards);
+                toast("can't play", {
+                    position: "bottom-center",
                         autoClose: 1000,
                         closeOnClick: true,
                         pauseOnHover: false,
@@ -84,6 +93,7 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
                         progress: undefined,
                     });
                 }
+            setChoose(false);
             }
         )
 
@@ -106,10 +116,36 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
         }
     }
 
-    return <div onDoubleClick={clickToPlayCard} className={styles.container}>
+    return <div onDoubleClick={() => clickToPlayCard(null)} className={styles.container}>
+        <div className={`${styles.chooseColor} ${choose ? '' : styles.hidden}`}>
+            <div className={styles.colorButton}
+                 onClick={() => {
+                     clickToPlayCard('yellow');
+                 }}>
+                yellow
+            </div>
+            <div className={styles.colorButton}
+                 onClick={() => {
+                     clickToPlayCard('blue');
+                 }}>
+                blue
+            </div>
+            <div className={styles.colorButton}
+                 onClick={() => {
+                     clickToPlayCard('red');
+                 }}>
+                red
+            </div>
+            <div className={styles.colorButton}
+                 onClick={() => {
+                     clickToPlayCard('green');
+                 }}>
+                green
+            </div>
+        </div>
         {
             debug ?
-                <div>
+                <div onFocusCapture={() => setChoose(true)}>
                     <div>
                         {better(card.point)}
                     </div>

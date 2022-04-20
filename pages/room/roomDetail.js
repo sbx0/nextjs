@@ -24,6 +24,10 @@ export default function RoomDetail({
                                        discardCardsMessage,
                                        numberOfCardsMessage,
                                        whoTurnMessage,
+                                       penaltyCards,
+                                       direction,
+                                       setDirection,
+                                       setPenaltyCards,
                                        setWhoTurnMessage
                                    }) {
     const handle = useFullScreenHandle();
@@ -37,6 +41,10 @@ export default function RoomDetail({
     });
     const [discards, setDiscards] = useState([]);
     const [myTurn, setMyTurn] = useState(false);
+
+    useEffect(() => {
+
+    }, [penaltyCards, direction])
 
     useEffect(() => {
         if (roomUser.data == null) return;
@@ -84,6 +92,8 @@ export default function RoomDetail({
                 all: allNumber
             }
         )
+        setPenaltyCards(roomInfo.data.penaltyCards);
+        setDirection(roomInfo.data.direction);
     }, [roomUser.data, roomInfo.data])
 
     useEffect(() => {
@@ -102,6 +112,8 @@ export default function RoomDetail({
                 {/*    X*/}
                 {/*</div>*/}
                 <div className={styles.container}>
+                    <div>{penaltyCards}</div>
+                    <div>{direction === 'normal' ? '->' : '<-'}</div>
                     {
                         roomStatus === 0 || roomStatus === 1 ?
                             <CallApiButton
@@ -155,6 +167,7 @@ export default function RoomDetail({
                     {
                         myTurn ?
                             <RoomDashboard myTurn={myTurn}
+                                           penaltyCards={penaltyCards}
                                            roomSize={roomSize}
                                            roomCode={roomCode}
                                            roomStatus={roomStatus}

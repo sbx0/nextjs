@@ -12,6 +12,46 @@
 
 @value font-size: 15px;
 
+.hidden {
+    display: none !important;
+}
+
+.chooseColor {
+    background: #ffffff;
+    border-radius: 0.5em;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90vw;
+    width: 500px;
+    text-align: left;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    z-index: 888;
+}
+
+.colorButton {
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 25px;
+    width: 50px;
+    height: 30px;
+    display: inline-block;
+    margin: 5px;
+    border: #cdcdcd 1px solid;
+    border-radius: 0.5em;
+    z-index: 999;
+}
+
 .containerCan {
     display: inline-block;
     position: relative;
