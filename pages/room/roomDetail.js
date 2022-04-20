@@ -8,7 +8,7 @@ import useRoomInfo from "../../hooks/useRoomInfo";
 import {startUnoRoom} from "../../apis/unoRoom";
 import MyCards from "../../components/card/myCards";
 import DiscardCards from "../../components/card/discardCards";
-import {FullScreen, useFullScreenHandle} from "react-full-screen";
+import {useFullScreenHandle} from "react-full-screen";
 import RoomDashboard from "./roomDashboard";
 
 
@@ -98,86 +98,78 @@ export default function RoomDetail({
 
     return (
         <>
-            <div onClick={handle.enter} className={styles.enter} hidden={handle.active}>
-                全屏
-            </div>
-            <FullScreen handle={handle} className={styles.fullscreen}>
-                {/*<div onClick={handle.exit} className={styles.exit} hidden={!handle.active}>*/}
-                {/*    X*/}
-                {/*</div>*/}
-                <div className={styles.container}>
-                    <div>{penaltyCards}</div>
-                    <div>{direction === 'normal' ? '->' : '<-'}</div>
+            <div className={styles.container}>
+                <div>{penaltyCards}</div>
+                <div>{direction === 'normal' ? '->' : '<-'}</div>
+                {
+                    roomStatus === 0 ?
+                        <CallApiButton
+                            buttonText={(isIAmIn ? '退出房间 ' : '加入房间 ') + roomSize.in + '/' + roomSize.all}
+                            loadingText={(isIAmIn ? '正在退出 ' : '正在加入')}
+                            api={isIAmIn ? quitRoom : joinRoom}
+                            params={{
+                                "roomCode": roomCode,
+                                "instance-id": serviceInstanceId,
+                            }}
+                            onSuccess={() => {
+                                roomInfo.setFlag(!roomInfo.flag);
+                                setIsIAmIn(!isIAmIn);
+                            }}
+                        />
+                        :
+                        <></>
+                }
+                <div className={styles.playerContainer}>
                     {
-                        roomStatus === 0 || roomStatus === 1 ?
-                            <CallApiButton
-                                buttonText={(isIAmIn ? '退出房间 ' : '加入房间 ') + roomSize.in + '/' + roomSize.all}
-                                loadingText={(isIAmIn ? '正在退出 ' : '正在加入')}
-                                api={isIAmIn ? quitRoom : joinRoom}
-                                params={{
-                                    "roomCode": roomCode,
-                                    "instance-id": serviceInstanceId,
-                                }}
-                                onSuccess={() => {
-                                    roomInfo.setFlag(!roomInfo.flag);
-                                    setIsIAmIn(!isIAmIn);
-                                }}
-                            />
-                            :
-                            <></>
+                        roomUser.data?.map((one, index) => {
+                            return <div key={one.id}
+                                        className={`${((index + "") === whoTurnMessage) ? styles.currentUser : ''} ${styles['player' + index]}`}>
+                                <div className={styles.playerName}>{one.nickname}</div>
+                                <div className={styles.cardNum}>{one.num}</div>
+                            </div>
+                        })
                     }
-                    <div className={styles.playerContainer}>
-                        {
-                            roomUser.data?.map((one, index) => {
-                                return <div key={one.id}
-                                            className={`${((index + "") === whoTurnMessage) ? styles.currentUser : ''} ${styles['player' + index]}`}>
-                                    <div className={styles.playerName}>{one.nickname}</div>
-                                    <div className={styles.cardNum}>{one.num}</div>
-                                </div>
-                            })
-                        }
-                    </div>
-                    {
-                        roomSize.in === roomSize.all && isIAmIn && roomStatus === 0 ?
-                            <CallApiButton
-                                buttonText={'开始'}
-                                loadingText={'正在加载'}
-                                api={startUnoRoom}
-                                params={{
-                                    "roomCode": roomCode,
-                                    "instance-id": serviceInstanceId,
-                                }}
-                                onSuccess={() => {
-                                    setRoomStatus(1);
-                                }}
-                            />
-                            :
-                            <></>
-                    }
-                    <DiscardCards discardCardsMessage={discardCardsMessage}
-                                  roomCode={roomCode}
-                                  data={discards}
-                                  setData={setDiscards}/>
-                    {
-                        myTurn ?
-                            <RoomDashboard myTurn={myTurn}
-                                           penaltyCards={penaltyCards}
-                                           roomSize={roomSize}
-                                           roomCode={roomCode}
-                                           roomStatus={roomStatus}
-                                           serviceInstanceId={serviceInstanceId}
-                                           isIAmIn={isIAmIn}
-                                           setDrawCardMessage={setDrawCardMessage}/>
-                            :
-                            <></>
-                    }
-                    <MyCards drawCardMessage={drawCardMessage}
-                             roomCode={roomCode}
-                             serviceInstanceId={serviceInstanceId}
-                             discards={discards}
-                             setDiscards={setDiscards}/>
                 </div>
-            </FullScreen>
+                {
+                    roomSize.in === roomSize.all && isIAmIn && roomStatus === 0 ?
+                        <CallApiButton
+                            buttonText={'开始'}
+                            loadingText={'正在加载'}
+                            api={startUnoRoom}
+                            params={{
+                                "roomCode": roomCode,
+                                "instance-id": serviceInstanceId,
+                            }}
+                            onSuccess={() => {
+                                setRoomStatus(1);
+                            }}
+                        />
+                        :
+                        <></>
+                }
+                <DiscardCards discardCardsMessage={discardCardsMessage}
+                              roomCode={roomCode}
+                              data={discards}
+                              setData={setDiscards}/>
+                {
+                    myTurn ?
+                        <RoomDashboard myTurn={myTurn}
+                                       penaltyCards={penaltyCards}
+                                       roomSize={roomSize}
+                                       roomCode={roomCode}
+                                       roomStatus={roomStatus}
+                                       serviceInstanceId={serviceInstanceId}
+                                       isIAmIn={isIAmIn}
+                                       setDrawCardMessage={setDrawCardMessage}/>
+                        :
+                        <></>
+                }
+                <MyCards drawCardMessage={drawCardMessage}
+                         roomCode={roomCode}
+                         serviceInstanceId={serviceInstanceId}
+                         discards={discards}
+                         setDiscards={setDiscards}/>
+            </div>
         </>
     );
 }
