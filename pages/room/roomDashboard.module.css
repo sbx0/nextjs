@@ -7,6 +7,8 @@
 @value player-padding: 10px;
 
 .board {
+    position: fixed;
+    bottom: 155px;
     width: 90vw;
     height: 50px;
     margin-top: 30px;

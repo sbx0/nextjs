@@ -21,7 +21,7 @@ export default function RoomDashboard({
             {
                 roomSize?.in === roomSize?.all && isIAmIn && roomStatus === 1 ?
                     <CallApiButton
-                        buttonText={'抽牌'}
+                        buttonText={parseInt(penaltyCards) > 0 ? '抽牌' + penaltyCards + '张' : '抽牌'}
                         loadingText={'正在抽牌'}
                         api={drawCard}
                         params={{

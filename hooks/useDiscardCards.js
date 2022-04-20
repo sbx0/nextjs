@@ -10,7 +10,7 @@ export default function useDiscardCards({
             return;
         }
         let cards = data.concat();
-        if (cards.length > 9) {
+        if (cards.length > 5) {
             cards.pop();
         }
         cards.push(discardCardsMessage);
@@ -21,7 +21,7 @@ export default function useDiscardCards({
         if (roomCode === undefined) return;
         discardCards({roomCode: roomCode}).then((response) => {
             if (response) {
-                setData(response.data.reverse());
+                setData(response.data.splice(0, 5).reverse());
             } else {
                 setData([]);
             }

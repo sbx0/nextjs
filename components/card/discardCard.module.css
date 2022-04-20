@@ -1,23 +1,27 @@
-@value card-width: 75px;
+@value card-width: 6em;
 
-@value card-height: 112px;
+@value card-height: 10em;
 
-@value card-inner-width: 63px;
+@value card-inner-width: 5.3em;
 
-@value card-inner-height: 100px;
+@value card-inner-height: 9.3em;
 
-@value card-inner-margin: 5px 5px 5px 5px;
+@value card-inner-margin: 0.3em;
 
-@value margin-right: -70px;
+@value margin-right: -4em;
 
-@value font-size: 10px;
+@value number-font-size: 0.8em;
+
+@value center-font-size: 1.5em;
+
+@value border-radius: 0.5em;
 
 .container {
     display: inline-block;
     position: relative;
     width: card-width;
     height: card-height;
-    border-radius: 10px;
+    border-radius: border-radius;
     background: #fff;
     margin-right: margin-right;
     border: #7b7b7b 1px solid;
@@ -40,7 +44,7 @@
 }
 
 .bg-red {
-    border-radius: 5px;
+    border-radius: border-radius;
     background: #ff5555;
     width: card-inner-width;
     height: card-inner-height;
@@ -48,7 +52,7 @@
 }
 
 .bg-blue {
-    border-radius: 5px;
+    border-radius: border-radius;
     background: #5555ff;
     width: card-inner-width;
     height: card-inner-height;
@@ -56,7 +60,7 @@
 }
 
 .bg-green {
-    border-radius: 5px;
+    border-radius: border-radius;
     background: #55aa55;
     width: card-inner-width;
     height: card-inner-height;
@@ -64,7 +68,7 @@
 }
 
 .bg-yellow {
-    border-radius: 5px;
+    border-radius: border-radius;
     background: #ffaa00;
     width: card-inner-width;
     height: card-inner-height;
@@ -72,7 +76,7 @@
 }
 
 .bg-black {
-    border-radius: 5px;
+    border-radius: border-radius;
     background: #030303;
     width: card-inner-width;
     height: card-inner-height;
@@ -85,28 +89,26 @@
     transform: translateY(-50%);
     height: 100px;
     margin: 0 auto;
-    border-radius: 30px;
     color: white;
-    font-size: font-size;
+    font-size: center-font-size;
     text-align: center;
     line-height: 100px;
-    font-weight: bolder;
 }
 
 .numberUp {
     position: absolute;
-    top: 5px;
-    left: 8px;
+    top: 0.5em;
+    left: 0.8em;
     color: white;
-    font-size: font-size;
+    font-size: number-font-size;
 }
 
 .numberDown {
     position: absolute;
-    bottom: 5px;
-    right: 8px;
+    bottom: 0.5em;
+    right: 0.8em;
     color: white;
-    font-size: font-size;
+    font-size: number-font-size;
     transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
 }

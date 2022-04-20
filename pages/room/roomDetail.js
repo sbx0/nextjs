@@ -10,6 +10,7 @@ import MyCards from "../../components/card/myCards";
 import DiscardCards from "../../components/card/discardCards";
 import {useFullScreenHandle} from "react-full-screen";
 import RoomDashboard from "./roomDashboard";
+import RoomUser from "./roomUser";
 
 
 export default function RoomDetail({
@@ -99,8 +100,6 @@ export default function RoomDetail({
     return (
         <>
             <div className={styles.container}>
-                <div>{penaltyCards}</div>
-                <div>{direction === 'normal' ? '->' : '<-'}</div>
                 {
                     roomStatus === 0 ?
                         <CallApiButton
@@ -119,17 +118,7 @@ export default function RoomDetail({
                         :
                         <></>
                 }
-                <div className={styles.playerContainer}>
-                    {
-                        roomUser.data?.map((one, index) => {
-                            return <div key={one.id}
-                                        className={`${((index + "") === whoTurnMessage) ? styles.currentUser : ''} ${styles['player' + index]}`}>
-                                <div className={styles.playerName}>{one.nickname}</div>
-                                <div className={styles.cardNum}>{one.num}</div>
-                            </div>
-                        })
-                    }
-                </div>
+                <RoomUser roomUser={roomUser} whoTurnMessage={whoTurnMessage} direction={direction}/>
                 {
                     roomSize.in === roomSize.all && isIAmIn && roomStatus === 0 ?
                         <CallApiButton

@@ -1,10 +1,13 @@
 .container {
-    width: 100%;
-    padding: 5px;
+    position: fixed;
+    bottom: 30vh;
+    width: 90vw;
+    padding: 0.1em;
+    overflow-x: auto;
 }
 
 .innerContainer {
-    display: flex;
-    justify-content: center;
-    margin-left: -70px;
+    width: max-content;
+    padding: 0.5em 4.4em 0.5em 1em;
+    margin: 0 auto;
 }
