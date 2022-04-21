@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {listRoomUser} from "../apis/unoRoomUser";
 
-export default function useRoomUser(roomCode, joinMessage, quitMessage, numberOfCardsMessage) {
+export default function useRoomUser(roomCode, numberOfCardsMessage) {
     const [data, setData] = useState(null);
     const [flag, setFlag] = useState(false);
 
@@ -31,37 +31,6 @@ export default function useRoomUser(roomCode, joinMessage, quitMessage, numberOf
             }
         })
     }, [roomCode, flag]);
-
-    useEffect(() => {
-        if (joinMessage != null) {
-            if (data == null) {
-                return;
-            }
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].id === joinMessage.id) {
-                    return;
-                }
-            }
-            let u = data.concat().reverse();
-            u.push(joinMessage);
-            setData(u.reverse());
-        }
-    }, [joinMessage]);
-
-    useEffect(() => {
-        if (quitMessage != null) {
-            if (data == null) {
-                return;
-            }
-            let u = [];
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].id !== quitMessage.id) {
-                    u.push(data[i]);
-                }
-            }
-            setData(u);
-        }
-    }, [quitMessage])
 
     return {data, flag, setFlag};
 }

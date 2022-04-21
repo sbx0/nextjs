@@ -5,6 +5,7 @@ import {ToastContainer} from "react-toastify";
 import React, {useContext} from "react";
 import {actionType, SSEContext} from "./roomSSE";
 import {LanguageContext} from "../../../components/i18n/i18n";
+import {GameContext} from "./roomDetail";
 
 export default function RoomDashboard({
                                           myTurn,
@@ -14,11 +15,12 @@ export default function RoomDashboard({
                                       }) {
     const language = useContext(LanguageContext);
     const {sseState, sseDispatch} = useContext(SSEContext);
+    const {state, dispatch} = useContext(GameContext);
 
     return <>
         <div className={styles.board}>
             {
-                roomSize?.in === roomSize?.all && isIAmIn && roomStatus === 1 ?
+                state.inNumber === state.allNumber && isIAmIn && roomStatus === 1 ?
                     <CallApiButton
                         buttonText={parseInt(sseState.penaltyCards) > 0 ? language.draw + sseState.penaltyCards + language.numCard : language.drawCard}
                         loadingText={language.drawingCard}

@@ -75,9 +75,8 @@ export default function RoomSSE() {
     const eventSource = useRef();
 
     useEffect(() => {
-        // get roomCode from router and put it to reducer
         dispatch({type: actionType.roomCode, data: router.query.roomCode})
-    }, [])
+    }, [router.query.roomCode])
 
     useEffect(() => {
         if (router.query.roomCode === null || router.query.roomCode === undefined || router.query.roomCode === '') {

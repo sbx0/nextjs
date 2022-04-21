@@ -1,24 +1,26 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import styles from '../../css/loading.module.css';
 import {useRouter} from "next/router";
 import useUserInfo from "../../hooks/useUserInfo";
+import {LanguageContext} from "../i18n/i18n";
 
 export const UserContext = createContext(null);
 
 export default function LoginContainer({children}) {
+    const language = useContext(LanguageContext);
     const router = useRouter()
     const user = useUserInfo();
-    const [message, setMessage] = useState('正在检测登录状态');
+    const [message, setMessage] = useState(language.checkingLoginStatus);
 
     useEffect(() => {
         if (user.loading) {
-            setMessage('正在检测登录状态');
+            setMessage(language.checkingLoginStatus);
         } else {
-            setMessage('请先登录');
+            setMessage(language.pleaseLogin);
         }
     }, [user.loading])
 
-    let result
+    let result;
 
     if (user.data == null) {
         result = <div className={styles.container} onClick={() => router.push("/login")}>
@@ -31,7 +33,7 @@ export default function LoginContainer({children}) {
             <div className={styles.text}>{message}</div>
         </div>
     } else {
-        result = children
+        result = children;
     }
 
     return <UserContext.Provider value={user}>

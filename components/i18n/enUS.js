@@ -16,4 +16,6 @@ export const enUS = {
     reverse: 'reverse',
     skip: 'skip',
     skipping: 'skipping',
+    checkingLoginStatus: 'checking login status',
+    pleaseLogin: 'please login',
 }

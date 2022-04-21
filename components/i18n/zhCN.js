@@ -16,4 +16,6 @@ export const zhCN = {
     reverse: '逆转',
     skip: '跳过',
     skipping: '正在跳过',
+    checkingLoginStatus: '正在检测登录状态',
+    pleaseLogin: '请登录',
 }
