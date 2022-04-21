@@ -4,14 +4,12 @@ import useDiscardCards from "../../hooks/useDiscardCards";
 import DiscardCard from "./discardCard";
 import {SSEContext} from "../../pages/room/components/roomSSE";
 
-export default function DiscardCards({data, setData}) {
+export default function DiscardCards() {
     const {sseState, sseDispatch} = useContext(SSEContext);
 
     const cards = useDiscardCards({
         roomCode: sseState.roomCode,
-        discardCardsMessage: sseState.discardCardsMessage,
-        data: data,
-        setData: setData
+        discardCardsMessage: sseState.discardCardsMessage
     });
 
     return <div className={styles.container}>

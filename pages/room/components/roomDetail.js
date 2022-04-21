@@ -1,10 +1,7 @@
-import React, {createContext, useContext, useEffect, useReducer, useState} from "react";
+import React, {createContext, useContext, useEffect, useReducer} from "react";
 import styles from './room.module.css';
 import useRoomUser from "../../../hooks/useRoomUser";
-import CallApiButton from "../../../components/common/callApiButton";
-import {joinRoom, quitRoom} from "../../../apis/unoRoomUser";
 import useRoomInfo from "../../../hooks/useRoomInfo";
-import {startUnoRoom} from "../../../apis/unoRoom";
 import MyCards from "../../../components/card/myCards";
 import DiscardCards from "../../../components/card/discardCards";
 import RoomDashboard from "./roomDashboard";
@@ -13,7 +10,7 @@ import {UserContext} from "../../../components/common/loginContainer";
 import {SSEContext} from "./roomSSE";
 import {LanguageContext} from "../../../components/i18n/i18n";
 
-const actionType = {
+export const gameActionType = {
     initUser: 'initUser',
     initRoomInfo: 'initRoomInfo',
     join: 'join',
@@ -21,20 +18,53 @@ const actionType = {
     in: 'in',
     out: 'out',
     startGame: 'startGame',
+    whoTurn: 'whoTurn',
+    discards: 'discards',
 }
 
 const gameInfo = {
     roomInfo: null,
     roomUser: null,
-    discards: null,
-    myTurn: null,
+    discards: [],
+    myTurn: false,
     inNumber: 0,
     allNumber: 0,
 }
 
 const gameReducer = (state, action) => {
     switch (action.type) {
-        case actionType.startGame:
+        case gameActionType.discards:
+            if (action.data == null) {
+                return state;
+            }
+            return {...state, discards: action.data}
+        case gameActionType.whoTurn:
+            let whoTurnMessage = action.data;
+            let index = parseInt(whoTurnMessage);
+            if (index == null) {
+                index = state.roomInfo.currentGamer;
+            }
+            if (index == null) {
+                return state;
+            }
+            let users = state.roomUser;
+            if (users === null) {
+                return state;
+            }
+            let currentPlayer = users[index];
+            if (currentPlayer == null) return;
+            if (currentPlayer.id === action.user.data.id) {
+                return {
+                    ...state,
+                    myTurn: true
+                }
+            } else {
+                return {
+                    ...state,
+                    myTurn: false
+                }
+            }
+        case gameActionType.startGame:
             return {
                 ...state,
                 roomInfo: {
@@ -42,7 +72,7 @@ const gameReducer = (state, action) => {
                     roomStatus: 1
                 }
             }
-        case actionType.in:
+        case gameActionType.in:
             return {
                 ...state,
                 roomInfo: {
@@ -50,7 +80,7 @@ const gameReducer = (state, action) => {
                     isIAmIn: true
                 }
             }
-        case actionType.out:
+        case gameActionType.out:
             return {
                 ...state,
                 roomInfo: {
@@ -58,18 +88,18 @@ const gameReducer = (state, action) => {
                     isIAmIn: false
                 }
             }
-        case actionType.initRoomInfo:
+        case gameActionType.initRoomInfo:
             return {
                 ...state,
                 roomInfo: action.data,
                 allNumber: action.data?.playersSize
             }
-        case actionType.initUser:
+        case gameActionType.initUser:
             if (action.data == null) {
                 return state;
             }
             return {...state, roomUser: action.data, inNumber: action.data.length};
-        case actionType.join:
+        case gameActionType.join:
             let joinUser = action.data;
             if (joinUser == null || state.roomUser == null) {
                 return state;
@@ -86,7 +116,7 @@ const gameReducer = (state, action) => {
                 roomUser: afterJoinUser.reverse(),
                 inNumber: afterJoinUser.length
             };
-        case actionType.quit:
+        case gameActionType.quit:
             let quitUser = action.data;
             if (quitUser == null || state.roomUser == null) {
                 return state;
@@ -103,7 +133,7 @@ const gameReducer = (state, action) => {
                 inNumber: afterQuitUser.length
             };
         default:
-            throw new Error('Unexpected action');
+            console.error('error')
     }
 }
 
@@ -116,90 +146,34 @@ export default function RoomDetail() {
     const {sseState, sseDispatch} = useContext(SSEContext);
     const roomInfo = useRoomInfo(sseState.roomCode);
     const roomUser = useRoomUser(sseState.roomCode, sseState.numberOfCardsMessage);
-    const [isIAmIn, setIsIAmIn] = useState(false);
-    const [roomStatus, setRoomStatus] = useState(0);
-    const [roomSize, setRoomSize] = useState({
-        in: 0,
-        all: 0
-    });
-    const [discards, setDiscards] = useState([]);
-    const [myTurn, setMyTurn] = useState(false);
 
     useEffect(() => {
-        console.log('state ', state)
-    }, [state])
-
-    useEffect(() => {
-        dispatch({type: actionType.initRoomInfo, data: roomInfo.data})
+        dispatch({type: gameActionType.initRoomInfo, data: roomInfo.data})
     }, [roomInfo.data])
 
     useEffect(() => {
-        dispatch({type: actionType.initUser, data: roomUser.data})
+        dispatch({type: gameActionType.initUser, data: roomUser.data})
     }, [roomUser.data])
 
     useEffect(() => {
-        dispatch({type: actionType.join, data: sseState.joinMessage})
+        dispatch({type: gameActionType.join, data: sseState.joinMessage})
     }, [sseState.joinMessage])
 
     useEffect(() => {
-        dispatch({type: actionType.quit, data: sseState.quitMessage})
+        dispatch({type: gameActionType.quit, data: sseState.quitMessage})
     }, [sseState.quitMessage])
 
+    useEffect(() => {
+        dispatch({type: gameActionType.whoTurn, data: sseState.whoTurnMessage, user: user})
+    }, [sseState.whoTurnMessage, roomUser.data, user])
+
     return (
-        <GameContext.Provider value={{gameState: state, gameDispatch: dispatch}}>
+        <GameContext.Provider value={{state: state, dispatch: dispatch}}>
             <div className={styles.container}>
-                {
-                    state.roomInfo?.roomStatus === 0 ?
-                        <CallApiButton
-                            buttonText={(state.roomInfo?.isIAmIn ? language.quitRoom : language.joinRoom) + state.inNumber + '/' + state.allNumber}
-                            loadingText={(state.roomInfo?.isIAmIn ? language.quitingRoom : language.joiningRoom)}
-                            api={state.roomInfo?.isIAmIn ? quitRoom : joinRoom}
-                            params={{
-                                "roomCode": sseState.roomCode,
-                                "instance-id": sseState.serviceInstanceId,
-                            }}
-                            onSuccess={() => {
-                                if (state.roomInfo?.isIAmIn) {
-                                    dispatch({type: actionType.out})
-                                } else {
-                                    dispatch({type: actionType.in})
-                                }
-                            }}
-                        />
-                        :
-                        <></>
-                }
-                <RoomUser roomUser={state.roomUser}/>
-                {
-                    state.inNumber === state.allNumber && state.roomInfo?.isIAmIn && state.roomInfo?.roomStatus === 0 ?
-                        <CallApiButton
-                            buttonText={language.begin}
-                            loadingText={language.loading}
-                            api={startUnoRoom}
-                            params={{
-                                "roomCode": sseState.roomCode,
-                                "instance-id": sseState.serviceInstanceId,
-                            }}
-                            onSuccess={() => {
-                                dispatch({type: actionType.startGame})
-                            }}
-                        />
-                        :
-                        <></>
-                }
-                <DiscardCards data={discards}
-                              setData={setDiscards}/>
-                {
-                    myTurn ?
-                        <RoomDashboard myTurn={myTurn}
-                                       roomSize={roomSize}
-                                       roomStatus={roomStatus}
-                                       isIAmIn={isIAmIn}/>
-                        :
-                        <></>
-                }
-                <MyCards discards={discards}
-                         setDiscards={setDiscards}/>
+                <RoomUser/>
+                <DiscardCards/>
+                <RoomDashboard/>
+                <MyCards/>
             </div>
         </GameContext.Provider>
     );

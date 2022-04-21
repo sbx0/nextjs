@@ -62,7 +62,7 @@ const reducer = (state, action) => {
         case actionType.direction:
             return {...state, direction: action.data};
         default:
-            throw new Error('Unexpected action');
+            console.error('error')
     }
 };
 

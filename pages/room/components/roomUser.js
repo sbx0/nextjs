@@ -1,9 +1,11 @@
 import styles from "./room.module.css";
 import React, {useContext} from "react";
 import {SSEContext} from "./roomSSE";
+import {GameContext} from "./roomDetail";
 
-export default function RoomUser({roomUser}) {
+export default function RoomUser() {
     const {sseState, sseDispatch} = useContext(SSEContext);
+    const {state, dispatch} = useContext(GameContext);
 
     return <>
         <div className={`${sseState.direction === 'normal' ? styles.normal : styles.reverse}`}>
@@ -24,7 +26,7 @@ export default function RoomUser({roomUser}) {
         </div>
         <div className={styles.playerContainer}>
             {
-                roomUser?.data?.map((one, index) => {
+                state.roomUser?.map((one, index) => {
                     return <div key={one.id}
                                 className={`${((index + "") === sseState.whoTurnMessage) ? styles.currentUser : ''} ${styles['player' + index]}`}>
                         <div className={styles.playerName}>{one.nickname}</div>

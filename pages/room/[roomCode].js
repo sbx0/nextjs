@@ -6,12 +6,12 @@ import {ToastContainer} from "react-toastify";
 import {LanguageContext} from "../../components/i18n/i18n";
 import LoginContainer from "../../components/common/loginContainer";
 import RoomSSE from "./components/roomSSE";
-import {enUS} from "../../components/i18n/enUS";
+import {zhCN} from "../../components/i18n/zhCN";
 
 export default function Room() {
 
     return <>
-        <LanguageContext.Provider value={enUS}>
+        <LanguageContext.Provider value={zhCN}>
             <LoginContainer>
                 <RoomSSE/>
             </LoginContainer>

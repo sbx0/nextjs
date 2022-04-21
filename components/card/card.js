@@ -3,58 +3,60 @@ import styles from './card.module.css';
 import {playCards} from "../../apis/unoCard";
 import {toast} from "react-toastify";
 import {LanguageContext} from "../i18n/i18n";
+import {gameActionType, GameContext} from "../../pages/room/components/roomDetail";
 
-export default function Card({roomCode, card, setData, data, discards, setDiscards, serviceInstanceId}) {
+export default function Card({roomCode, card, setData, data, serviceInstanceId}) {
     const language = useContext(LanguageContext);
     const [debug, setDebug] = useState(false);
     const [can, setCan] = useState(false);
     const [choose, setChoose] = useState(false);
+    const {state, dispatch} = useContext(GameContext);
 
     useEffect(() => {
         let canPlay = false;
 
-        if (discards == null || discards.length === 0) {
+        if (state.discards == null || state.discards.length === 0) {
             canPlay = true;
         } else {
-            if (discards[discards.length - 1].color === "black") {
+            if (state.discards[state.discards.length - 1].color === "black") {
                 canPlay = true;
             }
             if (card.color === "black") {
                 canPlay = true;
             }
-            if (card.color === discards[discards.length - 1].color) {
+            if (card.color === state.discards[state.discards.length - 1].color) {
                 canPlay = true;
             }
-            if (card.point === discards[discards.length - 1].point) {
+            if (card.point === state.discards[state.discards.length - 1].point) {
                 canPlay = true;
             }
         }
 
         setCan(canPlay);
-    }, [discards])
+    }, [state.discards])
 
     const clickToPlayCard = (color) => {
         let canPlay = false;
 
-        if (discards == null || discards.length === 0) {
+        if (state.discards == null || state.discards.length === 0) {
             canPlay = true;
         } else {
-            if (discards[discards.length - 1].color === "black") {
+            if (state.discards[state.discards.length - 1].color === "black") {
                 canPlay = true;
             }
             if (card.color === "black") {
                 canPlay = true;
             }
-            if (card.color === discards[discards.length - 1].color) {
+            if (card.color === state.discards[state.discards.length - 1].color) {
                 canPlay = true;
             }
-            if (card.point === discards[discards.length - 1].point) {
+            if (card.point === state.discards[state.discards.length - 1].point) {
                 canPlay = true;
             }
         }
 
         let original = data.concat();
-        let originalDiscards = discards.concat();
+        let originalDiscards = state.discards.concat();
 
         let nd = [];
         let j = 0;
@@ -64,7 +66,7 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
             }
         }
 
-        let ndd = discards.concat();
+        let ndd = state.discards.concat();
         for (let i = 0; i < ndd.length - 1; i++) {
             ndd[i] = ndd[i + 1];
         }
@@ -81,14 +83,14 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
         }
 
         setData(nd);
-        setDiscards(ndd);
+        dispatch({type: gameActionType.discards, data: ndd})
 
         playCards({roomCode: roomCode, uuid: card.uuid, color: color != null ? color : card.color}, null, {
             'instance-id': serviceInstanceId
         }).then((response) => {
                 if (response.code !== '0') {
                     setData(original);
-                    setDiscards(originalDiscards);
+                    dispatch({type: gameActionType.discards, data: originalDiscards})
                     toast("can't play", {
                         position: "bottom-center",
                         autoClose: 1000,
