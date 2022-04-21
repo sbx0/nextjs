@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import styles from './discardCards.module.css';
 import useDiscardCards from "../../hooks/useDiscardCards";
 import DiscardCard from "./discardCard";
-import {SSEContext} from "../../pages/room/roomSSE";
+import {SSEContext} from "../../pages/room/components/roomSSE";
 
 export default function DiscardCards({data, setData}) {
     const {sseState, sseDispatch} = useContext(SSEContext);

@@ -1,21 +1,22 @@
 import React, {useContext, useEffect, useState} from "react";
 import styles from './room.module.css';
-import 'react-toastify/dist/ReactToastify.css';
-import useRoomUser from "../../hooks/useRoomUser";
-import CallApiButton from "../../components/common/callApiButton";
-import {joinRoom, quitRoom} from "../../apis/unoRoomUser";
-import useRoomInfo from "../../hooks/useRoomInfo";
-import {startUnoRoom} from "../../apis/unoRoom";
-import MyCards from "../../components/card/myCards";
-import DiscardCards from "../../components/card/discardCards";
+import useRoomUser from "../../../hooks/useRoomUser";
+import CallApiButton from "../../../components/common/callApiButton";
+import {joinRoom, quitRoom} from "../../../apis/unoRoomUser";
+import useRoomInfo from "../../../hooks/useRoomInfo";
+import {startUnoRoom} from "../../../apis/unoRoom";
+import MyCards from "../../../components/card/myCards";
+import DiscardCards from "../../../components/card/discardCards";
 import {useFullScreenHandle} from "react-full-screen";
 import RoomDashboard from "./roomDashboard";
 import RoomUser from "./roomUser";
-import {UserContext} from "../../components/common/loginContainer";
+import {UserContext} from "../../../components/common/loginContainer";
 import {actionType as sseActionType, SSEContext} from "./roomSSE";
+import {LanguageContext} from "../../../components/i18n/i18n";
 
 
 export default function RoomDetail() {
+    const language = useContext(LanguageContext);
     const user = useContext(UserContext);
     const {sseState, sseDispatch} = useContext(SSEContext);
     const handle = useFullScreenHandle();
@@ -90,8 +91,8 @@ export default function RoomDetail() {
                 {
                     roomStatus === 0 ?
                         <CallApiButton
-                            buttonText={(isIAmIn ? '退出房间 ' : '加入房间 ') + roomSize.in + '/' + roomSize.all}
-                            loadingText={(isIAmIn ? '正在退出 ' : '正在加入')}
+                            buttonText={(isIAmIn ? language.quitRoom : language.joinRoom) + roomSize.in + '/' + roomSize.all}
+                            loadingText={(isIAmIn ? language.quitingRoom : language.joiningRoom)}
                             api={isIAmIn ? quitRoom : joinRoom}
                             params={{
                                 "roomCode": sseState.roomCode,
@@ -109,8 +110,8 @@ export default function RoomDetail() {
                 {
                     roomSize.in === roomSize.all && isIAmIn && roomStatus === 0 ?
                         <CallApiButton
-                            buttonText={'开始'}
-                            loadingText={'正在加载'}
+                            buttonText={language.begin}
+                            loadingText={language.loading}
                             api={startUnoRoom}
                             params={{
                                 "roomCode": sseState.roomCode,

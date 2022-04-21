@@ -1,11 +1,10 @@
-import React, {createContext, useEffect, useReducer, useRef} from "react";
+import React, {createContext, useContext, useEffect, useReducer, useRef} from "react";
 import {useRouter} from "next/router";
 import {EventSourcePolyfill} from "event-source-polyfill";
-import {ToastContainer} from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import LoadingContainer from "../../components/common/loadingContainer";
+import {serviceInstanceChoose} from "../../../apis/serviceInstance";
+import LoadingContainer from "../../../components/common/loadingContainer";
 import RoomDetail from "./roomDetail";
-import {serviceInstanceChoose} from "../../apis/serviceInstance";
+import {LanguageContext} from "../../../components/i18n/i18n";
 
 export const actionType = {
     roomCode: "roomCode",
@@ -35,8 +34,6 @@ const message = {
     direction: 'normal',
     roomCode: null
 };
-
-export const SSEContext = createContext(message);
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -69,12 +66,16 @@ const reducer = (state, action) => {
     }
 };
 
+export const SSEContext = createContext(null);
+
 export default function RoomSSE() {
+    const language = useContext(LanguageContext);
     const [state, dispatch] = useReducer(reducer, message);
     const router = useRouter();
     const eventSource = useRef();
 
     useEffect(() => {
+        // get roomCode from router and put it to reducer
         dispatch({type: actionType.roomCode, data: router.query.roomCode})
     }, [])
 
@@ -168,10 +169,9 @@ export default function RoomSSE() {
     }, [state.serviceInstanceId])
 
     return <>
-        <LoadingContainer loading={!state.ready} text={'连接中'}>
+        <LoadingContainer loading={!state.ready} text={language.loading}>
             <SSEContext.Provider value={{sseState: state, sseDispatch: dispatch}}>
                 <RoomDetail/>
-                <ToastContainer/>
             </SSEContext.Provider>
         </LoadingContainer>
     </>

@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import styles from './card.module.css';
 import {playCards} from "../../apis/unoCard";
 import {toast} from "react-toastify";
+import {LanguageContext} from "../i18n/i18n";
 
 export default function Card({roomCode, card, setData, data, discards, setDiscards, serviceInstanceId}) {
+    const language = useContext(LanguageContext);
     const [debug, setDebug] = useState(false);
     const [can, setCan] = useState(false);
     const [choose, setChoose] = useState(false);
@@ -105,15 +107,15 @@ export default function Card({roomCode, card, setData, data, discards, setDiscar
     const better = (text) => {
         switch (text) {
             case 'wild':
-                return '变色';
+                return language.wild;
             case 'wild draw four':
-                return '+4';
+                return language.wildDrawFour;
             case 'draw two':
-                return '+2';
+                return language.drawTwo;
             case 'reverse':
-                return '逆转';
+                return language.reverse;
             case 'skip':
-                return '跳过';
+                return language.skip;
             default:
                 return text;
         }

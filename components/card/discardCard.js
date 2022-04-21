@@ -1,25 +1,28 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import styles from './discardCard.module.css';
+import {LanguageContext} from "../i18n/i18n";
 
 export default function DiscardCard({card}) {
+    const language = useContext(LanguageContext);
     const [debug, setDebug] = useState(false);
 
     const better = (text) => {
         switch (text) {
             case 'wild':
-                return '变色';
+                return language.wild;
             case 'wild draw four':
-                return '+4';
+                return language.wildDrawFour;
             case 'draw two':
-                return '+2';
+                return language.drawTwo;
             case 'reverse':
-                return '逆转';
+                return language.reverse;
             case 'skip':
-                return '跳过';
+                return language.skip;
             default:
                 return text;
         }
     }
+
 
     return <div className={styles.container}>
         {

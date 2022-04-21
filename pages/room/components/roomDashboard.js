@@ -1,10 +1,10 @@
 import styles from './roomDashboard.module.css';
-import CallApiButton from "../../components/common/callApiButton";
-import {drawCard, nextPlay} from "../../apis/unoCard";
+import CallApiButton from "../../../components/common/callApiButton";
+import {drawCard, nextPlay} from "../../../apis/unoCard";
 import {ToastContainer} from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 import React, {useContext} from "react";
 import {actionType, SSEContext} from "./roomSSE";
+import {LanguageContext} from "../../../components/i18n/i18n";
 
 export default function RoomDashboard({
                                           myTurn,
@@ -12,6 +12,7 @@ export default function RoomDashboard({
                                           isIAmIn,
                                           roomStatus
                                       }) {
+    const language = useContext(LanguageContext);
     const {sseState, sseDispatch} = useContext(SSEContext);
 
     return <>
@@ -19,8 +20,8 @@ export default function RoomDashboard({
             {
                 roomSize?.in === roomSize?.all && isIAmIn && roomStatus === 1 ?
                     <CallApiButton
-                        buttonText={parseInt(sseState.penaltyCards) > 0 ? '抽牌' + sseState.penaltyCards + '张' : '抽牌'}
-                        loadingText={'正在抽牌'}
+                        buttonText={parseInt(sseState.penaltyCards) > 0 ? language.draw + sseState.penaltyCards + language.numCard : language.drawCard}
+                        loadingText={language.drawingCard}
                         api={drawCard}
                         params={{
                             "roomCode": sseState.roomCode,
@@ -36,8 +37,8 @@ export default function RoomDashboard({
             {
                 myTurn ?
                     <CallApiButton
-                        buttonText={'跳过'}
-                        loadingText={'正在跳过'}
+                        buttonText={language.skip}
+                        loadingText={language.skipping}
                         api={nextPlay}
                         params={{
                             "roomCode": sseState.roomCode,

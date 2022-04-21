@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import styles from './myCards.module.css';
 import useMyCards from "../../hooks/useMyCards";
 import Card from "./card";
-import {SSEContext} from "../../pages/room/roomSSE";
+import {SSEContext} from "../../pages/room/components/roomSSE";
 
 export default function MyCards({discards, setDiscards}) {
     const {sseState, sseDispatch} = useContext(SSEContext);

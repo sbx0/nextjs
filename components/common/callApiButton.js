@@ -1,11 +1,13 @@
 import {toast} from 'react-toastify';
 import styles from "../../css/index.module.css";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {useRouter} from 'next/router'
 import Loading from "./loading";
+import {LanguageContext} from "../i18n/i18n";
 
 
 export default function CallApiButton({loadingText, buttonText, onSuccess, api, params}) {
+    const language = useContext(LanguageContext);
     const router = useRouter()
     const [loading, setLoading] = useState(false);
 
@@ -40,12 +42,11 @@ export default function CallApiButton({loadingText, buttonText, onSuccess, api, 
         <div className={styles.fixHeight}>
             {
                 loading ?
-                    <Loading text={loadingText ? loadingText : '正在加载'}/>
+                    <Loading text={loadingText ? loadingText : language.loading}/>
                     :
                     <div className={styles.loginButton}
-                         onClick={createRoom}
-                    >
-                        {buttonText ? buttonText : '点击'}
+                         onClick={createRoom}>
+                        {buttonText ? buttonText : language.click}
                     </div>
             }
         </div>

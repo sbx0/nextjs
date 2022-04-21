@@ -1,18 +1,21 @@
 import React from "react";
+
 import 'react-toastify/dist/ReactToastify.css';
+import {ToastContainer} from "react-toastify";
 
-import GlobalHeader from "../../components/common/header";
-import Footer from "../../components/common/footer";
+import {LanguageContext} from "../../components/i18n/i18n";
 import LoginContainer from "../../components/common/loginContainer";
-import RoomSSE from "./roomSSE";
+import RoomSSE from "./components/roomSSE";
+import {enUS} from "../../components/i18n/enUS";
 
+export default function Room() {
 
-export default function RoomDetailRequireLogin() {
     return <>
-        <GlobalHeader/>
-        <LoginContainer>
-            <RoomSSE/>
-        </LoginContainer>
-        <Footer/>
+        <LanguageContext.Provider value={enUS}>
+            <LoginContainer>
+                <RoomSSE/>
+            </LoginContainer>
+            <ToastContainer/>
+        </LanguageContext.Provider>
     </>
 }
