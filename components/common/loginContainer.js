@@ -3,7 +3,9 @@ import styles from '../../css/loading.module.css';
 import {useRouter} from "next/router";
 import useUserInfo from "../../hooks/useUserInfo";
 
-export default function LoginContainer({children, setUser}) {
+export const UserContext = React.createContext(null);
+
+export default function LoginContainer({children}) {
     const router = useRouter()
     const user = useUserInfo();
     const [message, setMessage] = useState('正在检测登录状态');
@@ -16,24 +18,23 @@ export default function LoginContainer({children, setUser}) {
         }
     }, [user.loading])
 
-    useEffect(() => {
-        setUser(user.data);
-    }, [user])
-
+    let result
 
     if (user.data == null) {
-        return (
-            <div className={styles.container} onClick={() => router.push("/login")}>
-                {
-                    user.loading ?
-                        <div className={styles.loading}/>
-                        :
-                        <></>
-                }
-                <div className={styles.text}>{message}</div>
-            </div>
-        );
+        result = <div className={styles.container} onClick={() => router.push("/login")}>
+            {
+                user.loading ?
+                    <div className={styles.loading}/>
+                    :
+                    <></>
+            }
+            <div className={styles.text}>{message}</div>
+        </div>
     } else {
-        return <>{children}</>
+        result = children
     }
+
+    return <UserContext.Provider value={user}>
+        {result}
+    </UserContext.Provider>
 }

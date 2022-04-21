@@ -8,7 +8,7 @@ import RoomDetail from "./roomDetail";
 import {serviceInstanceChoose} from "../../apis/serviceInstance";
 
 
-export default function RoomSSE({user}) {
+export default function RoomSSE() {
     const [ready, setReady] = useState(false);
     const [serviceInstanceId, setServiceInstanceId] = useState(null);
     const [joinMessage, setJoinMessage] = useState(null);
@@ -90,7 +90,6 @@ export default function RoomSSE({user}) {
     return <>
         <LoadingContainer loading={!ready} text={'连接中'}>
             <RoomDetail
-                user={user}
                 ready={ready}
                 joinMessage={joinMessage}
                 quitMessage={quitMessage}

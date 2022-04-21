@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import styles from './room.module.css';
 import 'react-toastify/dist/ReactToastify.css';
 import useRoomUser from "../../hooks/useRoomUser";
@@ -11,10 +11,10 @@ import DiscardCards from "../../components/card/discardCards";
 import {useFullScreenHandle} from "react-full-screen";
 import RoomDashboard from "./roomDashboard";
 import RoomUser from "./roomUser";
+import {UserContext} from "../../components/common/loginContainer";
 
 
 export default function RoomDetail({
-                                       user,
                                        ready,
                                        roomCode,
                                        serviceInstanceId,
@@ -31,6 +31,7 @@ export default function RoomDetail({
                                        setPenaltyCards,
                                        setWhoTurnMessage
                                    }) {
+    const user = useContext(UserContext);
     const handle = useFullScreenHandle();
     const roomInfo = useRoomInfo(roomCode);
     const roomUser = useRoomUser(roomCode, joinMessage, quitMessage, numberOfCardsMessage);
@@ -56,7 +57,7 @@ export default function RoomDetail({
         let users = roomUser.data;
         let currentPlayer = users[index];
         if (currentPlayer == null) return;
-        if (currentPlayer.id === user.id) {
+        if (currentPlayer.id === user.data.id) {
             setMyTurn(true);
         } else {
             setMyTurn(false);
