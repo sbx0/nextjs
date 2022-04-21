@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styles from './myCards.module.css';
 import useMyCards from "../../hooks/useMyCards";
 import Card from "./card";
+import {SSEContext} from "../../pages/room/roomSSE";
 
-export default function MyCards({drawCardMessage, roomCode, discards, setDiscards, serviceInstanceId}) {
+export default function MyCards({discards, setDiscards}) {
+    const {sseState, sseDispatch} = useContext(SSEContext);
+
     const cards = useMyCards({
-        drawCardMessage: drawCardMessage,
-        roomCode: roomCode
+        drawCardMessage: sseState.drawCardMessage,
+        roomCode: sseState.roomCode
     });
 
     return <div className={styles.container}>
@@ -14,8 +17,8 @@ export default function MyCards({drawCardMessage, roomCode, discards, setDiscard
             {
                 cards.data.map((one, index) => <Card
                     key={index}
-                    serviceInstanceId={serviceInstanceId}
-                    roomCode={roomCode}
+                    serviceInstanceId={sseState.serviceInstanceId}
+                    roomCode={sseState.roomCode}
                     card={one}
                     data={cards.data}
                     setData={cards.setData}

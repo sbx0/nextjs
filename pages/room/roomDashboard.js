@@ -3,33 +3,31 @@ import CallApiButton from "../../components/common/callApiButton";
 import {drawCard, nextPlay} from "../../apis/unoCard";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import React from "react";
+import React, {useContext} from "react";
+import {actionType, SSEContext} from "./roomSSE";
 
 export default function RoomDashboard({
                                           myTurn,
-                                          penaltyCards,
                                           roomSize,
                                           isIAmIn,
-                                          roomStatus,
-                                          serviceInstanceId,
-                                          setDrawCardMessage,
-                                          roomCode
+                                          roomStatus
                                       }) {
+    const {sseState, sseDispatch} = useContext(SSEContext);
 
     return <>
         <div className={styles.board}>
             {
                 roomSize?.in === roomSize?.all && isIAmIn && roomStatus === 1 ?
                     <CallApiButton
-                        buttonText={parseInt(penaltyCards) > 0 ? '抽牌' + penaltyCards + '张' : '抽牌'}
+                        buttonText={parseInt(sseState.penaltyCards) > 0 ? '抽牌' + sseState.penaltyCards + '张' : '抽牌'}
                         loadingText={'正在抽牌'}
                         api={drawCard}
                         params={{
-                            "roomCode": roomCode,
-                            "instance-id": serviceInstanceId,
+                            "roomCode": sseState.roomCode,
+                            "instance-id": sseState.serviceInstanceId,
                         }}
                         onSuccess={(params) => {
-                            setDrawCardMessage(params);
+                            sseDispatch({type: actionType.draw, data: params})
                         }}
                     />
                     :
@@ -42,11 +40,11 @@ export default function RoomDashboard({
                         loadingText={'正在跳过'}
                         api={nextPlay}
                         params={{
-                            "roomCode": roomCode,
-                            "instance-id": serviceInstanceId,
+                            "roomCode": sseState.roomCode,
+                            "instance-id": sseState.serviceInstanceId,
                         }}
                         onSuccess={(params) => {
-                            setDrawCardMessage(params)
+                            sseDispatch({type: actionType.draw, data: params})
                         }}
                     />
                     :

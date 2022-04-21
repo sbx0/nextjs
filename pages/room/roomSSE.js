@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {createContext, useEffect, useReducer, useRef} from "react";
 import {useRouter} from "next/router";
 import {EventSourcePolyfill} from "event-source-polyfill";
 import {ToastContainer} from "react-toastify";
@@ -7,20 +7,76 @@ import LoadingContainer from "../../components/common/loadingContainer";
 import RoomDetail from "./roomDetail";
 import {serviceInstanceChoose} from "../../apis/serviceInstance";
 
+export const actionType = {
+    roomCode: "roomCode",
+    ready: "ready",
+    notReady: "notReady",
+    instance: "instance",
+    join: "join",
+    quit: "quit",
+    draw: "draw",
+    discard: "discard",
+    number: "number",
+    who: "who",
+    penalty: "penalty",
+    direction: "direction",
+};
+
+const message = {
+    ready: false,
+    serviceInstanceId: null,
+    joinMessage: null,
+    quitMessage: null,
+    drawCardMessage: null,
+    discardCardsMessage: null,
+    numberOfCardsMessage: null,
+    whoTurnMessage: '0',
+    penaltyCards: '0',
+    direction: 'normal',
+    roomCode: null
+};
+
+export const SSEContext = createContext(message);
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case actionType.roomCode:
+            return {...state, roomCode: action.data};
+        case actionType.ready:
+            return {...state, ready: true};
+        case actionType.notReady:
+            return {...state, ready: false};
+        case actionType.instance:
+            return {...state, serviceInstanceId: action.data};
+        case actionType.join:
+            return {...state, joinMessage: action.data};
+        case actionType.quit:
+            return {...state, quitMessage: action.data};
+        case actionType.draw:
+            return {...state, drawCardMessage: action.data};
+        case actionType.discard:
+            return {...state, discardCardsMessage: action.data};
+        case actionType.number:
+            return {...state, numberOfCardsMessage: action.data};
+        case actionType.who:
+            return {...state, whoTurnMessage: action.data};
+        case actionType.penalty:
+            return {...state, penaltyCards: action.data};
+        case actionType.direction:
+            return {...state, direction: action.data};
+        default:
+            throw new Error('Unexpected action');
+    }
+};
 
 export default function RoomSSE() {
-    const [ready, setReady] = useState(false);
-    const [serviceInstanceId, setServiceInstanceId] = useState(null);
-    const [joinMessage, setJoinMessage] = useState(null);
-    const [quitMessage, setQuitMessage] = useState(null);
-    const [drawCardMessage, setDrawCardMessage] = useState(null);
-    const [discardCardsMessage, setDiscardCardsMessage] = useState(null);
-    const [numberOfCardsMessage, setNumberOfCardsMessage] = useState(null);
-    const [whoTurnMessage, setWhoTurnMessage] = useState('0');
-    const [penaltyCards, setPenaltyCards] = useState('0');
-    const [direction, setDirection] = useState('normal');
+    const [state, dispatch] = useReducer(reducer, message);
     const router = useRouter();
     const eventSource = useRef();
+
+    useEffect(() => {
+        dispatch({type: actionType.roomCode, data: router.query.roomCode})
+    }, [])
 
     useEffect(() => {
         if (router.query.roomCode === null || router.query.roomCode === undefined || router.query.roomCode === '') {
@@ -28,13 +84,13 @@ export default function RoomSSE() {
         }
         serviceInstanceChoose({roomCode: router.query.roomCode}).then((response) => {
             if (response.code === '0') {
-                setServiceInstanceId(response.data);
+                dispatch({type: actionType.instance, data: response.data})
             }
         })
     }, [router.query.roomCode])
 
     useEffect(() => {
-        if (serviceInstanceId === null) {
+        if (state.serviceInstanceId === null) {
             return;
         }
 
@@ -46,7 +102,7 @@ export default function RoomSSE() {
             "/UNO/uno/room/subscribe/" + router.query.roomCode, {
                 headers: {
                     'version': process.env.NEXT_PUBLIC_VERSION,
-                    'instance-id': serviceInstanceId
+                    'instance-id': state.serviceInstanceId
                 }
             }
         )
@@ -57,22 +113,46 @@ export default function RoomSSE() {
 
         eventSource.current.onerror = (event) => {
             console.log('onerror')
-            setReady(false);
+            dispatch({type: 'notReady'})
         }
 
         eventSource.current.onopen = (event) => {
             console.log('onopen')
-            setReady(true);
+            dispatch({type: 'ready'})
         }
 
-        eventSource.current.addEventListener("join", (event) => setJoinMessage(JSON.parse(event.data.toString())));
-        eventSource.current.addEventListener("quit", (event) => setQuitMessage(JSON.parse(event.data.toString())));
-        eventSource.current.addEventListener("draw_card", (event) => setDrawCardMessage(JSON.parse(event.data.toString())));
-        eventSource.current.addEventListener("discard_cards", (event) => setDiscardCardsMessage(JSON.parse(event.data.toString())));
-        eventSource.current.addEventListener("number_of_cards", (event) => setNumberOfCardsMessage(event.data.toString()));
-        eventSource.current.addEventListener("who_turn", (event) => setWhoTurnMessage(event.data.toString()));
-        eventSource.current.addEventListener("penalty_cards", (event) => setPenaltyCards(event.data.toString()));
-        eventSource.current.addEventListener("direction", (event) => setDirection(event.data.toString()));
+        eventSource.current.addEventListener("join", (event) => dispatch({
+            type: actionType.join,
+            data: JSON.parse(event.data.toString())
+        }));
+        eventSource.current.addEventListener("quit", (event) => dispatch({
+            type: actionType.quit,
+            data: JSON.parse(event.data.toString())
+        }));
+        eventSource.current.addEventListener("draw_card", (event) => dispatch({
+            type: actionType.draw,
+            data: JSON.parse(event.data.toString())
+        }));
+        eventSource.current.addEventListener("discard_cards", (event) => dispatch({
+            type: actionType.discard,
+            data: JSON.parse(event.data.toString())
+        }));
+        eventSource.current.addEventListener("number_of_cards", (event) => dispatch({
+            type: actionType.number,
+            data: event.data.toString()
+        }));
+        eventSource.current.addEventListener("who_turn", (event) => dispatch({
+            type: actionType.who,
+            data: event.data.toString()
+        }));
+        eventSource.current.addEventListener("penalty_cards", (event) => dispatch({
+            type: actionType.penalty,
+            data: event.data.toString()
+        }));
+        eventSource.current.addEventListener("direction", (event) => dispatch({
+            type: actionType.direction,
+            data: event.data.toString()
+        }));
 
         return () => {
             eventSource.current.removeEventListener("join");
@@ -85,27 +165,14 @@ export default function RoomSSE() {
             eventSource.current.removeEventListener("direction");
             eventSource.current.close();
         }
-    }, [serviceInstanceId])
+    }, [state.serviceInstanceId])
 
     return <>
-        <LoadingContainer loading={!ready} text={'连接中'}>
-            <RoomDetail
-                ready={ready}
-                joinMessage={joinMessage}
-                quitMessage={quitMessage}
-                drawCardMessage={drawCardMessage}
-                setDrawCardMessage={setDrawCardMessage}
-                discardCardsMessage={discardCardsMessage}
-                numberOfCardsMessage={numberOfCardsMessage}
-                whoTurnMessage={whoTurnMessage}
-                setWhoTurnMessage={setWhoTurnMessage}
-                penaltyCards={penaltyCards}
-                setPenaltyCards={setPenaltyCards}
-                direction={direction}
-                setDirection={setDirection}
-                serviceInstanceId={serviceInstanceId}
-                roomCode={router.query.roomCode}/>
-            <ToastContainer/>
+        <LoadingContainer loading={!state.ready} text={'连接中'}>
+            <SSEContext.Provider value={{sseState: state, sseDispatch: dispatch}}>
+                <RoomDetail/>
+                <ToastContainer/>
+            </SSEContext.Provider>
         </LoadingContainer>
     </>
 }

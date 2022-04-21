@@ -1,9 +1,12 @@
 import styles from "./room.module.css";
-import React from "react";
+import React, {useContext} from "react";
+import {SSEContext} from "./roomSSE";
 
-export default function RoomUser({roomUser, whoTurnMessage, direction}) {
+export default function RoomUser({roomUser}) {
+    const {sseState, sseDispatch} = useContext(SSEContext);
+
     return <>
-        <div className={`${direction === 'normal' ? styles.normal : styles.reverse}`}>
+        <div className={`${sseState.direction === 'normal' ? styles.normal : styles.reverse}`}>
             <div className={styles.arrowAnim}>
                 <div className={styles.arrowSliding}>
                     <div className={styles.arrow}/>
@@ -23,7 +26,7 @@ export default function RoomUser({roomUser, whoTurnMessage, direction}) {
             {
                 roomUser?.data?.map((one, index) => {
                     return <div key={one.id}
-                                className={`${((index + "") === whoTurnMessage) ? styles.currentUser : ''} ${styles['player' + index]}`}>
+                                className={`${((index + "") === sseState.whoTurnMessage) ? styles.currentUser : ''} ${styles['player' + index]}`}>
                         <div className={styles.playerName}>{one.nickname}</div>
                         <div className={styles.cardNum}>{one.num}</div>
                     </div>

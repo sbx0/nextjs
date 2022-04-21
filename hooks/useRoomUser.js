@@ -6,7 +6,7 @@ export default function useRoomUser(roomCode, joinMessage, quitMessage, numberOf
     const [flag, setFlag] = useState(false);
 
     useEffect(() => {
-        if (numberOfCardsMessage === null) return;
+        if (numberOfCardsMessage === null || numberOfCardsMessage === undefined) return;
         let message = numberOfCardsMessage.split('=');
         let userId = message[0];
         let numbers = message[1];

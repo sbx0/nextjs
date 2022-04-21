@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 import styles from '../../css/loading.module.css';
 import {useRouter} from "next/router";
 import useUserInfo from "../../hooks/useUserInfo";
 
-export const UserContext = React.createContext(null);
+export const UserContext = createContext(null);
 
 export default function LoginContainer({children}) {
     const router = useRouter()

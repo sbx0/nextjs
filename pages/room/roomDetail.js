@@ -12,29 +12,15 @@ import {useFullScreenHandle} from "react-full-screen";
 import RoomDashboard from "./roomDashboard";
 import RoomUser from "./roomUser";
 import {UserContext} from "../../components/common/loginContainer";
+import {actionType as sseActionType, SSEContext} from "./roomSSE";
 
 
-export default function RoomDetail({
-                                       ready,
-                                       roomCode,
-                                       serviceInstanceId,
-                                       joinMessage,
-                                       quitMessage,
-                                       drawCardMessage,
-                                       setDrawCardMessage,
-                                       discardCardsMessage,
-                                       numberOfCardsMessage,
-                                       whoTurnMessage,
-                                       penaltyCards,
-                                       direction,
-                                       setDirection,
-                                       setPenaltyCards,
-                                       setWhoTurnMessage
-                                   }) {
+export default function RoomDetail() {
     const user = useContext(UserContext);
+    const {sseState, sseDispatch} = useContext(SSEContext);
     const handle = useFullScreenHandle();
-    const roomInfo = useRoomInfo(roomCode);
-    const roomUser = useRoomUser(roomCode, joinMessage, quitMessage, numberOfCardsMessage);
+    const roomInfo = useRoomInfo(sseState.roomCode);
+    const roomUser = useRoomUser(sseState.roomCode, sseState.joinMessage, sseState.quitMessage, sseState.numberOfCardsMessage);
     const [isIAmIn, setIsIAmIn] = useState(false);
     const [roomStatus, setRoomStatus] = useState(0);
     const [roomSize, setRoomSize] = useState({
@@ -47,7 +33,7 @@ export default function RoomDetail({
     useEffect(() => {
         if (roomUser.data == null) return;
         if (roomInfo.data == null) return;
-        let index = parseInt(whoTurnMessage);
+        let index = parseInt(sseState.whoTurnMessage);
         if (index == null) {
             index = roomInfo.data.currentGamer;
         }
@@ -62,18 +48,18 @@ export default function RoomDetail({
         } else {
             setMyTurn(false);
         }
-    }, [roomUser.data, roomInfo.data, whoTurnMessage])
+    }, [roomUser.data, roomInfo.data, sseState.whoTurnMessage])
 
     useEffect(() => {
         if (roomStatus === 0) {
             roomInfo.setFlag(!roomInfo.flag);
         }
-    }, [drawCardMessage])
+    }, [sseState.drawCardMessage])
 
     useEffect(() => {
         roomUser.setFlag(!roomUser.flag);
         roomInfo.setFlag(!roomInfo.flag);
-    }, [ready])
+    }, [sseState.ready])
 
     useEffect(() => {
         let inNumber = 0;
@@ -95,7 +81,7 @@ export default function RoomDetail({
     useEffect(() => {
         setRoomStatus(roomInfo.data.roomStatus);
         setIsIAmIn(roomInfo.data.isIAmIn);
-        setWhoTurnMessage(roomInfo.data.currentGamer + '')
+        sseDispatch({type: sseActionType.who, data: roomInfo.data.currentGamer + ''})
     }, [roomInfo.data])
 
     return (
@@ -108,8 +94,8 @@ export default function RoomDetail({
                             loadingText={(isIAmIn ? '正在退出 ' : '正在加入')}
                             api={isIAmIn ? quitRoom : joinRoom}
                             params={{
-                                "roomCode": roomCode,
-                                "instance-id": serviceInstanceId,
+                                "roomCode": sseState.roomCode,
+                                "instance-id": sseState.serviceInstanceId,
                             }}
                             onSuccess={() => {
                                 roomInfo.setFlag(!roomInfo.flag);
@@ -119,7 +105,7 @@ export default function RoomDetail({
                         :
                         <></>
                 }
-                <RoomUser roomUser={roomUser} whoTurnMessage={whoTurnMessage} direction={direction}/>
+                <RoomUser roomUser={roomUser}/>
                 {
                     roomSize.in === roomSize.all && isIAmIn && roomStatus === 0 ?
                         <CallApiButton
@@ -127,8 +113,8 @@ export default function RoomDetail({
                             loadingText={'正在加载'}
                             api={startUnoRoom}
                             params={{
-                                "roomCode": roomCode,
-                                "instance-id": serviceInstanceId,
+                                "roomCode": sseState.roomCode,
+                                "instance-id": sseState.serviceInstanceId,
                             }}
                             onSuccess={() => {
                                 setRoomStatus(1);
@@ -137,27 +123,18 @@ export default function RoomDetail({
                         :
                         <></>
                 }
-                <DiscardCards discardCardsMessage={discardCardsMessage}
-                              roomCode={roomCode}
-                              data={discards}
+                <DiscardCards data={discards}
                               setData={setDiscards}/>
                 {
                     myTurn ?
                         <RoomDashboard myTurn={myTurn}
-                                       penaltyCards={penaltyCards}
                                        roomSize={roomSize}
-                                       roomCode={roomCode}
                                        roomStatus={roomStatus}
-                                       serviceInstanceId={serviceInstanceId}
-                                       isIAmIn={isIAmIn}
-                                       setDrawCardMessage={setDrawCardMessage}/>
+                                       isIAmIn={isIAmIn}/>
                         :
                         <></>
                 }
-                <MyCards drawCardMessage={drawCardMessage}
-                         roomCode={roomCode}
-                         serviceInstanceId={serviceInstanceId}
-                         discards={discards}
+                <MyCards discards={discards}
                          setDiscards={setDiscards}/>
             </div>
         </>
