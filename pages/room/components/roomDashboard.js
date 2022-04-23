@@ -17,17 +17,17 @@ export default function RoomDashboard() {
     return <>
         <div className={styles.board}>
             {
-                state.roomInfo?.roomStatus === 0 ?
+                state?.roomInfo?.roomStatus === 0 ?
                     <CallApiButton
-                        buttonText={(state.roomInfo?.isIAmIn ? language.quitRoom : language.joinRoom) + state.inNumber + '/' + state.allNumber}
-                        loadingText={(state.roomInfo?.isIAmIn ? language.quitingRoom : language.joiningRoom)}
-                        api={state.roomInfo?.isIAmIn ? quitRoom : joinRoom}
+                        buttonText={(state?.roomInfo?.isIAmIn ? language.quitRoom : language.joinRoom) + state?.inNumber + '/' + state?.allNumber}
+                        loadingText={(state?.roomInfo?.isIAmIn ? language.quitingRoom : language.joiningRoom)}
+                        api={state?.roomInfo?.isIAmIn ? quitRoom : joinRoom}
                         params={{
-                            "roomCode": sseState.roomCode,
-                            "instance-id": sseState.serviceInstanceId,
+                            "roomCode": sseState?.roomCode,
+                            "instance-id": sseState?.serviceInstanceId,
                         }}
                         onSuccess={() => {
-                            if (state.roomInfo?.isIAmIn) {
+                            if (state?.roomInfo?.isIAmIn) {
                                 dispatch({type: actionType.out})
                             } else {
                                 dispatch({type: actionType.in})
@@ -38,14 +38,14 @@ export default function RoomDashboard() {
                     <></>
             }
             {
-                state.inNumber === state.allNumber && state.roomInfo?.isIAmIn && state.roomInfo?.roomStatus === 0 ?
+                state?.inNumber === state?.allNumber && state?.roomInfo?.isIAmIn && state?.roomInfo?.roomStatus === 0 ?
                     <CallApiButton
                         buttonText={language.begin}
                         loadingText={language.loading}
                         api={startUnoRoom}
                         params={{
-                            "roomCode": sseState.roomCode,
-                            "instance-id": sseState.serviceInstanceId,
+                            "roomCode": sseState?.roomCode,
+                            "instance-id": sseState?.serviceInstanceId,
                         }}
                         onSuccess={() => {
                             dispatch({type: actionType.startGame})
@@ -55,14 +55,14 @@ export default function RoomDashboard() {
                     <></>
             }
             {
-                state.myTurn && state.inNumber === state.allNumber && state.roomInfo?.isIAmIn && state.roomInfo?.roomStatus === 1 ?
+                state?.myTurn && state?.inNumber === state?.allNumber && state?.roomInfo?.isIAmIn && state?.roomInfo?.roomStatus === 1 ?
                     <CallApiButton
-                        buttonText={parseInt(sseState.penaltyCards) > 0 ? language.draw + sseState.penaltyCards + language.numCard : language.drawCard}
+                        buttonText={parseInt(sseState?.penaltyCards) > 0 ? language.draw + sseState?.penaltyCards + language.numCard : language.drawCard}
                         loadingText={language.drawingCard}
                         api={drawCard}
                         params={{
-                            "roomCode": sseState.roomCode,
-                            "instance-id": sseState.serviceInstanceId,
+                            "roomCode": sseState?.roomCode,
+                            "instance-id": sseState?.serviceInstanceId,
                         }}
                         onSuccess={(params) => {
                             sseDispatch({type: actionType.draw, data: params})
@@ -72,14 +72,14 @@ export default function RoomDashboard() {
                     <></>
             }
             {
-                state.myTurn ?
+                state?.myTurn ?
                     <CallApiButton
                         buttonText={language.skip}
                         loadingText={language.skipping}
                         api={nextPlay}
                         params={{
-                            "roomCode": sseState.roomCode,
-                            "instance-id": sseState.serviceInstanceId,
+                            "roomCode": sseState?.roomCode,
+                            "instance-id": sseState?.serviceInstanceId,
                         }}
                         onSuccess={(params) => {
                             sseDispatch({type: actionType.draw, data: params})

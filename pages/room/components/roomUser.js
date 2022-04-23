@@ -8,7 +8,7 @@ export default function RoomUser() {
     const {state, dispatch} = useContext(GameContext);
 
     return <>
-        <div className={`${sseState.direction === 'normal' ? styles.normal : styles.reverse}`}>
+        <div className={`${sseState?.direction === 'normal' ? styles.normal : styles.reverse}`}>
             <div className={styles.arrowAnim}>
                 <div className={styles.arrowSliding}>
                     <div className={styles.arrow}/>
@@ -26,9 +26,9 @@ export default function RoomUser() {
         </div>
         <div className={styles.playerContainer}>
             {
-                state.roomUser?.map((one, index) => {
+                state?.roomUser?.map((one, index) => {
                     return <div key={one.id}
-                                className={`${((index + "") === sseState.whoTurnMessage) ? styles.currentUser : ''} ${styles['player' + index]}`}>
+                                className={`${((index + "") === sseState?.whoTurnMessage) ? styles.currentUser : ''} ${styles['player' + index]}`}>
                         <div className={styles.playerName}>{one.nickname}</div>
                         <div className={styles.cardNum}>{one.num}</div>
                     </div>

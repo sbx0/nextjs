@@ -23,12 +23,7 @@ export const gameActionType = {
 }
 
 const gameInfo = {
-    roomInfo: null,
-    roomUser: null,
-    discards: [],
-    myTurn: false,
-    inNumber: 0,
-    allNumber: 0,
+    roomInfo: null, roomUser: null, discards: [], myTurn: false, inNumber: 0, allNumber: 0,
 }
 
 const gameReducer = (state, action) => {
@@ -53,46 +48,36 @@ const gameReducer = (state, action) => {
             }
             let currentPlayer = users[index];
             if (currentPlayer == null) return;
-            if (currentPlayer.id === action.user.data.id) {
+            if (currentPlayer.id === action.user?.data.id) {
                 return {
-                    ...state,
-                    myTurn: true
+                    ...state, myTurn: true
                 }
             } else {
                 return {
-                    ...state,
-                    myTurn: false
+                    ...state, myTurn: false
                 }
             }
         case gameActionType.startGame:
             return {
-                ...state,
-                roomInfo: {
-                    ...state.roomInfo,
-                    roomStatus: 1
+                ...state, roomInfo: {
+                    ...state.roomInfo, roomStatus: 1
                 }
             }
         case gameActionType.in:
             return {
-                ...state,
-                roomInfo: {
-                    ...state.roomInfo,
-                    isIAmIn: true
+                ...state, roomInfo: {
+                    ...state.roomInfo, isIAmIn: true
                 }
             }
         case gameActionType.out:
             return {
-                ...state,
-                roomInfo: {
-                    ...state.roomInfo,
-                    isIAmIn: false
+                ...state, roomInfo: {
+                    ...state.roomInfo, isIAmIn: false
                 }
             }
         case gameActionType.initRoomInfo:
             return {
-                ...state,
-                roomInfo: action.data,
-                allNumber: action.data?.playersSize
+                ...state, roomInfo: action.data, allNumber: action.data?.playersSize
             }
         case gameActionType.initUser:
             if (action.data == null) {
@@ -112,9 +97,7 @@ const gameReducer = (state, action) => {
             let afterJoinUser = state.roomUser.concat().reverse();
             afterJoinUser.push(joinUser);
             return {
-                ...state,
-                roomUser: afterJoinUser.reverse(),
-                inNumber: afterJoinUser.length
+                ...state, roomUser: afterJoinUser.reverse(), inNumber: afterJoinUser.length
             };
         case gameActionType.quit:
             let quitUser = action.data;
@@ -128,24 +111,22 @@ const gameReducer = (state, action) => {
                 }
             }
             return {
-                ...state,
-                roomUser: afterQuitUser,
-                inNumber: afterQuitUser.length
+                ...state, roomUser: afterQuitUser, inNumber: afterQuitUser.length
             };
         default:
             console.error('error')
     }
 }
 
-export const GameContext = createContext(null);
+export const GameContext = createContext({});
 
 export default function RoomDetail() {
     const [state, dispatch] = useReducer(gameReducer, gameInfo);
     const language = useContext(LanguageContext);
     const user = useContext(UserContext);
     const {sseState, sseDispatch} = useContext(SSEContext);
-    const roomInfo = useRoomInfo(sseState.roomCode);
-    const roomUser = useRoomUser(sseState.roomCode, sseState.numberOfCardsMessage);
+    const roomInfo = useRoomInfo(sseState?.roomCode);
+    const roomUser = useRoomUser(sseState?.roomCode, sseState?.numberOfCardsMessage);
 
     useEffect(() => {
         dispatch({type: gameActionType.initRoomInfo, data: roomInfo.data})
@@ -156,25 +137,23 @@ export default function RoomDetail() {
     }, [roomUser.data])
 
     useEffect(() => {
-        dispatch({type: gameActionType.join, data: sseState.joinMessage})
-    }, [sseState.joinMessage])
+        dispatch({type: gameActionType.join, data: sseState?.joinMessage})
+    }, [sseState?.joinMessage])
 
     useEffect(() => {
-        dispatch({type: gameActionType.quit, data: sseState.quitMessage})
-    }, [sseState.quitMessage])
+        dispatch({type: gameActionType.quit, data: sseState?.quitMessage})
+    }, [sseState?.quitMessage])
 
     useEffect(() => {
-        dispatch({type: gameActionType.whoTurn, data: sseState.whoTurnMessage, user: user})
-    }, [sseState.whoTurnMessage, roomUser.data, user])
+        dispatch({type: gameActionType.whoTurn, data: sseState?.whoTurnMessage, user: user})
+    }, [sseState?.whoTurnMessage, roomUser.data, user])
 
-    return (
-        <GameContext.Provider value={{state: state, dispatch: dispatch}}>
-            <div className={styles.container}>
-                <RoomUser/>
-                <DiscardCards/>
-                <RoomDashboard/>
-                <MyCards/>
-            </div>
-        </GameContext.Provider>
-    );
+    return (<GameContext.Provider value={{state: state, dispatch: dispatch}}>
+        <div className={styles.container}>
+            <RoomUser/>
+            <DiscardCards/>
+            <RoomDashboard/>
+            <MyCards/>
+        </div>
+    </GameContext.Provider>);
 }

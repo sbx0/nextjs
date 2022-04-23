@@ -9,21 +9,21 @@ export default function useDiscardCards() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        if (sseState.discardCardsMessage === null) {
+        if (sseState?.discardCardsMessage === null) {
             return;
         }
         let cards = data.concat();
         if (cards.length > 5) {
             cards.pop();
         }
-        cards.push(sseState.discardCardsMessage);
+        cards.push(sseState?.discardCardsMessage);
         setData(cards);
         dispatch({type: gameActionType.discards, data: cards})
-    }, [sseState.discardCardsMessage])
+    }, [sseState?.discardCardsMessage])
 
     useEffect(() => {
-        if (sseState.roomCode === undefined) return;
-        discardCards({roomCode: sseState.roomCode}).then((response) => {
+        if (sseState?.roomCode === undefined) return;
+        discardCards({roomCode: sseState?.roomCode}).then((response) => {
             if (response) {
                 dispatch({type: gameActionType.discards, data: response.data.splice(0, 5).reverse()})
                 setData(response.data.splice(0, 5).reverse());
@@ -32,7 +32,7 @@ export default function useDiscardCards() {
                 setData([]);
             }
         })
-    }, [sseState.roomCode]);
+    }, [sseState?.roomCode]);
 
     return data;
 }

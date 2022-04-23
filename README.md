@@ -1,6 +1,10 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped
 with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+# [Sponsors](https://jb.gg/OpenSourceSupport)
+
+![jetbrains](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
+
 # Demo
 
 ![uno-game-1.gif](https://s2.loli.net/2022/04/21/v5w6YTgM3GLpziO.gif)

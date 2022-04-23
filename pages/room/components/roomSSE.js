@@ -66,7 +66,7 @@ const reducer = (state, action) => {
     }
 };
 
-export const SSEContext = createContext(null);
+export const SSEContext = createContext({});
 
 export default function RoomSSE() {
     const language = useContext(LanguageContext);

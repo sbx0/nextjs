@@ -8,8 +8,8 @@ export default function DiscardCards() {
     const {sseState, sseDispatch} = useContext(SSEContext);
 
     const cards = useDiscardCards({
-        roomCode: sseState.roomCode,
-        discardCardsMessage: sseState.discardCardsMessage
+        roomCode: sseState?.roomCode,
+        discardCardsMessage: sseState?.discardCardsMessage
     });
 
     return <div className={styles.container}>
