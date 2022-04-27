@@ -15,48 +15,48 @@ export default function Card({roomCode, card, setData, data, serviceInstanceId})
     useEffect(() => {
         let canPlay = false;
 
-        if (user?.discards == null || user?.discards.length === 0) {
+        if (state?.discards == null || state?.discards.length === 0) {
             canPlay = true;
         } else {
-            if (user?.discards[user?.discards.length - 1].color === "black") {
+            if (state?.discards[state?.discards.length - 1].color === "black") {
                 canPlay = true;
             }
             if (card.color === "black") {
                 canPlay = true;
             }
-            if (card.color === user?.discards[user?.discards.length - 1].color) {
+            if (card.color === state?.discards[state?.discards.length - 1].color) {
                 canPlay = true;
             }
-            if (card.point === user?.discards[user?.discards.length - 1].point) {
+            if (card.point === state?.discards[state?.discards.length - 1].point) {
                 canPlay = true;
             }
         }
 
         setCan(canPlay);
-    }, [user?.discards])
+    }, [state?.discards])
 
     const clickToPlayCard = (color) => {
         let canPlay = false;
 
-        if (user?.discards == null || user?.discards.length === 0) {
+        if (state?.discards == null || state?.discards.length === 0) {
             canPlay = true;
         } else {
-            if (user?.discards[user?.discards.length - 1].color === "black") {
+            if (state?.discards[state?.discards.length - 1].color === "black") {
                 canPlay = true;
             }
             if (card.color === "black") {
                 canPlay = true;
             }
-            if (card.color === user?.discards[user?.discards.length - 1].color) {
+            if (card.color === state?.discards[state?.discards.length - 1].color) {
                 canPlay = true;
             }
-            if (card.point === user?.discards[user?.discards.length - 1].point) {
+            if (card.point === state?.discards[state?.discards.length - 1].point) {
                 canPlay = true;
             }
         }
 
         let original = data.concat();
-        let originalDiscards = user?.discards.concat();
+        let originalDiscards = state?.discards.concat();
 
         let nd = [];
         let j = 0;
@@ -66,7 +66,7 @@ export default function Card({roomCode, card, setData, data, serviceInstanceId})
             }
         }
 
-        let ndd = user?.discards.concat();
+        let ndd = state?.discards.concat();
         for (let i = 0; i < ndd.length - 1; i++) {
             ndd[i] = ndd[i + 1];
         }
