@@ -18,4 +18,8 @@ export const enUS = {
     skipping: 'skipping',
     checkingLoginStatus: 'checking login status',
     pleaseLogin: 'please login',
+    yellow: 'yellow',
+    blue: 'blue',
+    red: 'red',
+    green: 'green',
 }

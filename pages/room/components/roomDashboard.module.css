@@ -16,3 +16,49 @@
     display: flex;
     justify-content: center;
 }
+
+.colorDiv {
+    position: fixed;
+    bottom: 250px;
+    width: 90vw;
+    height: 40px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.colorButton {
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 10px;
+    background: #0071e3;
+    color: #fff;
+    font-size: .9rem;
+    line-height: 1.47648;
+    font-weight: 400;
+    min-width: 28px;
+    padding: 10px 31px;
+    margin-right: 10px;
+    margin-left: 10px;
+    box-sizing: border-box;
+    max-width: var(--max-width);
+    border: 0;
+}
+
+.colorYellow {
+    background: #ffaa00;
+}
+
+.colorBlue {
+    background: #5555ff;
+}
+
+.colorRed {
+    background: #ff5555;
+}
+
+.colorGreen {
+    background: #55aa55;
+}

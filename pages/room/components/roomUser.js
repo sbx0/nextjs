@@ -8,22 +8,6 @@ export default function RoomUser() {
     const {state, dispatch} = useContext(GameContext);
 
     return <>
-        <div className={`${sseState?.direction === 'normal' ? styles.normal : styles.reverse}`}>
-            <div className={styles.arrowAnim}>
-                <div className={styles.arrowSliding}>
-                    <div className={styles.arrow}/>
-                </div>
-                <div className={`${styles.arrowSliding} ${styles.delay1}`}>
-                    <div className={styles.arrow}/>
-                </div>
-                <div className={`${styles.arrowSliding} ${styles.delay2}`}>
-                    <div className={styles.arrow}/>
-                </div>
-                <div className={`${styles.arrowSliding} ${styles.delay3}`}>
-                    <div className={styles.arrow}/>
-                </div>
-            </div>
-        </div>
         <div className={styles.playerContainer}>
             {
                 state?.roomUser?.map((one, index) => {

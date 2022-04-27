@@ -13,6 +13,7 @@ import {LanguageContext} from "../../../components/i18n/i18n";
 export const gameActionType = {
     initUser: 'initUser',
     initRoomInfo: 'initRoomInfo',
+    initCards: 'initCards',
     join: 'join',
     quit: 'quit',
     in: 'in',
@@ -20,14 +21,37 @@ export const gameActionType = {
     startGame: 'startGame',
     whoTurn: 'whoTurn',
     discards: 'discards',
+    showColor: 'showColor',
+    hideColor: 'hideColor',
+    chooseColor: 'chooseColor',
+    chooseCard: 'chooseCard',
 }
 
 const gameInfo = {
-    roomInfo: null, roomUser: null, discards: [], myTurn: false, inNumber: 0, allNumber: 0,
+    roomInfo: null,
+    roomUser: null,
+    cards: [],
+    discards: [],
+    myTurn: false,
+    inNumber: 0,
+    allNumber: 0,
+    showColor: false,
+    chooseColor: null,
+    chooseCard: null,
 }
 
 const gameReducer = (state, action) => {
     switch (action.type) {
+        case gameActionType.chooseCard:
+            return {...state, chooseCard: action.data}
+        case gameActionType.initCards:
+            return {...state, cards: action.data}
+        case gameActionType.chooseColor:
+            return {...state, chooseColor: action.data}
+        case gameActionType.showColor:
+            return {...state, showColor: true}
+        case gameActionType.hideColor:
+            return {...state, showColor: false}
         case gameActionType.discards:
             if (action.data == null) {
                 return state;
@@ -37,9 +61,6 @@ const gameReducer = (state, action) => {
             let whoTurnMessage = action.data;
             let index = parseInt(whoTurnMessage);
             if (index == null) {
-                index = state.roomInfo.currentGamer;
-            }
-            if (index == null) {
                 return state;
             }
             let users = state.roomUser;
@@ -48,14 +69,13 @@ const gameReducer = (state, action) => {
             }
             let currentPlayer = users[index];
             if (currentPlayer == null) return state;
+            let my = false;
             if (currentPlayer.id === action.user?.data.id) {
-                return {
-                    ...state, myTurn: true
-                }
-            } else {
-                return {
-                    ...state, myTurn: false
-                }
+                my = true;
+            }
+
+            return {
+                ...state, myTurn: my
             }
         case gameActionType.startGame:
             return {
@@ -76,8 +96,28 @@ const gameReducer = (state, action) => {
                 }
             }
         case gameActionType.initRoomInfo:
+            let myTurn = false;
+
+            let currentGamerIndex = action.data?.currentGamer;
+            if (currentGamerIndex == null) {
+                return {
+                    ...state, roomInfo: action.data, allNumber: action.data?.playersSize, myTurn: myTurn
+                }
+            }
+            let roomUsers = state.roomUser;
+            if (roomUsers === null) {
+                return {
+                    ...state, roomInfo: action.data, allNumber: action.data?.playersSize, myTurn: myTurn
+                }
+            }
+            let currentPlayerData = roomUsers[currentGamerIndex];
+
+            if (currentPlayerData?.id === action.user?.data.id) {
+                myTurn = true;
+            }
+
             return {
-                ...state, roomInfo: action.data, allNumber: action.data?.playersSize
+                ...state, roomInfo: action.data, allNumber: action.data?.playersSize, myTurn: myTurn
             }
         case gameActionType.initUser:
             if (action.data == null) {
@@ -120,6 +160,10 @@ const gameReducer = (state, action) => {
 
 export const GameContext = createContext({});
 
+const colorWeight = {
+    black: 0, red: 1, blue: 2, green: 3, yellow: 4
+}
+
 export default function RoomDetail() {
     const [state, dispatch] = useReducer(gameReducer, gameInfo);
     const language = useContext(LanguageContext);
@@ -129,8 +173,8 @@ export default function RoomDetail() {
     const roomUser = useRoomUser(sseState?.roomCode, sseState?.numberOfCardsMessage);
 
     useEffect(() => {
-        dispatch({type: gameActionType.initRoomInfo, data: roomInfo.data})
-    }, [roomInfo.data])
+        dispatch({type: gameActionType.initRoomInfo, data: roomInfo.data, user: user})
+    }, [roomInfo.data, user.data])
 
     useEffect(() => {
         dispatch({type: gameActionType.initUser, data: roomUser.data})
@@ -143,6 +187,49 @@ export default function RoomDetail() {
     useEffect(() => {
         dispatch({type: gameActionType.quit, data: sseState?.quitMessage})
     }, [sseState?.quitMessage])
+
+    useEffect(() => {
+        if (state.roomInfo?.roomStatus === 0) {
+            roomInfo.setFlag(!roomInfo.flag);
+        }
+
+        let drawCardMessage = sseState?.drawCardMessage;
+        let cards = state?.cards;
+
+        if (drawCardMessage === null) {
+            return;
+        }
+        let sorted = cards.concat();
+        for (let i = 0; i < drawCardMessage.length; i++) {
+            sorted.push(drawCardMessage[i]);
+        }
+        let temp;
+
+        for (let i = sorted.length; i > 0; i--) {
+            for (let j = 0; j < i - 1; j++) {
+                if (colorWeight[sorted[j].color] > colorWeight[sorted[j + 1].color]) {
+                    temp = sorted[j];
+                    sorted[j] = sorted[j + 1];
+                    sorted[j + 1] = temp;
+                }
+            }
+        }
+
+        for (let i = sorted.length; i > 0; i--) {
+            for (let j = 0; j < i - 1; j++) {
+                if (sorted[j].color !== sorted[j + 1].color) {
+                    continue;
+                }
+                if (sorted[j].point > sorted[j + 1].point) {
+                    temp = sorted[j];
+                    sorted[j] = sorted[j + 1];
+                    sorted[j + 1] = temp;
+                }
+            }
+        }
+
+        dispatch({type: gameActionType.initCards, data: sorted})
+    }, [sseState?.drawCardMessage])
 
     useEffect(() => {
         dispatch({type: gameActionType.whoTurn, data: sseState?.whoTurnMessage, user: user})

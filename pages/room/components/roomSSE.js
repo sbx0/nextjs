@@ -108,7 +108,6 @@ export default function RoomSSE() {
         )
 
         eventSource.current.onmessage = (event) => {
-            console.log('onmessage')
         }
 
         eventSource.current.onerror = (event) => {

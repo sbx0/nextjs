@@ -18,4 +18,8 @@ export const zhCN = {
     skipping: '正在跳过',
     checkingLoginStatus: '正在检测登录状态',
     pleaseLogin: '请登录',
+    yellow: '黄',
+    blue: '蓝',
+    red: '红',
+    green: '绿',
 }

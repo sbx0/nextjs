@@ -5,7 +5,7 @@ import {toast} from "react-toastify";
 import {LanguageContext} from "../i18n/i18n";
 import {gameActionType, GameContext} from "../../pages/room/components/roomDetail";
 
-export default function Card({roomCode, card, setData, data, serviceInstanceId}) {
+export default function Card({roomCode, card, serviceInstanceId}) {
     const language = useContext(LanguageContext);
     const [debug, setDebug] = useState(false);
     const [can, setCan] = useState(false);
@@ -35,7 +35,8 @@ export default function Card({roomCode, card, setData, data, serviceInstanceId})
         setCan(canPlay);
     }, [state?.discards])
 
-    const clickToPlayCard = (color) => {
+    const clickToPlayCard = () => {
+        dispatch({type: gameActionType.chooseCard, data: card})
         let canPlay = false;
 
         if (state?.discards == null || state?.discards.length === 0) {
@@ -55,8 +56,9 @@ export default function Card({roomCode, card, setData, data, serviceInstanceId})
             }
         }
 
-        let original = data.concat();
+        let original = state?.cards.concat();
         let originalDiscards = state?.discards.concat();
+        let data = state?.cards;
 
         let nd = [];
         let j = 0;
@@ -73,36 +75,36 @@ export default function Card({roomCode, card, setData, data, serviceInstanceId})
         ndd[ndd.length - 1] = card;
 
         if (card.color === 'black') {
-            if (color === null) {
-                setChoose(true);
-                setTimeout(() => {
-                    setChoose(false);
-                }, [5000])
+            if (state.chooseColor === null) {
+                dispatch({type: gameActionType.showColor})
                 return;
             }
         }
 
-        setData(nd);
+        dispatch({type: gameActionType.initCards, data: nd})
         dispatch({type: gameActionType.discards, data: ndd})
 
-        playCards({roomCode: roomCode, uuid: card.uuid, color: color != null ? color : card.color}, null, {
+        playCards({
+            roomCode: roomCode, uuid: card.uuid, color: state.chooseColor != null ? state.chooseColor : card.color
+        }, null, {
             'instance-id': serviceInstanceId
         }).then((response) => {
-                if (response.code !== '0') {
-                    setData(original);
-                    dispatch({type: gameActionType.discards, data: originalDiscards})
-                    toast("can't play", {
-                        position: "bottom-center",
-                        autoClose: 1000,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        draggable: true,
-                        progress: undefined,
-                    });
-                }
-                setChoose(false);
+            if (response.code !== '0') {
+                dispatch({type: gameActionType.initCards, data: original})
+                dispatch({type: gameActionType.discards, data: originalDiscards})
+                toast("can't play", {
+                    position: "bottom-center",
+                    autoClose: 1000,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                });
             }
-        )
+            dispatch({type: gameActionType.chooseColor, data: null})
+            dispatch({type: gameActionType.hideColor, data: null})
+            dispatch({type: gameActionType.chooseCard, data: null})
+        })
 
     }
 
@@ -123,58 +125,27 @@ export default function Card({roomCode, card, setData, data, serviceInstanceId})
         }
     }
 
-    return <div onDoubleClick={() => clickToPlayCard(null)} className={styles.container}>
-        <div className={`${styles.chooseColor} ${choose ? '' : styles.hidden}`}>
-            <div className={styles.colorButton}
-                 onClick={() => {
-                     clickToPlayCard('yellow');
-                 }}>
-                yellow
+    return <div onDoubleClickCapture={() => clickToPlayCard()} className={styles.container}>
+        {debug ? <div>
+            <div>
+                {better(card.point)}
             </div>
-            <div className={styles.colorButton}
-                 onClick={() => {
-                     clickToPlayCard('blue');
-                 }}>
-                blue
+            <div>
+                {card.color}
             </div>
-            <div className={styles.colorButton}
-                 onClick={() => {
-                     clickToPlayCard('red');
-                 }}>
-                red
+            <div>
+                {better(card.point)}
             </div>
-            <div className={styles.colorButton}
-                 onClick={() => {
-                     clickToPlayCard('green');
-                 }}>
-                green
+        </div> : <div className={styles['bg-' + card.color]}>
+            <div className={styles.numberUp}>
+                {better(card.point)}
             </div>
-        </div>
-        {
-            debug ?
-                <div>
-                    <div>
-                        {better(card.point)}
-                    </div>
-                    <div>
-                        {card.color}
-                    </div>
-                    <div>
-                        {better(card.point)}
-                    </div>
-                </div>
-                :
-                <div className={styles['bg-' + card.color]}>
-                    <div className={styles.numberUp}>
-                        {better(card.point)}
-                    </div>
-                    <div className={styles.number}>
-                        {better(card.point)}
-                    </div>
-                    <div className={styles.numberDown}>
-                        {better(card.point)}
-                    </div>
-                </div>
-        }
+            <div className={styles.number}>
+                {better(card.point)}
+            </div>
+            <div className={styles.numberDown}>
+                {better(card.point)}
+            </div>
+        </div>}
     </div>
 }
