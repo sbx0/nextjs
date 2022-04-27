@@ -47,7 +47,7 @@ const gameReducer = (state, action) => {
                 return state;
             }
             let currentPlayer = users[index];
-            if (currentPlayer == null) return;
+            if (currentPlayer == null) return state;
             if (currentPlayer.id === action.user?.data.id) {
                 return {
                     ...state, myTurn: true
