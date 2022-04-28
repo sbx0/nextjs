@@ -22,4 +22,8 @@ export const enUS = {
     blue: 'blue',
     red: 'red',
     green: 'green',
+    addBot: 'add bot',
+    removeBot: 'remove bot',
+    addingBot: 'adding bot',
+    removingBot: 'removing bot',
 }

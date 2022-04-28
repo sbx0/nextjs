@@ -8,6 +8,7 @@ import {LanguageContext} from "../../../components/i18n/i18n";
 import {gameActionType, GameContext} from "./roomDetail";
 import {startUnoRoom} from "../../../apis/unoRoom";
 import {joinRoom, quitRoom} from "../../../apis/unoRoomUser";
+import {addUnoBot, removeUnoBot} from "../../../apis/unoBot";
 
 export default function RoomDashboard() {
     const language = useContext(LanguageContext);
@@ -121,6 +122,28 @@ export default function RoomDashboard() {
             </div>
         </div> : <></>}
         <div className={styles.board}>
+            <CallApiButton
+                buttonText={language.addBot}
+                loadingText={language.addingBot}
+                api={addUnoBot}
+                params={{
+                    "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                }}
+                onSuccess={() => {
+
+                }}
+            />
+            <CallApiButton
+                buttonText={language.removeBot}
+                loadingText={language.removingBot}
+                api={removeUnoBot}
+                params={{
+                    "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                }}
+                onSuccess={() => {
+
+                }}
+            />
             {state?.roomInfo?.roomStatus === 0 ? <CallApiButton
                 buttonText={(state?.roomInfo?.isIAmIn ? language.quitRoom : language.joinRoom) + state?.inNumber + '/' + state?.allNumber}
                 loadingText={(state?.roomInfo?.isIAmIn ? language.quitingRoom : language.joiningRoom)}

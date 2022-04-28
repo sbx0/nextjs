@@ -22,4 +22,8 @@ export const zhCN = {
     blue: '蓝',
     red: '红',
     green: '绿',
+    addBot: '添加机器人',
+    removeBot: '移除机器人',
+    addingBot: '正在添加机器人',
+    removingBot: '正在移除机器人',
 }
