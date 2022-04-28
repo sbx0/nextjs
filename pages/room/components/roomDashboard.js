@@ -122,43 +122,45 @@ export default function RoomDashboard() {
             </div>
         </div> : <></>}
         <div className={styles.board}>
-            <CallApiButton
-                buttonText={language.addBot}
-                loadingText={language.addingBot}
-                api={addUnoBot}
-                params={{
-                    "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
-                }}
-                onSuccess={() => {
+            {state?.roomInfo?.roomStatus === 0 ? <>
+                <CallApiButton
+                    buttonText={language.addBot}
+                    loadingText={language.addingBot}
+                    api={addUnoBot}
+                    params={{
+                        "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                    }}
+                    onSuccess={() => {
 
-                }}
-            />
-            <CallApiButton
-                buttonText={language.removeBot}
-                loadingText={language.removingBot}
-                api={removeUnoBot}
-                params={{
-                    "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
-                }}
-                onSuccess={() => {
+                    }}
+                />
+                <CallApiButton
+                    buttonText={language.removeBot}
+                    loadingText={language.removingBot}
+                    api={removeUnoBot}
+                    params={{
+                        "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                    }}
+                    onSuccess={() => {
 
-                }}
-            />
-            {state?.roomInfo?.roomStatus === 0 ? <CallApiButton
-                buttonText={(state?.roomInfo?.isIAmIn ? language.quitRoom : language.joinRoom) + state?.inNumber + '/' + state?.allNumber}
-                loadingText={(state?.roomInfo?.isIAmIn ? language.quitingRoom : language.joiningRoom)}
-                api={state?.roomInfo?.isIAmIn ? quitRoom : joinRoom}
-                params={{
-                    "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
-                }}
-                onSuccess={() => {
-                    if (state?.roomInfo?.isIAmIn) {
-                        dispatch({type: gameActionType.out})
-                    } else {
-                        dispatch({type: gameActionType.in})
-                    }
-                }}
-            /> : <></>}
+                    }}
+                />
+                <CallApiButton
+                    buttonText={(state?.roomInfo?.isIAmIn ? language.quitRoom : language.joinRoom) + state?.inNumber + '/' + state?.allNumber}
+                    loadingText={(state?.roomInfo?.isIAmIn ? language.quitingRoom : language.joiningRoom)}
+                    api={state?.roomInfo?.isIAmIn ? quitRoom : joinRoom}
+                    params={{
+                        "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                    }}
+                    onSuccess={() => {
+                        if (state?.roomInfo?.isIAmIn) {
+                            dispatch({type: gameActionType.out})
+                        } else {
+                            dispatch({type: gameActionType.in})
+                        }
+                    }}
+                />
+            </> : <></>}
             {state?.inNumber === state?.allNumber && state?.roomInfo?.isIAmIn && state?.roomInfo?.roomStatus === 0 ?
                 <CallApiButton
                     buttonText={language.begin}

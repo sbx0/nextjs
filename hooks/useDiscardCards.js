@@ -14,7 +14,9 @@ export default function useDiscardCards() {
         }
         let cards = data.concat();
         if (cards.length > 5) {
+            cards.reverse();
             cards.pop();
+            cards.reverse();
         }
         cards.push(sseState?.discardCardsMessage);
         setData(cards);
@@ -24,9 +26,10 @@ export default function useDiscardCards() {
     useEffect(() => {
         if (sseState?.roomCode === undefined) return;
         discardCards({roomCode: sseState?.roomCode}).then((response) => {
-            if (response) {
-                dispatch({type: gameActionType.discards, data: response.data.splice(0, 5).reverse()})
-                setData(response.data.splice(0, 5).reverse());
+            let d = response.data.reverse();
+            if (response.code === '0') {
+                dispatch({type: gameActionType.discards, data: d})
+                setData(d);
             } else {
                 dispatch({type: gameActionType.discards, data: []})
                 setData([]);
