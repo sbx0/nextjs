@@ -1,8 +1,8 @@
+import React, {useContext} from "react";
 import styles from './roomDashboard.module.css';
 import CallApiButton from "../../../components/common/callApiButton";
 import {drawCard, nextPlay, playCards} from "../../../apis/unoCard";
-import {toast, ToastContainer} from "react-toastify";
-import React, {useContext} from "react";
+import {toast} from "react-toastify";
 import {actionType, SSEContext} from "./roomSSE";
 import {LanguageContext} from "../../../components/i18n/i18n";
 import {gameActionType, GameContext} from "./roomDetail";
@@ -121,30 +121,32 @@ export default function RoomDashboard() {
                 {language.green}
             </div>
         </div> : <></>}
+        {state?.roomInfo?.roomStatus === 0 ? <div className={styles.colorDiv}>
+            <CallApiButton
+                buttonText={language.addBot}
+                loadingText={language.addingBot}
+                api={addUnoBot}
+                params={{
+                    "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                }}
+                onSuccess={() => {
+
+                }}
+            />
+            <CallApiButton
+                buttonText={language.removeBot}
+                loadingText={language.removingBot}
+                api={removeUnoBot}
+                params={{
+                    "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                }}
+                onSuccess={() => {
+
+                }}
+            /></div> : <></>}
         <div className={styles.board}>
             {state?.roomInfo?.roomStatus === 0 ? <>
-                <CallApiButton
-                    buttonText={language.addBot}
-                    loadingText={language.addingBot}
-                    api={addUnoBot}
-                    params={{
-                        "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
-                    }}
-                    onSuccess={() => {
 
-                    }}
-                />
-                <CallApiButton
-                    buttonText={language.removeBot}
-                    loadingText={language.removingBot}
-                    api={removeUnoBot}
-                    params={{
-                        "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
-                    }}
-                    onSuccess={() => {
-
-                    }}
-                />
                 <CallApiButton
                     buttonText={(state?.roomInfo?.isIAmIn ? language.quitRoom : language.joinRoom) + state?.inNumber + '/' + state?.allNumber}
                     loadingText={(state?.roomInfo?.isIAmIn ? language.quitingRoom : language.joiningRoom)}
@@ -197,7 +199,6 @@ export default function RoomDashboard() {
                         sseDispatch({type: actionType.draw, data: params})
                     }}
                 /> : <></>}
-            <ToastContainer/>
         </div>
     </>
 }

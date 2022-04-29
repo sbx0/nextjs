@@ -14,7 +14,7 @@ export default function RoomUser() {
                     return <div key={one.id}
                                 className={`${((index + "") === sseState?.whoTurnMessage) ? styles.currentUser : ''} ${styles['player' + index]}`}>
                         <div className={styles.playerName}>{one.nickname}</div>
-                        <div className={styles.cardNum}>{one.num}</div>
+                        <div className={styles.cardNum}>{one.numberOfCards}</div>
                     </div>
                 })
             }

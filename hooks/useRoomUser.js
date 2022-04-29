@@ -14,7 +14,7 @@ export default function useRoomUser(roomCode, numberOfCardsMessage) {
         let users = data.concat();
         for (let i = 0; i < users.length; i++) {
             if (users[i].id.toString() === userId) {
-                users[i].num = numbers;
+                users[i].numberOfCards = numbers;
                 break;
             }
         }

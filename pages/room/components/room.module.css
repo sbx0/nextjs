@@ -148,13 +148,14 @@
 
 .playerName {
     color: white;
-    font-size: 20px;
+    font-size: 1em;
     user-select: none;
 }
 
 .cardNum {
     color: white;
-    font-size: 15px;
+    font-size: 1.3em;
+    font-weight: bold;
     user-select: none;
 }
 

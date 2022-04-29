@@ -13,11 +13,11 @@ export default function useDiscardCards() {
             return;
         }
         let cards = data.concat();
-        if (cards.length > 5) {
+        while (cards.length > 5) {
             cards.reverse();
             cards.pop();
-            cards.reverse();
         }
+        cards.reverse();
         cards.push(sseState?.discardCardsMessage);
         setData(cards);
         dispatch({type: gameActionType.discards, data: cards})
