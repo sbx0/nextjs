@@ -10,7 +10,7 @@ with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/
 
 # Demo
 
-![uno-game-1.gif](https://s2.loli.net/2022/04/21/v5w6YTgM3GLpziO.gif)
+![demo.gif](https://s2.loli.net/2022/05/10/6jK3TrQfcgnZ5lR.gif)
 
 ## Getting Started
 
