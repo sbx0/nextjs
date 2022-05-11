@@ -99,7 +99,7 @@ export default function RoomSSE() {
         }
 
         eventSource.current = new EventSourcePolyfill(
-            "/UNO/uno/room/subscribe/" + router.query.roomCode, {
+            "/UNO/message/subscribe/" + router.query.roomCode, {
                 headers: {
                     'version': process.env.NEXT_PUBLIC_VERSION,
                     'instance-id': state.serviceInstanceId

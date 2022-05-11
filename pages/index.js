@@ -1,111 +1,99 @@
-import React, {useEffect, useState} from 'react';
-import Link from 'next/link';
-import {createUnoRoom, pagingUnoRoomsApi} from "../apis/unoRoom";
-import styles from '../css/index.module.css';
+import React, {useEffect, useRef, useState} from 'react';
 import GlobalHeader from "../components/common/header";
 import Footer from "../components/common/footer";
-import cookie from "cookie";
 import 'react-toastify/dist/ReactToastify.css';
 import CallApiButton from "../components/common/callApiButton";
+import styles from '../css/index.module.css';
+import {infoMatch, joinMatch, quitMatch} from "../apis/match";
+import {EventSourcePolyfill} from "event-source-polyfill";
+import {useRouter} from "next/router";
 
-export default function Index({data}) {
-    const [page, setPage] = useState(2);
-    const [pageSize, setPageSize] = useState(20);
-    const [records, setRecords] = useState(data);
-    const [hasMore, setHasMore] = useState(true);
+export default function Index() {
+    const eventSource = useRef();
+    const router = useRouter()
+
+    const [size, setSize] = useState(0);
+    const [matching, setMatching] = useState(false);
 
     useEffect(() => {
-        if (data.length < pageSize) {
-            setHasMore(false);
-        }
+        infoMatch().then((response) => {
+            if (response.code === "0") {
+                setSize(response.data.size);
+                setMatching(response.data.join);
+            }
+        })
     }, [])
 
     useEffect(() => {
-        listContent();
-    }, [page])
-
-    const refresh = () => {
-        setHasMore(true);
-        setPage(1);
-    }
-
-    const listContent = () => {
-        if (!hasMore) {
-            return;
-        }
-        pagingUnoRoomsApi({
-            page: page,
-            size: pageSize
-        }).then((response) => {
-            let data = response.data;
-            if (page === 1) {
-                setRecords(data);
-            } else {
-                let slice = records.slice(0);
-                for (let i = 0; i < data.length; i++) {
-                    slice.push(data[i]);
+        eventSource.current = new EventSourcePolyfill(
+            "/UNO/message/subscribe/match", {
+                headers: {
+                    'version': process.env.NEXT_PUBLIC_VERSION,
                 }
-                setRecords(slice);
             }
-            let total = response.total;
-            let pageSize = response.size;
-            let totalPages = Math.ceil(total / pageSize);
-            if (page + 1 > totalPages) {
-                setHasMore(false);
-            } else {
-                setPage(page + 1);
-                setHasMore(true);
-            }
-        })
+        )
+
+        eventSource.current.onmessage = (event) => {
+        }
+
+        eventSource.current.onerror = (event) => {
+            console.log('onerror')
+        }
+
+        eventSource.current.onopen = (event) => {
+            console.log('onopen')
+        }
+
+        eventSource.current.addEventListener("match_info", (event) => {
+            console.log("match_info ", event.data)
+            setSize(event.data);
+        });
+
+        eventSource.current.addEventListener("match_found", (event) => {
+            console.log("match_found ", event.data)
+            router.push("/room/" + event.data).then(r => r);
+        });
+
+        return () => {
+            eventSource.current.removeEventListener("match_info");
+            eventSource.current.removeEventListener("match_found");
+            eventSource.current.close();
+        }
+    }, [])
+
+    let button;
+
+    if (matching) {
+        button = <CallApiButton
+            buttonText={'取消匹配，' + size + '人正在匹配中'}
+            loadingText={'正在取消'}
+            api={quitMatch}
+            onSuccess={() => {
+                setMatching(false);
+            }}
+        />
+    } else {
+        button = <CallApiButton
+            buttonText={'开始匹配，' + size + '人正在匹配中'}
+            loadingText={'正在匹配'}
+            api={joinMatch}
+            params={{
+                "gamerSize": 2,
+                "allowBot": false
+            }}
+            onSuccess={() => {
+                setMatching(true);
+            }}
+        />
     }
 
     return (
         <>
             <GlobalHeader/>
             <div className={styles.container}>
-                <CallApiButton
-                    buttonText={'创建房间'}
-                    loadingText={'正在创建'}
-                    api={createUnoRoom}
-                    params={{
-                        "roomName": "Friendship first",
-                        "playersSize": 2,
-                        "privacyFlag": 0,
-                        "remark": "Auto Create"
-                    }}
-                    onSuccess={refresh}
-                />
-                {
-                    records.map(record => <div key={record.id}
-                                               className={styles.card}>
-                        <p>{record.createTime} [{record.playersInSize}/{record.playersSize}]</p>
-                        <Link href={'/room/' + record.roomCode}>
-                            <h4>{record.roomName}</h4>
-                        </Link>
-                        <p>{record.remark}</p>
-                    </div>)
-                }
-                <div className={styles.loadingButtonDiv}>
-                    {
-                        hasMore ? <button onClick={() => listContent()}>Loading More</button> : <></>
-                    }
-                </div>
+                {button}
             </div>
             <Footer/>
         </>
     );
-}
-
-export async function getServerSideProps({req, query}) {
-    const cookies = cookie.parse(req ? req.headers.cookie || "" : document.cookie);
-    const response = await pagingUnoRoomsApi({
-        page: 1,
-        size: 20
-    }, cookies);
-
-    if (response.code === "0") {
-        return {props: {data: response.data}}
-    }
-
-    return {props: {data: []}}
 }
