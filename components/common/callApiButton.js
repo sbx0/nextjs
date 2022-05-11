@@ -13,6 +13,9 @@ export default function CallApiButton({loadingText, buttonText, onSuccess, api, 
 
     const createRoom = () => {
         setLoading(true);
+        if (params == null) {
+            params = {}
+        }
         api(params, null, {
             'instance-id': params['instance-id']
         }).then((response) => {
