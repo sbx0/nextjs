@@ -20,8 +20,8 @@ export default function Login() {
             username: username,
             password: password
         }).then((response) => {
-            if (response.isLogin) {
-                setCookie('token', response.tokenValue);
+            if (response.data.isLogin) {
+                setCookie('token', response.data.tokenValue);
                 router.push("/").then(r => r);
             }
         })
