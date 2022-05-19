@@ -1,52 +1,28 @@
 [![Build Status](https://github.com/sbx0/nextjs/actions/workflows/node.js.yml/badge.svg)](https://github.com/sbx0/nextjs/actions/workflows/node.js.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped
-with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# nextjs (uno game frontend) [under construction]
 
-# [supported by JetBrains](https://jb.gg/OpenSourceSupport)
+I am Java developer, this is my frontend toy project.
 
-![jetbrains](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
+The supplementary backend project is [https://github.com/sbx0/microservices](https://github.com/sbx0/microservices).
 
-# Demo
+You can visit [https://next.sbx0.cn](https://next.sbx0.cn) to see this project's online version, but the user register
+function is not public because this project is under construction. So if you are interested in this project and want to
+use it online, you can email me, and I will give you an account for free. My email address is in
+my [GitHub home page](https://github.com/sbx0).
+
+## Features
+
+- basic uno game rules
+- one click matching gamers
+- create game room and invite your friends
+- no gamer size limit
+
+## Demo
 
 ![demo.gif](https://s2.loli.net/2022/05/10/6jK3TrQfcgnZ5lR.gif)
 
-## Getting Started
+## [supported by JetBrains](https://jb.gg/OpenSourceSupport)
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed
-on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited
-in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated
-as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions
-are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use
-the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
-from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![jetbrains](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
