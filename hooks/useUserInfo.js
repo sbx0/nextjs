@@ -10,7 +10,7 @@ export default function useUserInfo() {
             if (response?.code === 500) {
                 setData(null);
             } else {
-                setData(response);
+                setData(response.data);
             }
             setLoading(false);
         })
