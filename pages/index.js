@@ -10,7 +10,7 @@ import {useRouter} from "next/router";
 
 export default function Index() {
     const eventSource = useRef();
-    const router = useRouter()
+    const router = useRouter();
 
     const [size, setSize] = useState(0);
     const [matching, setMatching] = useState(false);
