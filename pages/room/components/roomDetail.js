@@ -7,7 +7,7 @@ import DiscardCards from "../../../components/card/discardCards";
 import RoomDashboard from "./roomDashboard";
 import RoomUser from "./roomUser";
 import {UserContext} from "../../../components/common/loginContainer";
-import {SSEContext} from "./roomSSE";
+import {actionType, SSEContext} from "./roomSSE";
 import {LanguageContext} from "../../../components/i18n/i18n";
 
 export const gameActionType = {
@@ -174,6 +174,9 @@ export default function RoomDetail() {
 
     useEffect(() => {
         dispatch({type: gameActionType.initRoomInfo, data: roomInfo.data, user: user})
+        if (roomInfo?.data?.roomStatus > 1) {
+            sseDispatch({type: actionType.ending, data: null})
+        }
     }, [roomInfo.data, user.data])
 
     useEffect(() => {

@@ -5,6 +5,7 @@ import {serviceInstanceChoose} from "../../../apis/serviceInstance";
 import LoadingContainer from "../../../components/common/loadingContainer";
 import RoomDetail from "./roomDetail";
 import {LanguageContext} from "../../../components/i18n/i18n";
+import RoomResult from "./roomResult";
 
 export const actionType = {
     roomCode: "roomCode",
@@ -19,6 +20,8 @@ export const actionType = {
     who: "who",
     penalty: "penalty",
     direction: "direction",
+    ending: "ending",
+    back: "back",
 };
 
 const message = {
@@ -32,7 +35,8 @@ const message = {
     whoTurnMessage: '0',
     penaltyCards: '0',
     direction: 'normal',
-    roomCode: null
+    roomCode: null,
+    ending: false,
 };
 
 const reducer = (state, action) => {
@@ -61,6 +65,8 @@ const reducer = (state, action) => {
             return {...state, penaltyCards: action.data};
         case actionType.direction:
             return {...state, direction: action.data};
+        case actionType.ending:
+            return {...state, ending: true};
         default:
             console.error('error')
     }
@@ -152,6 +158,10 @@ export default function RoomSSE() {
             type: actionType.direction,
             data: event.data.toString()
         }));
+        eventSource.current.addEventListener("ending", (event) => dispatch({
+            type: actionType.ending,
+            data: event.data.toString()
+        }));
 
         return () => {
             eventSource.current.removeEventListener("join");
@@ -162,6 +172,7 @@ export default function RoomSSE() {
             eventSource.current.removeEventListener("who_turn");
             eventSource.current.removeEventListener("penalty_cards");
             eventSource.current.removeEventListener("direction");
+            eventSource.current.removeEventListener("ending");
             eventSource.current.close();
         }
     }, [state.serviceInstanceId])
@@ -169,7 +180,12 @@ export default function RoomSSE() {
     return <>
         <LoadingContainer loading={!state.ready} text={language.loading}>
             <SSEContext.Provider value={{sseState: state, sseDispatch: dispatch}}>
-                <RoomDetail/>
+                {
+                    state?.ending ?
+                        <RoomResult/>
+                        :
+                        <RoomDetail/>
+                }
             </SSEContext.Provider>
         </LoadingContainer>
     </>

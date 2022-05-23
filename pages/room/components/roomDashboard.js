@@ -146,7 +146,6 @@ export default function RoomDashboard() {
             /></div> : <></>}
         <div className={styles.board}>
             {state?.roomInfo?.roomStatus === 0 ? <>
-
                 <CallApiButton
                     buttonText={(state?.roomInfo?.isIAmIn ? language.quitRoom : language.joinRoom) + state?.inNumber + '/' + state?.allNumber}
                     loadingText={(state?.roomInfo?.isIAmIn ? language.quitingRoom : language.joiningRoom)}
