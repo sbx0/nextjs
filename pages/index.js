@@ -13,6 +13,7 @@ export default function Index() {
     const router = useRouter();
 
     const [size, setSize] = useState(0);
+    const [gamerSize, setGamerSize] = useState(2);
     const [matching, setMatching] = useState(false);
 
     useEffect(() => {
@@ -78,7 +79,7 @@ export default function Index() {
             loadingText={'正在匹配'}
             api={joinMatch}
             params={{
-                "gamerSize": 2,
+                "gamerSize": gamerSize,
                 "allowBot": false
             }}
             onSuccess={() => {
@@ -91,6 +92,19 @@ export default function Index() {
         <>
             <GlobalHeader/>
             <div className={styles.container}>
+                <div>
+                    选择人数&nbsp;
+                    <select onChange={(event) => setGamerSize(event.target.value)}>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                    </select>
+                </div>
                 {button}
             </div>
             <Footer/>

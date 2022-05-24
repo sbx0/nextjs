@@ -32,7 +32,7 @@ const message = {
     drawCardMessage: null,
     discardCardsMessage: null,
     numberOfCardsMessage: null,
-    whoTurnMessage: '0',
+    whoTurnMessage: null,
     penaltyCards: '0',
     direction: 'normal',
     roomCode: null,
