@@ -4,6 +4,7 @@ import {playCards} from "../../apis/unoCard";
 import {toast} from "react-toastify";
 import {LanguageContext} from "../i18n/i18n";
 import {gameActionType, GameContext} from "../../pages/room/components/roomDetail";
+import useSingleAndDoubleClick from "../common/useSingleAndDoubleClick";
 
 export default function Card({roomCode, card, serviceInstanceId}) {
     const language = useContext(LanguageContext);
@@ -125,7 +126,10 @@ export default function Card({roomCode, card, serviceInstanceId}) {
         }
     }
 
-    return <div onDoubleClickCapture={() => clickToPlayCard()} className={styles.container}>
+    const click = useSingleAndDoubleClick(null, clickToPlayCard);
+
+    return <div onClick={click}
+                className={styles.container}>
         {debug ? <div>
             <div>
                 {better(card.point)}
