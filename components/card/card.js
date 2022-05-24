@@ -126,7 +126,11 @@ export default function Card({roomCode, card, serviceInstanceId}) {
         }
     }
 
-    const click = useSingleAndDoubleClick(null, clickToPlayCard);
+    const singleClick = () => {
+
+    }
+
+    const click = useSingleAndDoubleClick(singleClick, clickToPlayCard);
 
     return <div onClick={click}
                 className={styles.container}>

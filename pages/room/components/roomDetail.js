@@ -8,7 +8,6 @@ import RoomDashboard from "./roomDashboard";
 import RoomUser from "./roomUser";
 import {UserContext} from "../../../components/common/loginContainer";
 import {actionType, SSEContext} from "./roomSSE";
-import {LanguageContext} from "../../../components/i18n/i18n";
 
 export const gameActionType = {
     initUser: 'initUser',
@@ -63,7 +62,7 @@ const gameReducer = (state, action) => {
             if (index == null) {
                 return state;
             }
-            let users = state.roomUser;
+            let users = action.users;
             if (users === null) {
                 return state;
             }
@@ -73,6 +72,8 @@ const gameReducer = (state, action) => {
             if (currentPlayer.id === action.user?.data.id) {
                 my = true;
             }
+
+            console.log('myTurn', my)
 
             return {
                 ...state, myTurn: my
@@ -96,24 +97,25 @@ const gameReducer = (state, action) => {
                 }
             }
         case gameActionType.initRoomInfo:
-            let myTurn = false;
-
-            let currentGamerIndex = action.data?.currentGamer;
-            if (currentGamerIndex == null) {
-                return {
-                    ...state, roomInfo: action.data, allNumber: action.data?.playersSize, myTurn: myTurn
+            let myTurn = state.myTurn;
+            if (action.data?.message == null) {
+                let currentGamerIndex = action.data?.currentGamer;
+                if (currentGamerIndex == null) {
+                    return {
+                        ...state, roomInfo: action.data, allNumber: action.data?.playersSize, myTurn: myTurn
+                    }
                 }
-            }
-            let roomUsers = state.roomUser;
-            if (roomUsers === null) {
-                return {
-                    ...state, roomInfo: action.data, allNumber: action.data?.playersSize, myTurn: myTurn
+                let roomUsers = action.users;
+                if (roomUsers === null) {
+                    return {
+                        ...state, roomInfo: action.data, allNumber: action.data?.playersSize, myTurn: myTurn
+                    }
                 }
-            }
-            let currentPlayerData = roomUsers[currentGamerIndex];
 
-            if (currentPlayerData?.id === action.user?.data.id) {
-                myTurn = true;
+                let currentPlayerData = roomUsers[currentGamerIndex];
+                if (currentPlayerData?.id === action.user?.data.id) {
+                    myTurn = true;
+                }
             }
 
             return {
@@ -166,18 +168,27 @@ const colorWeight = {
 
 export default function RoomDetail() {
     const [state, dispatch] = useReducer(gameReducer, gameInfo);
-    const language = useContext(LanguageContext);
     const user = useContext(UserContext);
     const {sseState, sseDispatch} = useContext(SSEContext);
     const roomInfo = useRoomInfo(sseState?.roomCode);
     const roomUser = useRoomUser(sseState?.roomCode, sseState?.numberOfCardsMessage);
 
     useEffect(() => {
-        dispatch({type: gameActionType.initRoomInfo, data: roomInfo.data, user: user})
+        dispatch({
+            type: gameActionType.initRoomInfo,
+            data: roomInfo.data,
+            user: user,
+            users: roomUser.data,
+            message: sseState?.whoTurnMessage
+        })
         if (roomInfo?.data?.roomStatus > 1) {
             sseDispatch({type: actionType.ending, data: null})
         }
-    }, [roomInfo.data, user.data])
+    }, [roomInfo.data, roomUser.data, user])
+
+    useEffect(() => {
+        dispatch({type: gameActionType.whoTurn, data: sseState?.whoTurnMessage, user: user, users: roomUser.data})
+    }, [sseState?.whoTurnMessage])
 
     useEffect(() => {
         dispatch({type: gameActionType.initUser, data: roomUser.data})
@@ -233,10 +244,6 @@ export default function RoomDetail() {
 
         dispatch({type: gameActionType.initCards, data: sorted})
     }, [sseState?.drawCardMessage])
-
-    useEffect(() => {
-        dispatch({type: gameActionType.whoTurn, data: sseState?.whoTurnMessage, user: user})
-    }, [sseState?.whoTurnMessage, roomUser.data, user])
 
     return (<GameContext.Provider value={{state: state, dispatch: dispatch}}>
         <div className={styles.container}>
