@@ -32,6 +32,11 @@ export default function GameView() {
                 Discard Card
             </div>
         </div>
+        <div className={styles.fixBottom}>
+            <div className={styles.panelContainer}>
+
+            </div>
+        </div>
         <div className={styles.gamersContainer} hidden>
             {gamers.map((gamer) =>
                 <div>
