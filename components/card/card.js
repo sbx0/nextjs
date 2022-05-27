@@ -6,9 +6,9 @@ import {LanguageContext} from "../i18n/i18n";
 import {gameActionType, GameContext} from "../../pages/room/components/roomDetail";
 import useSingleAndDoubleClick from "../common/useSingleAndDoubleClick";
 
-export default function Card({roomCode, card, serviceInstanceId}) {
+export default function Card({roomCode, card}) {
+    const debug = process.env.NEXT_PUBLIC_DEBUG === 'true';
     const language = useContext(LanguageContext);
-    const [debug, setDebug] = useState(false);
     const [can, setCan] = useState(false);
     const [choose, setChoose] = useState(false);
     const {state, dispatch} = useContext(GameContext);
@@ -87,9 +87,7 @@ export default function Card({roomCode, card, serviceInstanceId}) {
 
         playCards({
             roomCode: roomCode, uuid: card.uuid, color: state.chooseColor != null ? state.chooseColor : card.color
-        }, null, {
-            'instance-id': serviceInstanceId
-        }).then((response) => {
+        }, null).then((response) => {
             if (response.code !== '0') {
                 dispatch({type: gameActionType.initCards, data: original})
                 dispatch({type: gameActionType.discards, data: originalDiscards})

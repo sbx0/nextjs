@@ -16,9 +16,7 @@ export default function CallApiButton({loadingText, buttonText, onSuccess, api, 
         if (params == null) {
             params = {}
         }
-        api(params, null, {
-            'instance-id': params['instance-id']
-        }).then((response) => {
+        api(params, null).then((response) => {
             if (response.code === 500) {
                 router.push("/login").then(r => r);
             }

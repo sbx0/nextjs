@@ -22,7 +22,6 @@ export default function MyCards() {
         <div className={styles.innerContainer}>
             {state?.cards.map((one, index) => <Card
                 key={index}
-                serviceInstanceId={sseState?.serviceInstanceId}
                 roomCode={sseState?.roomCode}
                 card={one}
                 data={cards.data}

@@ -39,10 +39,6 @@ export function get(url, params, cookies, additionalHeaders) {
         }
     }
 
-    if (additionalHeaders != null) {
-        headers['instance-id'] = additionalHeaders['instance-id'];
-    }
-
     const request = axios({
         method: 'get',
         url: url,

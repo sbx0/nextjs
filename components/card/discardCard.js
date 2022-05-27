@@ -1,10 +1,10 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import styles from './discardCard.module.css';
 import {LanguageContext} from "../i18n/i18n";
 
 export default function DiscardCard({card}) {
     const language = useContext(LanguageContext);
-    const [debug, setDebug] = useState(false);
+    const debug = process.env.NEXT_PUBLIC_DEBUG === 'true';
 
     const better = (text) => {
         switch (text) {
