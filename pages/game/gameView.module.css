@@ -86,6 +86,34 @@
     overflow: auto;
 }
 
+.controllerContainer {
+    width: 100%;
+    height: 4rem;
+    padding: 0.2rem;
+    overflow: auto;
+    margin-bottom: 1rem;
+}
+
+.controllerScroll {
+    width: max-content;
+    height: 100%;
+}
+
+.controllerButton {
+    border: 0.2rem solid black;
+    padding: 0.6rem 0.9rem;
+    width: max-content;
+    height: 100%;
+    display: inline-grid;
+    align-content: center;
+    text-align: center;
+    margin-right: 1rem;
+}
+
+.controllerButton:last-child {
+    margin-right: 0;
+}
+
 .myCardsContainer {
     width: 121%;
     height: 100%;

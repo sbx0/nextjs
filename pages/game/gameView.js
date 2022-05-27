@@ -41,6 +41,22 @@ export default function GameView() {
             </div>
         </div>
         <div className={styles.fixBottom}>
+            <div className={styles.controllerContainer}>
+                <div className={styles.controllerScroll}>
+                    <div className={styles.controllerButton}>
+                        Join Game
+                    </div>
+                    <div className={styles.controllerButton}>
+                        Quit Game
+                    </div>
+                    <div className={styles.controllerButton}>
+                        Start Game
+                    </div>
+                    <div className={styles.controllerButton}>
+                        Skip
+                    </div>
+                </div>
+            </div>
             <div className={styles.panelContainer}>
                 <div className={styles.myCardsContainer}>
                     {cards.map((card) =>
