@@ -10,6 +10,14 @@ export default function GameView() {
         {'id': 'gamer5', 'name': 'gamer5'},
     ];
 
+    const cards = [
+        {'id': 'gamer1', 'name': 'gamer1'},
+        {'id': 'gamer2', 'name': 'gamer2'},
+        {'id': 'gamer3', 'name': 'gamer3'},
+        {'id': 'gamer4', 'name': 'gamer4'},
+        {'id': 'gamer5', 'name': 'gamer5'},
+    ];
+
     return <div className={styles.viewContainer}>
         <div className={styles.gamersContainer}>
             <div className={styles.gamersScroll}>
@@ -34,7 +42,13 @@ export default function GameView() {
         </div>
         <div className={styles.fixBottom}>
             <div className={styles.panelContainer}>
+                <div className={styles.myCardsContainer}>
+                    {cards.map((card) =>
+                        <div key={card.id} className={styles.cardContainer}>
 
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
         <div className={styles.gamersContainer} hidden>
