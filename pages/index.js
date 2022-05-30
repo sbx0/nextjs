@@ -52,7 +52,7 @@ export default function Index() {
         });
 
         eventSource.current.addEventListener("match_found", (event) => {
-            router.push("/room/" + event.data).then(r => r);
+            router.push("/game/" + event.data).then(r => r);
         });
 
         return () => {

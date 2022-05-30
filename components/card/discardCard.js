@@ -29,25 +29,25 @@ export default function DiscardCard({card}) {
             debug ?
                 <div>
                     <div>
-                        {better(card.point)}
+                        {better(card?.point)}
                     </div>
                     <div>
-                        {card.color}
+                        {card?.color}
                     </div>
                     <div>
-                        {better(card.point)}
+                        {better(card?.point)}
                     </div>
                 </div>
                 :
                 <div className={styles['bg-' + card.color]}>
                     <div className={styles.numberUp}>
-                        {better(card.point)}
+                        {better(card?.point)}
                     </div>
                     <div className={styles.number}>
-                        {better(card.point)}
+                        {better(card?.point)}
                     </div>
                     <div className={styles.numberDown}>
-                        {better(card.point)}
+                        {better(card?.point)}
                     </div>
                 </div>
         }

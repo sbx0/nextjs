@@ -214,7 +214,7 @@ export default function RoomDetail() {
             return;
         }
         let sorted = cards.concat();
-        for (let i = 0; i < drawCardMessage.length; i++) {
+        for (let i = 0; i < drawCardMessage?.length; i++) {
             sorted.push(drawCardMessage[i]);
         }
         let temp;
