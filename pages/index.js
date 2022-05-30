@@ -7,6 +7,7 @@ import styles from '../css/index.module.css';
 import {infoMatch, joinMatch, quitMatch} from "../apis/match";
 import {EventSourcePolyfill} from "event-source-polyfill";
 import {useRouter} from "next/router";
+import {Box, CircularProgress, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 
 export default function Index() {
     const eventSource = useRef();
@@ -19,6 +20,7 @@ export default function Index() {
     useEffect(() => {
         infoMatch().then((response) => {
             if (response.code === "0") {
+                setGamerSize(parseInt(response.data.choose));
                 setSize(response.data.size);
                 setMatching(response.data.join);
             }
@@ -46,13 +48,11 @@ export default function Index() {
         }
 
         eventSource.current.addEventListener("match_info", (event) => {
-            console.log("match_info ", event.data)
             setSize(event.data);
         });
 
         eventSource.current.addEventListener("match_found", (event) => {
-            console.log("match_found ", event.data)
-            router.push("/room/" + event.data).then(r => r);
+            router.push("/game/" + event.data).then(r => r);
         });
 
         return () => {
@@ -66,7 +66,7 @@ export default function Index() {
 
     if (matching) {
         button = <CallApiButton
-            buttonText={'取消匹配，' + size + '人正在匹配中'}
+            buttonText={'取消匹配'}
             loadingText={'正在取消'}
             api={quitMatch}
             onSuccess={() => {
@@ -75,7 +75,7 @@ export default function Index() {
         />
     } else {
         button = <CallApiButton
-            buttonText={'开始匹配，' + size + '人正在匹配中'}
+            buttonText={'开始匹配'}
             loadingText={'正在匹配'}
             api={joinMatch}
             params={{
@@ -92,20 +92,45 @@ export default function Index() {
         <>
             <GlobalHeader/>
             <div className={styles.container}>
-                <div>
-                    选择人数&nbsp;
-                    <select onChange={(event) => setGamerSize(event.target.value)}>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                        <option>9</option>
-                    </select>
-                </div>
-                {button}
+                <FormControl sx={{m: 1, minWidth: 80}}>
+                    <InputLabel id="demo-simple-select-autowidth-label">人数</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-autowidth-label"
+                        id="demo-simple-select-autowidth"
+                        value={gamerSize}
+                        onChange={(event) => {
+                            setGamerSize(event.target.value);
+                        }}
+                        autoWidth
+                        label="Age"
+                        disabled={matching}
+                    >
+                        <MenuItem value={2}>2人</MenuItem>
+                        <MenuItem value={3}>3人</MenuItem>
+                        <MenuItem value={4}>4人</MenuItem>
+                        <MenuItem value={5}>5人</MenuItem>
+                        <MenuItem value={6}>6人</MenuItem>
+                        <MenuItem value={7}>7人</MenuItem>
+                        <MenuItem value={8}>8人</MenuItem>
+                        <MenuItem value={9}>9人</MenuItem>
+                    </Select>
+                </FormControl>
+                <Box sx={{display: 'flex'}}>
+                    {button}
+                </Box>
+                {
+                    matching ?
+                        <>
+                            <Box sx={{display: 'flex'}}>
+                                <CircularProgress/>
+                            </Box>
+                            <Box sx={{display: 'flex'}}>
+                                <p>{'当前队列 ' + size + ' 人'}</p>
+                            </Box>
+                        </>
+                        :
+                        <></>
+                }
             </div>
             <Footer/>
         </>

@@ -1,0 +1,131 @@
+.viewContainer {
+    width: 100vw;
+    height: 100vh;
+    border: 0.2rem solid black;
+    padding: 1rem;
+}
+
+.gamersContainer {
+    width: 100%;
+    height: 8rem;
+    border: 0.2rem solid black;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    overflow: auto;
+    scroll-behavior: smooth;
+}
+
+.gamersScroll {
+    width: max-content;
+    height: 100%;
+}
+
+.gamerContainer {
+    width: 8rem;
+    height: 100%;
+    border: 0.2rem solid black;
+    padding: 1rem;
+    margin-right: 1rem;
+    display: inline-grid;
+    align-content: center;
+    text-align: center;
+}
+
+.gamerContainer:last-child {
+    margin-right: 0;
+}
+
+.gamerName {
+    display: block;
+    width: 100%;
+    height: 30%;
+}
+
+
+.deckContainer {
+    width: 100%;
+    height: 12rem;
+    border: 0.2rem solid black;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 46% 46%;
+    grid-gap: 2rem;
+}
+
+.cardDeckContainer {
+    height: 100%;
+    border: 0.2rem solid black;
+    display: grid;
+    align-content: center;
+    text-align: center;
+}
+
+.discardDeckContainer {
+    height: 100%;
+    border: 0.2rem solid black;
+    display: grid;
+    align-content: center;
+    text-align: center;
+}
+
+.fixBottom {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    padding: 1rem;
+}
+
+.panelContainer {
+    width: 100%;
+    height: 11.3rem;
+    border: 0.2rem solid black;
+    padding: 1rem;
+    overflow: auto;
+}
+
+.controllerContainer {
+    width: 100%;
+    height: 4rem;
+    padding: 0.2rem;
+    overflow: auto;
+    margin-bottom: 1rem;
+}
+
+.controllerScroll {
+    width: max-content;
+    height: 100%;
+}
+
+.controllerButton {
+    border: 0.2rem solid black;
+    padding: 0.6rem 0.9rem;
+    width: max-content;
+    height: 100%;
+    display: inline-grid;
+    align-content: center;
+    text-align: center;
+    margin-right: 1rem;
+}
+
+.controllerButton:last-child {
+    margin-right: 0;
+}
+
+.myCardsContainer {
+    width: 121%;
+    height: 100%;
+}
+
+.cardContainer {
+    width: 6rem;
+    height: 9rem;
+    border: 0.2rem solid black;
+    margin-right: 1rem;
+    margin-bottom: .5rem;
+    display: inline-grid;
+    align-content: center;
+    text-align: center;
+}

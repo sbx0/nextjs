@@ -6,6 +6,8 @@ import {removeCookie, setCookie} from "../utils/cookies";
 import GlobalHeader from "../components/common/header";
 import {useRouter} from 'next/router'
 import Footer from "../components/common/footer";
+import 'react-toastify/dist/ReactToastify.css';
+import {toast, ToastContainer} from "react-toastify";
 
 export default function Login() {
     const router = useRouter()
@@ -14,15 +16,26 @@ export default function Login() {
     const userInfo = useUserInfo();
 
     const loginRequest = () => {
+        if (username === '') return;
+        if (password === '') return;
         removeCookie('token', null)
         if (userInfo.data != null) return;
         loginApi({
             username: username,
             password: password
         }).then((response) => {
-            if (response.data.isLogin) {
+            if (response.data?.isLogin) {
                 setCookie('token', response.data.tokenValue);
                 router.push("/").then(r => r);
+            } else {
+                toast(response.message, {
+                    position: "bottom-center",
+                    autoClose: 1000,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                });
             }
         })
     }
@@ -72,6 +85,7 @@ export default function Login() {
                         </>
                 }
             </div>
+            <ToastContainer/>
             <Footer/>
         </>
     );

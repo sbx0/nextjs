@@ -1,10 +1,10 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import styles from './discardCard.module.css';
 import {LanguageContext} from "../i18n/i18n";
 
 export default function DiscardCard({card}) {
     const language = useContext(LanguageContext);
-    const [debug, setDebug] = useState(false);
+    const debug = process.env.NEXT_PUBLIC_DEBUG === 'true';
 
     const better = (text) => {
         switch (text) {
@@ -29,25 +29,25 @@ export default function DiscardCard({card}) {
             debug ?
                 <div>
                     <div>
-                        {better(card.point)}
+                        {better(card?.point)}
                     </div>
                     <div>
-                        {card.color}
+                        {card?.color}
                     </div>
                     <div>
-                        {better(card.point)}
+                        {better(card?.point)}
                     </div>
                 </div>
                 :
                 <div className={styles['bg-' + card.color]}>
                     <div className={styles.numberUp}>
-                        {better(card.point)}
+                        {better(card?.point)}
                     </div>
                     <div className={styles.number}>
-                        {better(card.point)}
+                        {better(card?.point)}
                     </div>
                     <div className={styles.numberDown}>
-                        {better(card.point)}
+                        {better(card?.point)}
                     </div>
                 </div>
         }

@@ -2,15 +2,12 @@ import React, {createContext, useContext, useEffect, useReducer, useRef} from "r
 import {useRouter} from "next/router";
 import {EventSourcePolyfill} from "event-source-polyfill";
 import {serviceInstanceChoose} from "../../../apis/serviceInstance";
-import LoadingContainer from "../../../components/common/loadingContainer";
 import RoomDetail from "./roomDetail";
 import {LanguageContext} from "../../../components/i18n/i18n";
 import RoomResult from "./roomResult";
 
 export const actionType = {
     roomCode: "roomCode",
-    ready: "ready",
-    notReady: "notReady",
     instance: "instance",
     join: "join",
     quit: "quit",
@@ -25,8 +22,6 @@ export const actionType = {
 };
 
 const message = {
-    ready: false,
-    serviceInstanceId: null,
     joinMessage: null,
     quitMessage: null,
     drawCardMessage: null,
@@ -43,12 +38,6 @@ const reducer = (state, action) => {
     switch (action.type) {
         case actionType.roomCode:
             return {...state, roomCode: action.data};
-        case actionType.ready:
-            return {...state, ready: true};
-        case actionType.notReady:
-            return {...state, ready: false};
-        case actionType.instance:
-            return {...state, serviceInstanceId: action.data};
         case actionType.join:
             return {...state, joinMessage: action.data};
         case actionType.quit:
@@ -96,10 +85,6 @@ export default function RoomSSE() {
     }, [router.query.roomCode])
 
     useEffect(() => {
-        if (state.serviceInstanceId === null) {
-            return;
-        }
-
         if (router.query.roomCode === null || router.query.roomCode === undefined || router.query.roomCode === '') {
             return;
         }
@@ -107,8 +92,7 @@ export default function RoomSSE() {
         eventSource.current = new EventSourcePolyfill(
             "/UNO/message/subscribe/" + router.query.roomCode, {
                 headers: {
-                    'version': process.env.NEXT_PUBLIC_VERSION,
-                    'instance-id': state.serviceInstanceId
+                    'version': process.env.NEXT_PUBLIC_VERSION
                 }
             }
         )
@@ -175,18 +159,16 @@ export default function RoomSSE() {
             eventSource.current.removeEventListener("ending");
             eventSource.current.close();
         }
-    }, [state.serviceInstanceId])
+    }, [])
 
     return <>
-        <LoadingContainer loading={!state.ready} text={language.loading}>
-            <SSEContext.Provider value={{sseState: state, sseDispatch: dispatch}}>
-                {
-                    state?.ending ?
-                        <RoomResult/>
-                        :
-                        <RoomDetail/>
-                }
-            </SSEContext.Provider>
-        </LoadingContainer>
+        <SSEContext.Provider value={{sseState: state, sseDispatch: dispatch}}>
+            {
+                state?.ending ?
+                    <RoomResult/>
+                    :
+                    <RoomDetail/>
+            }
+        </SSEContext.Provider>
     </>
 }

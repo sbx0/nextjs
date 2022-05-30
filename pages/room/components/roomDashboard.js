@@ -68,9 +68,7 @@ export default function RoomDashboard() {
             roomCode: sseState?.roomCode,
             uuid: card.uuid,
             color: state.chooseColor != null ? state.chooseColor : card.color
-        }, null, {
-            'instance-id': sseState?.serviceInstanceId
-        }).then((response) => {
+        }, null).then((response) => {
             if (response.code !== '0') {
                 dispatch({type: gameActionType.initCards, data: original})
                 dispatch({type: gameActionType.discards, data: originalDiscards})
@@ -127,7 +125,7 @@ export default function RoomDashboard() {
                 loadingText={language.addingBot}
                 api={addUnoBot}
                 params={{
-                    "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                    "roomCode": sseState?.roomCode
                 }}
                 onSuccess={() => {
 
@@ -138,7 +136,7 @@ export default function RoomDashboard() {
                 loadingText={language.removingBot}
                 api={removeUnoBot}
                 params={{
-                    "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                    "roomCode": sseState?.roomCode
                 }}
                 onSuccess={() => {
 
@@ -151,7 +149,7 @@ export default function RoomDashboard() {
                     loadingText={(state?.roomInfo?.isIAmIn ? language.quitingRoom : language.joiningRoom)}
                     api={state?.roomInfo?.isIAmIn ? quitRoom : joinRoom}
                     params={{
-                        "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                        "roomCode": sseState?.roomCode
                     }}
                     onSuccess={() => {
                         if (state?.roomInfo?.isIAmIn) {
@@ -168,7 +166,7 @@ export default function RoomDashboard() {
                     loadingText={language.loading}
                     api={startUnoRoom}
                     params={{
-                        "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                        "roomCode": sseState?.roomCode
                     }}
                     onSuccess={() => {
                         dispatch({type: gameActionType.startGame})
@@ -180,7 +178,7 @@ export default function RoomDashboard() {
                     loadingText={language.drawingCard}
                     api={drawCard}
                     params={{
-                        "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                        "roomCode": sseState?.roomCode
                     }}
                     onSuccess={(params) => {
                         sseDispatch({type: actionType.draw, data: params})
@@ -192,7 +190,7 @@ export default function RoomDashboard() {
                     loadingText={language.skipping}
                     api={nextPlay}
                     params={{
-                        "roomCode": sseState?.roomCode, "instance-id": sseState?.serviceInstanceId,
+                        "roomCode": sseState?.roomCode
                     }}
                     onSuccess={(params) => {
                         sseDispatch({type: actionType.draw, data: params})
