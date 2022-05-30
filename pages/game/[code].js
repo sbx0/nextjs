@@ -1,6 +1,6 @@
 import React from "react";
-import GameView from "./gameView";
-import useGameData from "./useGameData";
+import GameView from "../../components/game/gameView";
+import useGameData from "../../hooks/useGameData";
 
 export default function Game() {
     const {gameInfo, setGameInfo} = useGameData();
