@@ -14,22 +14,11 @@ export default function GameMessage({code, gameInfo, setGameInfo}) {
             type: type,
             content: moment().format('HH:mm:ss ') + type + ' ' + content,
         })
+
         if (messages.length > 20) {
             messages.reverse();
             messages.pop();
             messages.reverse();
-        }
-
-        switch (type) {
-            case 'who_turn':
-                let newGameInfo = {...gameInfo};
-                let currentId = gameInfo.currentGamer.id;
-                newGameInfo.roomInfo.currentGamer = parseInt(content);
-                let currentTurnId = gameInfo.gamers[parseInt(content)].id;
-                newGameInfo.roomInfo.whoTurn = currentId === currentTurnId;
-                setGameInfo(newGameInfo);
-                console.log('i change gameInfo ', newGameInfo)
-                return;
         }
 
         setMessages(messages.slice(0));
@@ -49,7 +38,7 @@ export default function GameMessage({code, gameInfo, setGameInfo}) {
         )
 
         eventSource.current.onmessage = (event) => {
-            addMessage({type: 'ping', content: 'ping'})
+            console.log(moment().format('HH:mm:ss ') + 'ping')
         }
 
         eventSource.current.onerror = (event) => {
@@ -73,11 +62,36 @@ export default function GameMessage({code, gameInfo, setGameInfo}) {
             addMessage({type: 'discard_cards', content: event.data.toString()})
         });
         eventSource.current.addEventListener("number_of_cards", (event) => {
-            addMessage({type: 'number_of_cards', content: event.data.toString()})
+            let data = event.data.toString();
+            let message = data.split('=');
+            let userId = parseInt(message[0]);
+            let numbers = message[1];
+            let newGameInfo = {...gameInfo};
+            let gamers = newGameInfo.gamers;
+            for (let i = 0; i < gamers.length; i++) {
+                if (gamers[i].id === userId) {
+                    gamers[i].numberOfCards = numbers;
+                    break;
+                }
+            }
+            newGameInfo.gamers = gamers;
+            setGameInfo(newGameInfo);
+            console.log(moment().format('HH:mm:ss ') + 'number_of_cards')
         });
         eventSource.current.addEventListener("who_turn", (event) => {
-            console.log("who turn")
-            addMessage({type: 'who_turn', content: event.data.toString()});
+            let newGameInfo = {...gameInfo};
+            let currentId = gameInfo.currentGamer.id;
+            newGameInfo.roomInfo.currentGamer = parseInt(event.data.toString());
+            let currentTurnGamer = gameInfo.gamers[parseInt(event.data.toString())];
+            let currentTurnId = currentTurnGamer.id;
+            let myTurn = currentId === currentTurnId;
+            newGameInfo.roomInfo.whoTurn = myTurn;
+            setGameInfo(newGameInfo);
+            if (!myTurn) {
+                addMessage({type: 'who_turn', content: "It's time for " + currentTurnGamer.nickname});
+            } else {
+                addMessage({type: 'who_turn', content: "Your turn!!!"});
+            }
         });
         eventSource.current.addEventListener("penalty_cards", (event) => {
             addMessage({type: 'penalty_cards', content: event.data.toString()})
