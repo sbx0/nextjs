@@ -4,7 +4,7 @@ import {EventSourcePolyfill} from "event-source-polyfill";
 import {useRouter} from "next/router";
 import moment from "moment/moment";
 
-export default function GameMessage({code, gameInfo, setGameInfo}) {
+export default function GameMessage({code, gameData}) {
     const [messages, setMessages] = useState([]);
     const router = useRouter();
     const eventSource = useRef();
@@ -60,33 +60,35 @@ export default function GameMessage({code, gameInfo, setGameInfo}) {
         });
         eventSource.current.addEventListener("discard_cards", (event) => {
             addMessage({type: 'discard_cards', content: event.data.toString()})
+            let data = event.data.toString();
+            let newDiscards = gameData.discards.slice(0);
+            newDiscards[0] = JSON.parse(data);
+            gameData.setDiscards(newDiscards);
         });
         eventSource.current.addEventListener("number_of_cards", (event) => {
             let data = event.data.toString();
             let message = data.split('=');
             let userId = parseInt(message[0]);
             let numbers = message[1];
-            let newGameInfo = {...gameInfo};
-            let gamers = newGameInfo.gamers;
-            for (let i = 0; i < gamers.length; i++) {
-                if (gamers[i].id === userId) {
-                    gamers[i].numberOfCards = numbers;
+            let newGamers = gameData.gamers.slice(0);
+            for (let i = 0; i < newGamers.length; i++) {
+                if (newGamers[i].id === userId) {
+                    newGamers[i].numberOfCards = numbers;
                     break;
                 }
             }
-            newGameInfo.gamers = gamers;
-            setGameInfo(newGameInfo);
+            gameData.setGamers(newGamers);
             console.log(moment().format('HH:mm:ss ') + 'number_of_cards')
         });
         eventSource.current.addEventListener("who_turn", (event) => {
-            let newGameInfo = {...gameInfo};
-            let currentId = gameInfo.currentGamer.id;
-            newGameInfo.roomInfo.currentGamer = parseInt(event.data.toString());
-            let currentTurnGamer = gameInfo.gamers[parseInt(event.data.toString())];
+            let newRoomInfo = {...gameData.roomInfo};
+            let currentId = gameData.currentGamer.id;
+            newRoomInfo.currentGamer = parseInt(event.data.toString());
+            let currentTurnGamer = gameData.gamers[parseInt(event.data.toString())];
             let currentTurnId = currentTurnGamer.id;
             let myTurn = currentId === currentTurnId;
-            newGameInfo.roomInfo.whoTurn = myTurn;
-            setGameInfo(newGameInfo);
+            newRoomInfo.whoTurn = myTurn;
+            gameData.setRoomInfo(newRoomInfo);
             if (!myTurn) {
                 addMessage({type: 'who_turn', content: "It's time for " + currentTurnGamer.nickname});
             } else {
