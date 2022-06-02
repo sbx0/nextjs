@@ -4,7 +4,7 @@ import {gameInfoApi} from "../../apis/game";
 import {useRouter} from "next/router";
 import {Box, CircularProgress} from "@mui/material";
 import {startUnoRoom} from "../../apis/unoRoom";
-import {nextPlay, playCards} from "../../apis/unoCard";
+import {drawCard, nextPlay, playCards} from "../../apis/unoCard";
 import GameMessage from "./gameMessage";
 import {toast} from "react-toastify";
 import useSingleAndDoubleClick from "../common/useSingleAndDoubleClick";
@@ -58,7 +58,19 @@ export default function GameView({gameData}) {
                 </div>
             </div>
             <div className={styles.deckContainer}>
-                <div className={styles.cardDeckContainer}>
+                <div className={styles.cardDeckContainer}
+                     onClick={() => {
+                         drawCard({roomCode: router.query.code}).then((r) => {
+                             if (r.code === '0') {
+                                 let cards = gameData.cards.slice(0);
+                                 let drawCards = r.data;
+                                 for (let i = 0; i < drawCards.length; i++) {
+                                     cards.push(drawCards[i]);
+                                 }
+                                 gameData.setCards(cards);
+                             }
+                         })
+                     }}>
                     Draw Card
                 </div>
                 <div className={styles.discardDeckContainer}>
@@ -75,6 +87,7 @@ export default function GameView({gameData}) {
                         <GameStartButton code={router.query.code}
                                          status={gameData.roomInfo.roomStatus}/>
                         <SkipButton code={router.query.code}
+                                    gameData={gameData}
                                     status={gameData.roomInfo.roomStatus}
                                     turn={gameData.roomInfo.whoTurn}/>
                     </div>
@@ -104,17 +117,38 @@ export default function GameView({gameData}) {
 function Card({card, code, gameData}) {
     const language = useContext(LanguageContext);
     const [loading, setLoading] = useState(false);
+    const [chooseColor, setChooseColor] = useState(false);
 
-    const clickToPlayCard = () => {
+    const clickToPlayCard = (color) => {
         let discards = gameData.discards;
+        if (card.color === 'black' && color == null) {
+            toast("please choose color", {
+                position: "bottom-center",
+                autoClose: 1000,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+            });
+            return;
+        }
 
         // todo local check
 
         setLoading(true);
         playCards({
-            roomCode: code, uuid: card.uuid, color: card.color
-        }, null).then((response) => {
-            if (response.code !== '0') {
+            roomCode: code, uuid: card.uuid, color: color != null ? color : card.color
+        }, null).then((r) => {
+            if (r.code === '0') {
+                let cards = gameData.cards.slice(0);
+                let newCards = [];
+                for (let i = 0; i < cards.length; i++) {
+                    if (cards[i].uuid !== card.uuid) {
+                        newCards.push(cards[i]);
+                    }
+                }
+                gameData.setCards(newCards);
+            } else {
                 toast("can't play", {
                     position: "bottom-center",
                     autoClose: 1000,
@@ -147,7 +181,7 @@ function Card({card, code, gameData}) {
     }
 
     const singleClick = () => {
-
+        setChooseColor(!chooseColor);
     }
 
     const click = useSingleAndDoubleClick(singleClick, clickToPlayCard);
@@ -160,18 +194,56 @@ function Card({card, code, gameData}) {
                 <>
                     <p>{card.color}</p>
                     <p>{better(card.point)}</p>
+                    {
+                        chooseColor && card.color === 'black' ?
+                            <div className={styles.colorChooseContainer}>
+                                <div className={styles.colorChooseInnerContainer}>
+                                    <div className={styles.colorButton}
+                                         onClick={() => {
+                                             clickToPlayCard('red');
+                                         }}>
+                                        red
+                                    </div>
+                                    <div className={styles.colorButton}
+                                         onClick={() => {
+                                             clickToPlayCard('yellow');
+                                         }}>
+                                        yellow
+                                    </div>
+                                    <div className={styles.colorButton}
+                                         onClick={() => {
+                                             clickToPlayCard('blue');
+                                         }}>
+                                        blue
+                                    </div>
+                                    <div className={styles.colorButton}
+                                         onClick={() => {
+                                             clickToPlayCard('green');
+                                         }}>
+                                        green
+                                    </div>
+                                </div>
+                            </div>
+                            :
+                            <></>
+                    }
                 </>
         }
     </div>
 }
 
-function SkipButton({code, status, turn}) {
+function SkipButton({code, status, turn, gameData}) {
     if (status === 1 && turn) {
         return <div className={styles.controllerButton}
                     onClick={() => {
                         nextPlay({roomCode: code}).then(r => {
                             if (r.code === '0') {
-                                console.log('next play')
+                                let cards = gameData.cards.slice(0);
+                                let drawCards = r.data;
+                                for (let i = 0; i < drawCards.length; i++) {
+                                    cards.push(drawCards[i]);
+                                }
+                                gameData.setCards(cards);
                             }
                         })
                     }}>Skip</div>
