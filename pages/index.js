@@ -20,7 +20,11 @@ export default function Index() {
     useEffect(() => {
         infoMatch().then((response) => {
             if (response.code === "0") {
-                setGamerSize(parseInt(response.data.choose));
+                if (response.data.choose == null) {
+                    setGamerSize(2);
+                } else {
+                    setGamerSize(parseInt(response.data.choose))
+                }
                 setSize(response.data.size);
                 setMatching(response.data.join);
             }
@@ -102,7 +106,7 @@ export default function Index() {
                             setGamerSize(event.target.value);
                         }}
                         autoWidth
-                        label="Age"
+                        label="人数"
                         disabled={matching}
                     >
                         <MenuItem value={2}>2人</MenuItem>

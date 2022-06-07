@@ -75,7 +75,10 @@ export default function GameView({gameData}) {
                 </div>
                 <div className={styles.discardDeckContainer}>
                     {
-                        gameData.discards[0].color + ' ' + gameData.discards[0].point
+                        gameData.discards.size > 0 ?
+                            <>{gameData.discards[0].color + ' ' + gameData.discards[0].point}</>
+                            :
+                            <>Discards</>
                     }
                 </div>
             </div>
@@ -85,6 +88,7 @@ export default function GameView({gameData}) {
                 <div className={styles.controllerContainer}>
                     <div className={styles.controllerScroll}>
                         <GameStartButton code={router.query.code}
+                                         gameData={gameData}
                                          status={gameData.roomInfo.roomStatus}/>
                         <SkipButton code={router.query.code}
                                     gameData={gameData}
@@ -252,13 +256,15 @@ function SkipButton({code, status, turn, gameData}) {
     }
 }
 
-function GameStartButton({code, status}) {
+function GameStartButton({code, status, gameData}) {
     if (status === 0) {
         return <div className={styles.controllerButton}
                     onClick={() => {
                         startUnoRoom({roomCode: code}).then(r => {
                             if (r.code === '0') {
-                                console.log('game start')
+                                let newRoomInfo = {...gameData.roomInfo};
+                                newRoomInfo.roomStatus = 1;
+                                gameData.setRoomInfo(newRoomInfo);
                             }
                         })
                     }}>Start Game</div>
