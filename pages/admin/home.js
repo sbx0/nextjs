@@ -16,7 +16,7 @@ import {MobileDatePicker} from '@mui/x-date-pickers/MobileDatePicker';
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import moment from "moment";
-import {Chip} from "@mui/material";
+import {Chip, MenuItem} from "@mui/material";
 
 export default function DataTable() {
     const moreProperties = {
@@ -33,6 +33,11 @@ export default function DataTable() {
         },
         newFlag: {
             order: 2.1,
+            columnType: 'select',
+            selectOptions: [
+                {key: 0, value: 0, label: '二手房'},
+                {key: 1, value: 1, label: '新房'}
+            ],
             renderCell: (params) => params.row.newFlag === 1 ? <Chip color="success" label="新房" size="small"/> :
                 <Chip label="二手房" size="small"/>
         },
@@ -330,15 +335,29 @@ function BuildField({column, handleChange, formData, dialogType}) {
         }
     }
 
-    if (column.columnType.toString().indexOf('varchar') !== -1) {
+    if (column.columnType.toString().indexOf('select') !== -1) {
+        return <>
+            <TextField
+                select
+                margin="dense"
+                value={formData[column.field]}
+                onChange={(event) => handleChange(column.field, event.target.value)}
+                fullWidth
+                label={column.headerName}
+            >
+                {column.selectOptions.map((option) => {
+                    return <MenuItem key={option.key} value={option.value}>{option.label}</MenuItem>
+                })}
+            </TextField>
+        </>
+    } else if (column.columnType.toString().indexOf('varchar') !== -1) {
         return <TextField
-            margin="dense"
-            id="name"
+            id={column.headerName}
             label={column.headerName}
+            margin="dense"
             defaultValue={formData[column.field]}
             type="text"
             fullWidth
-            variant="standard"
             onChange={(event) => handleChange(column.field, event.target.value)}
         />;
     } else if (column.columnType.toString().indexOf('decimal') !== -1
@@ -350,7 +369,6 @@ function BuildField({column, handleChange, formData, dialogType}) {
             defaultValue={formData[column.field]}
             type="number"
             fullWidth
-            variant="standard"
             onChange={(event) => handleChange(column.field, event.target.value)}
         />;
     } else if (column.columnType.toString().indexOf('year') !== -1) {
@@ -363,7 +381,6 @@ function BuildField({column, handleChange, formData, dialogType}) {
                 key={column.field}
                 margin="dense"
                 fullWidth
-                variant="standard"
                 {...params}
             />}/>;
     } else if (column.columnType.toString().indexOf('datetime') !== -1) {
@@ -376,7 +393,6 @@ function BuildField({column, handleChange, formData, dialogType}) {
                 key={column.field}
                 margin="dense"
                 fullWidth
-                variant="standard"
                 {...params}
             />}/>;
     } else {
