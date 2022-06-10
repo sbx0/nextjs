@@ -4,12 +4,18 @@ import {DataGrid, GridActionsCellItem} from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FormDialog from "../../components/dialog/FormDialog";
-import {homeCommunitiesApi, homeCommunityTableStructureApi, homeCommunityUpdateOneByIdApi} from "../../apis/home";
+import {
+    homeCommunitiesApi,
+    homeCommunityAddOneApi,
+    homeCommunityTableStructureApi,
+    homeCommunityUpdateOneByIdApi
+} from "../../apis/home";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {MobileDatePicker} from '@mui/x-date-pickers/MobileDatePicker';
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
+import moment from "moment";
 
 export default function DataTable() {
     const moreProperties = {
@@ -63,11 +69,9 @@ export default function DataTable() {
         sort: 'desc',
     }]);
     const [formData, setFormData] = useState({});
+    const [dialogType, setDialogType] = useState('add');
 
-    useEffect(() => {
-        getList({keyword: '', sorts: sortModel})
-    }, [sortModel]);
-
+    // load table structure and build table
     useEffect(() => {
         homeCommunityTableStructureApi().then((r) => {
             if (r.code === '0') {
@@ -106,24 +110,30 @@ export default function DataTable() {
                                 icon={<EditIcon/>}
                                 label="Edit"
                                 className="textPrimary"
-                                onClick={() => handleEditClick(newColumns, row)}
+                                onClick={() => handleEditActionClick(row)}
                                 color="inherit"
                             />,
                             <GridActionsCellItem
                                 icon={<DeleteIcon/>}
                                 label="Delete"
-                                onClick={() => handleDeleteClick(newColumns, row)}
+                                onClick={() => handleDeleteActionClick(row)}
                                 color="inherit"
                             />,
                         ];
                     },
                 });
                 setListColumns(newListColumns);
+                getList({keyword: '', sorts: sortModel})
             }
         })
-        getList({keyword: '', sorts: sortModel})
     }, []);
 
+    // handle order click
+    useEffect(() => {
+        getList({keyword: '', sorts: sortModel})
+    }, [sortModel]);
+
+    // load list data
     const getList = (params) => {
         homeCommunitiesApi(params).then((r) => {
             if (r.code === '0') {
@@ -132,14 +142,52 @@ export default function DataTable() {
         });
     }
 
-    const handleEditClick = (columns, rowData) => {
+    const handleAddActionClick = () => {
+        setDialogType('add')
+        setOpen(true);
+    }
+
+    const handleEditActionClick = (rowData) => {
+        setDialogType('edit')
         setRowData(rowData);
         setFormData(rowData);
         setOpen(true);
     }
 
+    const handleDialogClose = () => {
+        setOpen(false);
+        setRowData({});
 
-    const handleDeleteClick = () => {
+        let newFormData = {...handleDate(formData)};
+
+        if (dialogType === 'edit') {
+            homeCommunityUpdateOneByIdApi(newFormData).then((r) => {
+                if (r.code === '0') {
+                    getList({keyword: '', sorts: sortModel});
+                }
+            })
+        } else {
+            homeCommunityAddOneApi(newFormData).then((r) => {
+                if (r.code === '0') {
+                    getList({keyword: '', sorts: sortModel});
+                }
+            })
+        }
+    }
+
+    const handleDate = (formData) => {
+        let newFormData = {...formData};
+        console.log(moment(newFormData.buildingAge).format('yyyy'))
+        newFormData.buildingAge = moment(newFormData.buildingAge).format('yyyy');
+        return newFormData;
+    }
+
+    const handleDialogCancel = () => {
+        setOpen(false);
+        setRowData({});
+    }
+
+    const handleDeleteActionClick = () => {
 
     }
 
@@ -147,21 +195,11 @@ export default function DataTable() {
         return value.replace(/\_(\w)/g, (_, letter) => letter.toUpperCase())
     }
 
-    const handleSaveDialogClose = () => {
-        setOpen(false);
-        setRowData({});
-
-        let newFormData = {...formData};
-
-        homeCommunityUpdateOneByIdApi(newFormData).then((r) => {
-            if (r.code === '0') {
-                getList({keyword: '', sorts: sortModel});
-            }
-        })
-    }
-
     return (
         <div style={{height: 400, width: '100%'}}>
+            <Button variant="outlined" onClick={() => handleAddActionClick()}>
+                新增
+            </Button>
             <DataGrid
                 rows={rows}
                 columns={listColumns}
@@ -171,20 +209,21 @@ export default function DataTable() {
                 onSortModelChange={(newSortModel) => setSortModel(newSortModel)}
             />
             <FormDialog open={open} setOpen={setOpen}
-                        title={'Change'}
+                        title={dialogType}
                         dialogContent={<BuildForm columns={columns}
+                                                  dialogType={dialogType}
                                                   formData={formData}
                                                   setFormData={setFormData}/>}
                         dialogActions={<>
-                            <Button onClick={handleSaveDialogClose}>取消</Button>
-                            <Button onClick={handleSaveDialogClose}>提交</Button>
+                            <Button onClick={handleDialogCancel}>取消</Button>
+                            <Button onClick={handleDialogClose}>提交</Button>
                         </>}/>
         </div>
     );
 }
 
 
-function BuildForm({columns, formData, setFormData}) {
+function BuildForm({columns, formData, setFormData, dialogType}) {
 
     const handleChange = (field, value) => {
         let newFormData = {...formData};
@@ -197,16 +236,23 @@ function BuildForm({columns, formData, setFormData}) {
             columns.map((column, index) =>
                 <BuildField key={column.field + index}
                             column={column}
+                            dialogType={dialogType}
                             handleChange={handleChange}
                             formData={formData}/>)
         }
     </LocalizationProvider>
 }
 
-function BuildField({column, handleChange, formData}) {
+function BuildField({column, handleChange, formData, dialogType}) {
 
-    if (column.hideEdit || column.field === 'actions') {
-        return null;
+    if (dialogType === 'edit') {
+        if (column.hideEdit || column.field === 'actions') {
+            return null;
+        }
+    } else {
+        if (column.hideSave || column.field === 'actions') {
+            return null;
+        }
     }
 
     if (column.columnType.toString().indexOf('varchar') !== -1) {
