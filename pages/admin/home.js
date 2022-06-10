@@ -17,6 +17,7 @@ import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import moment from "moment";
 import {Chip, MenuItem} from "@mui/material";
+import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
 
 export default function DataTable() {
     const moreProperties = {
@@ -88,6 +89,13 @@ export default function DataTable() {
             hideList: true,
             order: 16,
         },
+        mapConfig: {
+            hideList: true,
+            hideDetail: true,
+            hideSave: false,
+            hideEdit: false,
+            order: 16.5
+        },
         createTime: {
             width: 150,
             hideList: true,
@@ -117,15 +125,13 @@ export default function DataTable() {
     const [open, setOpen] = useState(false);
     const [rows, setRows] = useState([]);
     const [rowData, setRowData] = useState({});
-    const [sortModel, setSortModel] = useState([{
-        field: 'id',
-        sort: 'desc',
-    }]);
+    const [sortModel, setSortModel] = useState([]);
     const [formData, setFormData] = useState({});
     const [dialogType, setDialogType] = useState('add');
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(10);
     const [total, setTotal] = useState(0);
+    const [mapOpen, setMapOpen] = useState(false);
 
     // load table structure and build table
     useEffect(() => {
@@ -187,6 +193,12 @@ export default function DataTable() {
                     cellClassName: 'actions',
                     getActions: ({row}) => {
                         return [
+                            <GridActionsCellItem
+                                icon={<ZoomOutMapIcon/>}
+                                label="Map"
+                                onClick={() => handleMapActionClick(row)}
+                                color="inherit"
+                            />,
                             <GridActionsCellItem
                                 icon={<EditIcon/>}
                                 label="Edit"
@@ -273,8 +285,19 @@ export default function DataTable() {
         setRowData({});
     }
 
+    const handleMapDialogCancel = () => {
+        setMapOpen(false);
+        setRowData({});
+    }
+
     const handleDeleteActionClick = () => {
 
+    }
+
+    const handleMapActionClick = (rowData) => {
+        setRowData(rowData);
+        setFormData(rowData);
+        setMapOpen(true);
     }
 
     const formatToHump = (value) => {
@@ -310,6 +333,16 @@ export default function DataTable() {
                         dialogActions={<>
                             <Button onClick={handleDialogCancel}>取消</Button>
                             <Button onClick={handleDialogClose}>提交</Button>
+                        </>}/>
+            <FormDialog open={mapOpen} setOpen={setMapOpen}
+                        title={'Map'}
+                        fullScreen={true}
+                        dialogContent={<div style={{width: '100%', height: '80vh'}}>
+                            <iframe style={{width: '100%', height: '100%'}} src={rowData.mapConfig}
+                                    id="iframe"></iframe>
+                        </div>}
+                        dialogActions={<>
+                            <Button onClick={handleMapDialogCancel}>关闭</Button>
                         </>}/>
         </div>
     );

@@ -4,10 +4,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function FormDialog({open, setOpen, title, dialogContent, dialogActions}) {
+export default function FormDialog({open, setOpen, title, dialogContent, dialogActions, fullScreen}) {
 
     return (
-        <Dialog open={open} onClose={() => setOpen(false)}>
+        <Dialog open={open} onClose={() => setOpen(false)} fullScreen={fullScreen}>
             <DialogTitle>{title}</DialogTitle>
             <DialogContent>
                 {dialogContent}
