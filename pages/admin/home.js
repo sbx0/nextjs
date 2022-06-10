@@ -21,48 +21,91 @@ import {Chip} from "@mui/material";
 export default function DataTable() {
     const moreProperties = {
         id: {
-            hideList: false,
+            hideList: true,
             hideDetail: true,
             hideSave: true,
-            hideEdit: true
+            hideEdit: true,
+            order: 1
         },
         communityName: {
-            width: 300
-        },
-        communityAddress: {
-            hideList: true,
-            width: 250
-        },
-        property: {
-            width: 250
-        },
-        developer: {
-            width: 250
+            width: 200,
+            order: 2
         },
         newFlag: {
+            order: 2.1,
             renderCell: (params) => params.row.newFlag === 1 ? <Chip color="success" label="新房" size="small"/> :
                 <Chip label="二手房" size="small"/>
         },
+        communityAddress: {
+            hideList: true,
+            width: 250,
+            order: 3
+        },
+        averagePrice: {
+            order: 4
+        },
+        buildingAge: {
+            order: 5
+        },
+        buildingType: {
+            hideList: true,
+            order: 6
+        },
+        buildingNumber: {
+            order: 7
+        },
+        householdNumber: {
+            order: 8
+        },
+        parkingAbove: {
+            order: 9
+        },
+        parkingUnder: {
+            order: 10
+        },
+        volumeRate: {
+            order: 11
+        },
+        greeningRate: {
+            order: 12
+        },
+        developer: {
+            hideList: true,
+            width: 250,
+            order: 13
+        },
+        property: {
+            hideList: true,
+            width: 250,
+            order: 14
+        },
+        remark: {
+            hideList: true,
+            order: 16,
+        },
         createTime: {
             width: 150,
-            hideList: false,
+            hideList: true,
             hideDetail: false,
             hideSave: true,
-            hideEdit: true
+            hideEdit: true,
+            order: 17
         },
         updateTime: {
             width: 150,
-            hideList: false,
+            hideList: true,
             hideDetail: false,
             hideSave: true,
-            hideEdit: true
+            hideEdit: true,
+            order: 18
         },
         delFlag: {
             hideList: true,
             hideDetail: true,
             hideSave: true,
-            hideEdit: true
-        }
+            hideEdit: true,
+            order: 19
+        },
     }
     const [columns, setColumns] = useState([]);
     const [listColumns, setListColumns] = useState([]);
@@ -92,8 +135,22 @@ export default function DataTable() {
                         ...newColumn,
                         ...moreProperties[key]
                     }
+                    if (newColumn.order === undefined) {
+                        newColumn.order = 9999;
+                    }
                     newColumns.push(newColumn);
                 }
+
+                for (let i = 0; i < newColumns.length; i++) {
+                    for (let j = 0; j < (newColumns.length - i - 1); j++) {
+                        if (newColumns[j].order > newColumns[j + 1].order) {
+                            let temp = newColumns[j];
+                            newColumns[j] = newColumns[j + 1];
+                            newColumns[j + 1] = temp;
+                        }
+                    }
+                }
+
                 setColumns(newColumns);
 
                 let newListColumns = [];
@@ -103,6 +160,17 @@ export default function DataTable() {
                     }
                     newListColumns.push(newColumns[i]);
                 }
+
+                for (let i = 0; i < newListColumns.length; i++) {
+                    for (let j = 0; j < (newListColumns.length - i - 1); j++) {
+                        if (newListColumns[j].order > newListColumns[j + 1].order) {
+                            let temp = newListColumns[j];
+                            newListColumns[j] = newListColumns[j + 1];
+                            newListColumns[j + 1] = temp;
+                        }
+                    }
+                }
+
                 newListColumns.push({
                     field: 'actions',
                     type: 'actions',
@@ -148,6 +216,8 @@ export default function DataTable() {
     }
 
     const handleAddActionClick = () => {
+        setRowData({});
+        setFormData({});
         setDialogType('add')
         setOpen(true);
     }
@@ -262,7 +332,6 @@ function BuildField({column, handleChange, formData, dialogType}) {
 
     if (column.columnType.toString().indexOf('varchar') !== -1) {
         return <TextField
-            autoFocus
             margin="dense"
             id="name"
             label={column.headerName}
@@ -275,7 +344,6 @@ function BuildField({column, handleChange, formData, dialogType}) {
     } else if (column.columnType.toString().indexOf('decimal') !== -1
         || column.columnType.toString().indexOf('int') !== -1) {
         return <TextField
-            autoFocus
             margin="dense"
             id="name"
             label={column.headerName}
