@@ -204,14 +204,14 @@ export default function DataTable() {
                     },
                 });
                 setListColumns(newListColumns);
-                getList({keyword: '', sorts: sortModel, page: page, size: size})
+                getList({keyword: '', orders: sortModel, page: page, size: size})
             }
         })
     }, []);
 
     // handle order click
     useEffect(() => {
-        getList({keyword: '', sorts: sortModel, page: page, size: size})
+        getList({keyword: '', orders: sortModel, page: page, size: size})
     }, [sortModel, page, size]);
 
     // load list data
@@ -249,13 +249,13 @@ export default function DataTable() {
         if (dialogType === 'edit') {
             homeCommunityUpdateOneByIdApi(newFormData).then((r) => {
                 if (r.code === '0') {
-                    getList({keyword: '', sorts: sortModel, page: page, size: size});
+                    getList({keyword: '', orders: sortModel, page: page, size: size});
                 }
             })
         } else {
             homeCommunityAddOneApi(newFormData).then((r) => {
                 if (r.code === '0') {
-                    getList({keyword: '', sorts: sortModel, page: page, size: size});
+                    getList({keyword: '', orders: sortModel, page: page, size: size});
                 }
             })
         }
@@ -297,6 +297,7 @@ export default function DataTable() {
                 pageSize={size}
                 rowsPerPageOptions={[10, 20, 50, 100]}
                 onPageSizeChange={(newSize) => setSize(newSize)}
+                sortingMode="server"
                 sortModel={sortModel}
                 onSortModelChange={(newSortModel) => setSortModel(newSortModel)}
             />
