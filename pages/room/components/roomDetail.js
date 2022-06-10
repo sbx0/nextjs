@@ -73,8 +73,6 @@ const gameReducer = (state, action) => {
                 my = true;
             }
 
-            console.log('myTurn', my)
-
             return {
                 ...state, myTurn: my
             }

@@ -1,22 +1,22 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 
 export default function useGameData() {
-    const [gameInfo, setGameInfo] = useState({
-        gamers: [{
-            id: undefined,
-            nickname: undefined,
-            numberOfCards: undefined,
-        }],
-        cards: undefined,
-        roomInfo: undefined,
-    });
-
-    useEffect(() => {
-        console.log('gameInfo change ', gameInfo)
-    }, [gameInfo])
+    const [roomInfo, setRoomInfo] = useState({});
+    const [currentGamer, setCurrentGamer] = useState({});
+    const [gamers, setGamers] = useState([]);
+    const [cards, setCards] = useState([]);
+    const [discards, setDiscards] = useState([]);
 
     return {
-        gameInfo,
-        setGameInfo
+        roomInfo,
+        setRoomInfo,
+        currentGamer,
+        setCurrentGamer,
+        gamers,
+        setGamers,
+        cards,
+        setCards,
+        discards,
+        setDiscards
     }
 }

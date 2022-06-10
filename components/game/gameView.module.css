@@ -115,17 +115,64 @@
 }
 
 .myCardsContainer {
-    width: 121%;
+    width: max-content;
     height: 100%;
 }
 
 .cardContainer {
     width: 6rem;
     height: 9rem;
+    border-radius: 0.5rem;
     border: 0.2rem solid black;
-    margin-right: 1rem;
+    margin-right: -1.5rem;
     margin-bottom: .5rem;
     display: inline-grid;
     align-content: center;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+    vertical-align: top;
+    background-color: #ffffff;
+}
+
+.cardContainer:last-child {
+    margin-right: 0.1rem;
+}
+
+.cardContainer span {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.colorChooseContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.colorChooseInnerContainer {
+    width: 100vw;
+    padding: 10rem;
+    border: 0.1rem solid black;
+    background-color: #0000009c;
+    display: inline-grid;
+    justify-items: center;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+    grid-template-columns:1fr 1fr 1fr 1fr;
+}
+
+.colorButton {
+    margin: 0.5rem;
+    width: 6rem;
+    height: 3rem;
+    border: 0.2rem black solid;
+    background-color: #ffffff;
+    display: inline-grid;
+    z-index: 999;
 }
