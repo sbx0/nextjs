@@ -16,6 +16,7 @@ import {MobileDatePicker} from '@mui/x-date-pickers/MobileDatePicker';
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import moment from "moment";
+import {Chip} from "@mui/material";
 
 export default function DataTable() {
     const moreProperties = {
@@ -37,6 +38,10 @@ export default function DataTable() {
         },
         developer: {
             width: 250
+        },
+        newFlag: {
+            renderCell: (params) => params.row.newFlag === 1 ? <Chip color="success" label="新房" size="small"/> :
+                <Chip label="二手房" size="small"/>
         },
         createTime: {
             width: 150,
