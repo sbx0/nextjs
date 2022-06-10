@@ -16,7 +16,7 @@ import {MobileDatePicker} from '@mui/x-date-pickers/MobileDatePicker';
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import moment from "moment";
-import {Chip, MenuItem} from "@mui/material";
+import {Chip, MenuItem, Rating, Typography} from "@mui/material";
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
 
 export default function DataTable() {
@@ -29,7 +29,7 @@ export default function DataTable() {
             order: 1
         },
         communityName: {
-            width: 200,
+            width: 150,
             order: 2
         },
         newFlag: {
@@ -41,6 +41,36 @@ export default function DataTable() {
             ],
             renderCell: (params) => params.row.newFlag === 1 ? <Chip color="success" label="新房" size="small"/> :
                 <Chip label="二手房" size="small"/>
+        },
+        areaName: {
+            order: 3.1,
+            columnType: 'select',
+            selectOptions: [
+                {key: 0, value: '上城', label: '上城'},
+                {key: 1, value: '拱墅', label: '拱墅'},
+                {key: 2, value: '西湖', label: '西湖'},
+                {key: 3, value: '滨江', label: '滨江'},
+                {key: 4, value: '萧山', label: '萧山'},
+                {key: 5, value: '余杭', label: '余杭'},
+                {key: 6, value: '钱塘', label: '钱塘'},
+                {key: 7, value: '海宁', label: '海宁'},
+                {key: 8, value: '富阳', label: '富阳'},
+                {key: 9, value: '桐庐', label: '桐庐'},
+            ],
+        },
+        subjectiveRating: {
+            order: 3.2,
+            width: 140,
+            columnType: 'rating',
+            renderCell: (params) => {
+                return <Rating value={params.row.subjectiveRating} readOnly/>
+            }
+        },
+        objectiveRating: {
+            order: 3.3,
+            hideList: true,
+            hideSave: true,
+            hideEdit: true
         },
         communityAddress: {
             hideList: true,
@@ -381,7 +411,14 @@ function BuildField({column, handleChange, formData, dialogType}) {
         }
     }
 
-    if (column.columnType.toString().indexOf('select') !== -1) {
+    if (column.columnType.toString().indexOf('rating') !== -1) {
+        return <>
+            <Typography component="legend">{column.headerName}</Typography>
+            <Rating name={column.field}
+                    value={formData[column.field]}
+                    onChange={(event, newValue) => handleChange(column.field, newValue)}/>
+        </>
+    } else if (column.columnType.toString().indexOf('select') !== -1) {
         return <>
             <TextField
                 select
