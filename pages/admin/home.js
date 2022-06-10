@@ -123,6 +123,9 @@ export default function DataTable() {
     }]);
     const [formData, setFormData] = useState({});
     const [dialogType, setDialogType] = useState('add');
+    const [page, setPage] = useState(0);
+    const [size, setSize] = useState(10);
+    const [total, setTotal] = useState(0);
 
     // load table structure and build table
     useEffect(() => {
@@ -201,21 +204,24 @@ export default function DataTable() {
                     },
                 });
                 setListColumns(newListColumns);
-                getList({keyword: '', sorts: sortModel})
+                getList({keyword: '', sorts: sortModel, page: page, size: size})
             }
         })
     }, []);
 
     // handle order click
     useEffect(() => {
-        getList({keyword: '', sorts: sortModel})
-    }, [sortModel]);
+        getList({keyword: '', sorts: sortModel, page: page, size: size})
+    }, [sortModel, page, size]);
 
     // load list data
     const getList = (params) => {
-        homeCommunitiesApi(params).then((r) => {
+        let p = {...params};
+        p.page = page + 1;
+        homeCommunitiesApi(p).then((r) => {
             if (r.code === '0') {
                 setRows(r.data);
+                setTotal(r.total)
             }
         });
     }
@@ -243,13 +249,13 @@ export default function DataTable() {
         if (dialogType === 'edit') {
             homeCommunityUpdateOneByIdApi(newFormData).then((r) => {
                 if (r.code === '0') {
-                    getList({keyword: '', sorts: sortModel});
+                    getList({keyword: '', sorts: sortModel, page: page, size: size});
                 }
             })
         } else {
             homeCommunityAddOneApi(newFormData).then((r) => {
                 if (r.code === '0') {
-                    getList({keyword: '', sorts: sortModel});
+                    getList({keyword: '', sorts: sortModel, page: page, size: size});
                 }
             })
         }
@@ -276,15 +282,21 @@ export default function DataTable() {
     }
 
     return (
-        <div style={{height: 400, width: '100%'}}>
+        <div style={{height: '631px', width: '100%'}}>
             <Button variant="outlined" onClick={() => handleAddActionClick()}>
                 新增
             </Button>
             <DataGrid
                 rows={rows}
+                rowCount={total}
                 columns={listColumns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                pagination
+                paginationMode="server"
+                page={page}
+                onPageChange={(newPage) => setPage(newPage)}
+                pageSize={size}
+                rowsPerPageOptions={[10, 20, 50, 100]}
+                onPageSizeChange={(newSize) => setSize(newSize)}
                 sortModel={sortModel}
                 onSortModelChange={(newSortModel) => setSortModel(newSortModel)}
             />
