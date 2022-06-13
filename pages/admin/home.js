@@ -400,6 +400,8 @@ function BuildForm({columns, formData, setFormData, dialogType}) {
 }
 
 function BuildField({column, handleChange, formData, dialogType}) {
+    let data = {...formData};
+    data.buildingAge = moment(data.buildingAge, 'yyyy');
 
     if (dialogType === 'edit') {
         if (column.hideEdit || column.field === 'actions') {
@@ -415,7 +417,7 @@ function BuildField({column, handleChange, formData, dialogType}) {
         return <>
             <Typography component="legend">{column.headerName}</Typography>
             <Rating name={column.field}
-                    value={formData[column.field]}
+                    value={data[column.field]}
                     onChange={(event, newValue) => handleChange(column.field, newValue)}/>
         </>
     } else if (column.columnType.toString().indexOf('select') !== -1) {
@@ -423,7 +425,7 @@ function BuildField({column, handleChange, formData, dialogType}) {
             <TextField
                 select
                 margin="dense"
-                value={formData[column.field]}
+                value={data[column.field]}
                 onChange={(event) => handleChange(column.field, event.target.value)}
                 fullWidth
                 label={column.headerName}
@@ -438,7 +440,7 @@ function BuildField({column, handleChange, formData, dialogType}) {
             id={column.headerName}
             label={column.headerName}
             margin="dense"
-            defaultValue={formData[column.field]}
+            defaultValue={data[column.field]}
             type="text"
             fullWidth
             onChange={(event) => handleChange(column.field, event.target.value)}
@@ -449,7 +451,7 @@ function BuildField({column, handleChange, formData, dialogType}) {
             margin="dense"
             id="name"
             label={column.headerName}
-            defaultValue={formData[column.field]}
+            defaultValue={data[column.field]}
             type="number"
             fullWidth
             onChange={(event) => handleChange(column.field, event.target.value)}
@@ -458,7 +460,7 @@ function BuildField({column, handleChange, formData, dialogType}) {
         return <MobileDatePicker
             label={column.headerName}
             inputFormat="yyyy"
-            value={formData[column.field]}
+            value={data[column.field]}
             onChange={(data) => handleChange(column.field, data)}
             renderInput={(params) => <TextField
                 key={column.field}
@@ -470,7 +472,7 @@ function BuildField({column, handleChange, formData, dialogType}) {
         return <MobileDatePicker
             label={column.headerName}
             inputFormat="yyyy-MM-dd"
-            value={formData[column.field]}
+            value={data[column.field]}
             onChange={(data) => handleChange(column.field, data)}
             renderInput={(params) => <TextField
                 key={column.field}
