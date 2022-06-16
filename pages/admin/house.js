@@ -5,19 +5,19 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FormDialog from "../../components/dialog/FormDialog";
 import {
-    homeCommunitiesApi,
-    homeCommunityAddOneApi,
-    homeCommunityTableStructureApi,
-    homeCommunityUpdateOneByIdApi
-} from "../../apis/home";
+    homeCommunityHouseAddOneApi,
+    homeCommunityHouseApi,
+    homeCommunityHouseTableStructureApi,
+    homeCommunityHouseUpdateOneByIdApi
+} from "../../apis/house";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {MobileDatePicker} from '@mui/x-date-pickers/MobileDatePicker';
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import moment from "moment";
-import {Chip, MenuItem, Rating, Typography} from "@mui/material";
-import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
+import {MenuItem, Rating, Typography} from "@mui/material";
+import CommunityAutocomplete from "../../components/select/CommunityAutocomplete";
 
 export default function DataTable() {
     const moreProperties = {
@@ -28,35 +28,37 @@ export default function DataTable() {
             hideEdit: true,
             order: 1
         },
-        communityName: {
+        houseName: {
             width: 150,
             order: 2
         },
-        newFlag: {
-            order: 2.1,
-            columnType: 'select',
-            selectOptions: [
-                {key: 0, value: 0, label: '二手房'},
-                {key: 1, value: 1, label: '新房'}
-            ],
-            renderCell: (params) => params.row.newFlag === 1 ? <Chip color="success" label="新房" size="small"/> :
-                <Chip label="二手房" size="small"/>
+        communityId: {
+            width: 150,
+            order: 2.5,
+            hideList: true,
+            columnType: 'CommunityAutocomplete'
         },
-        areaName: {
-            order: 3.1,
-            columnType: 'select',
-            selectOptions: [
-                {key: 0, value: '上城', label: '上城'},
-                {key: 1, value: '拱墅', label: '拱墅'},
-                {key: 2, value: '西湖', label: '西湖'},
-                {key: 3, value: '滨江', label: '滨江'},
-                {key: 4, value: '萧山', label: '萧山'},
-                {key: 5, value: '余杭', label: '余杭'},
-                {key: 6, value: '钱塘', label: '钱塘'},
-                {key: 7, value: '海宁', label: '海宁'},
-                {key: 8, value: '富阳', label: '富阳'},
-                {key: 9, value: '桐庐', label: '桐庐'},
-            ],
+        communityName: {
+            width: 150,
+            order: 3,
+            hideSave: true,
+            hideEdit: true
+        },
+        decorationType: {
+            width: 150,
+            order: 4
+        },
+        housePrice: {
+            width: 150,
+            order: 5
+        },
+        houseSize: {
+            width: 150,
+            order: 6
+        },
+        firstPay: {
+            width: 150,
+            order: 7
         },
         subjectiveRating: {
             order: 3.2,
@@ -72,59 +74,9 @@ export default function DataTable() {
             hideSave: true,
             hideEdit: true
         },
-        communityAddress: {
-            hideList: true,
-            width: 250,
-            order: 3
-        },
-        averagePrice: {
-            order: 4
-        },
-        buildingAge: {
-            order: 5
-        },
-        buildingType: {
-            hideList: true,
-            order: 6
-        },
-        buildingNumber: {
-            order: 7
-        },
-        householdNumber: {
-            order: 8
-        },
-        parkingAbove: {
-            order: 9
-        },
-        parkingUnder: {
-            order: 10
-        },
-        volumeRate: {
-            order: 11
-        },
-        greeningRate: {
-            order: 12
-        },
-        developer: {
-            hideList: true,
-            width: 250,
-            order: 13
-        },
-        property: {
-            hideList: true,
-            width: 250,
-            order: 14
-        },
         remark: {
             hideList: true,
             order: 16,
-        },
-        mapConfig: {
-            hideList: true,
-            hideDetail: true,
-            hideSave: false,
-            hideEdit: false,
-            order: 16.5
         },
         createTime: {
             width: 150,
@@ -165,7 +117,7 @@ export default function DataTable() {
 
     // load table structure and build table
     useEffect(() => {
-        homeCommunityTableStructureApi().then((r) => {
+        homeCommunityHouseTableStructureApi().then((r) => {
             if (r.code === '0') {
                 let newColumns = [];
                 let tableColumns = r.data.columns;
@@ -224,12 +176,6 @@ export default function DataTable() {
                     getActions: ({row}) => {
                         return [
                             <GridActionsCellItem
-                                icon={<ZoomOutMapIcon/>}
-                                label="Map"
-                                onClick={() => handleMapActionClick(row)}
-                                color="inherit"
-                            />,
-                            <GridActionsCellItem
                                 icon={<EditIcon/>}
                                 label="Edit"
                                 className="textPrimary"
@@ -260,7 +206,7 @@ export default function DataTable() {
     const getList = (params) => {
         let p = {...params};
         p.page = page + 1;
-        homeCommunitiesApi(p).then((r) => {
+        homeCommunityHouseApi(p).then((r) => {
             if (r.code === '0') {
                 setRows(r.data);
                 setTotal(r.total)
@@ -289,13 +235,13 @@ export default function DataTable() {
         let newFormData = {...handleDate(formData)};
 
         if (dialogType === 'edit') {
-            homeCommunityUpdateOneByIdApi(newFormData).then((r) => {
+            homeCommunityHouseUpdateOneByIdApi(newFormData).then((r) => {
                 if (r.code === '0') {
                     getList({keyword: '', orders: sortModel, page: page, size: size});
                 }
             })
         } else {
-            homeCommunityAddOneApi(newFormData).then((r) => {
+            homeCommunityHouseAddOneApi(newFormData).then((r) => {
                 if (r.code === '0') {
                     getList({keyword: '', orders: sortModel, page: page, size: size});
                 }
@@ -364,16 +310,6 @@ export default function DataTable() {
                             <Button onClick={handleDialogCancel}>取消</Button>
                             <Button onClick={handleDialogClose}>提交</Button>
                         </>}/>
-            <FormDialog open={mapOpen} setOpen={setMapOpen}
-                        title={'Map'}
-                        fullScreen={true}
-                        dialogContent={<div style={{width: '100%', height: '80vh'}}>
-                            <iframe style={{width: '100%', height: '100%'}} src={rowData.mapConfig}
-                                    id="iframe"></iframe>
-                        </div>}
-                        dialogActions={<>
-                            <Button onClick={handleMapDialogCancel}>关闭</Button>
-                        </>}/>
         </div>
     );
 }
@@ -413,7 +349,9 @@ function BuildField({column, handleChange, formData, dialogType}) {
         }
     }
 
-    if (column.columnType.toString().indexOf('rating') !== -1) {
+    if (column.columnType.toString().indexOf('CommunityAutocomplete') !== -1) {
+        return <CommunityAutocomplete label={column.headerName}/>;
+    } else if (column.columnType.toString().indexOf('rating') !== -1) {
         return <>
             <Typography component="legend">{column.headerName}</Typography>
             <Rating name={column.field}
