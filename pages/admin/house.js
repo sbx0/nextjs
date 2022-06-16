@@ -17,6 +17,7 @@ import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import moment from "moment";
 import {MenuItem, Rating, Typography} from "@mui/material";
+import CommunityAutocomplete from "../../components/select/CommunityAutocomplete";
 
 export default function DataTable() {
     const moreProperties = {
@@ -34,7 +35,8 @@ export default function DataTable() {
         communityId: {
             width: 150,
             order: 2.5,
-            hideList: true
+            hideList: true,
+            columnType: 'CommunityAutocomplete'
         },
         communityName: {
             width: 150,
@@ -347,7 +349,9 @@ function BuildField({column, handleChange, formData, dialogType}) {
         }
     }
 
-    if (column.columnType.toString().indexOf('rating') !== -1) {
+    if (column.columnType.toString().indexOf('CommunityAutocomplete') !== -1) {
+        return <CommunityAutocomplete label={column.headerName}/>;
+    } else if (column.columnType.toString().indexOf('rating') !== -1) {
         return <>
             <Typography component="legend">{column.headerName}</Typography>
             <Rating name={column.field}
